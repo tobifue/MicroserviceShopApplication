@@ -25,11 +25,9 @@ Use your **real name** (i.e., not a nickname or an abbreviation) and your offici
 # How are questions handled?
 
 For general inquiries (which are relevant for multiple teams) please use the Moodle forum. In case of individual inquiries please contact our **tutor first** 
-- Miller Kevin (git handle @millerk97)
 - Robert Sama (git handle @roberts95)
-- Elfriede Linhart (git handle @linharte85)
 
-If they are unable to provide assistance, they will forward your inquiry to the relevant supervisor. 
+If he is unable to provide assistance, he will forward your inquiry to the relevant supervisor. 
 
 For exceptional situations, e.g., team building issues, you can also contact your supervisor directly. Based on experience, most Git issues are not related to us but are focused on internal team communications. Hence, if you want to contact a tutor or supervisor, always use their Git handles in your issues such that the respective person is notified about your inquiry by GitLab.
 
