@@ -24,7 +24,7 @@ Use your **real name** (i.e., not a nickname or an abbreviation) and your offici
 
 # How are questions handled?
 
-For general inquiries (which are relevant for multiple teams) please use the [Moodle Disscussion Forum - Practical Assignment](https://moodle.univie.ac.at/mod/forum/view.php?id=7537094). In case of individual inquiries, please contact our **tutor first** 
+For general inquiries (which are relevant for multiple teams) please use the [Moodle Disscussion Forum - Practical Assignment](https://moodle.univie.ac.at/mod/forum/view.php?id=7537094). In case of individual inquiries, please contact our **tutor first** either via ase.tutor@swa.univie.ac.at or GitLab handle
 - Robert Sama (git handle @roberts95)
 
 If he is unable to provide assistance, he will forward your inquiry to the relevant supervisor. 
