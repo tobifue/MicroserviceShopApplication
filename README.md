@@ -24,7 +24,7 @@ Use your **real name** (i.e., not a nickname or an abbreviation) and your offici
 
 # How are questions handled?
 
-For general inquiries (which are relevant for multiple teams) please use the Moodle forum. In case of individual inquiries please contact our **tutor first** 
+For general inquiries (which are relevant for multiple teams) please use the [Moodle Disscussion Forum - Practical Assignment](https://moodle.univie.ac.at/mod/forum/view.php?id=7537094). In case of individual inquiries, please contact our **tutor first** 
 - Robert Sama (git handle @roberts95)
 
 If he is unable to provide assistance, he will forward your inquiry to the relevant supervisor. 
@@ -38,7 +38,7 @@ Your **team supervisor** can be identified based on your team’s id.
 - For teams `040X` the supervisor is Amirali Amiri  (git handle @amiralia57). 
 - For teams `050X` the supervisor is Evangelos Ntentos (git handle @ntentose84). 
 
-Use these git handles to specifically address a person in a Git issue. 
+Use these git handles to specifically address a person in a Git issue. As a last resort, you can contact the course [email](mailto:ase@swa.univie.ac.at).
 
 # Which functions should not be used?
 
