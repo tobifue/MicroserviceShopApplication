@@ -11,19 +11,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ase.gateway.user.User;
 import ase.gateway.user.UserRepository;
 
-import java.net.http.HttpClient;
-
 
 @EnableJpaRepositories("ase.gateway.*")
 @EntityScan("ase.gateway.*")
 @ComponentScan(basePackages = {"ase.gateway.*"})
 @SpringBootApplication
 public class GatewayApplication {
-
-
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_2)
-            .build();
 
 
     public static void main(String[] args) {
