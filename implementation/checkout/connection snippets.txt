@@ -1,0 +1,143 @@
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import java.net.http.HttpClient;
+
+
+import java.net.URI;
+import java.net.URLEncoder;
+
+
+static public class Item{
+    private String name;
+    private double price;
+    private String vendorId;
+    private int quantity;
+    public Item(){}
+    public Item(String name, double price, String vendorId, int quantity){
+        this.name = name;
+        this.price = price;
+        this.vendorId = vendorId;
+        this.quantity = quantity;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getVendorId() {
+        return vendorId;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+
+
+}
+
+public static  class Cart{
+    public List<Item> items;
+    private double price;
+    private String costumerId;
+
+    public Cart(){};
+    public Cart(List<Item> items, double price, String costumerId){
+        this.items = items;
+        this.price = price;
+        this.costumerId = costumerId;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getCostumerId() {
+        return costumerId;
+    }
+}
+
+
+
+    //daten empfangen bzw anfragen zu Node
+    //geht sicher auch easy über spring
+    String inputJson = "{ \"name\":\"item1\", \"price\":\"5000\", \"quantity\":\"3\", \"vendor\":\"70\" }";
+    String path ="/addItem";
+
+    SendPost sendPost = new SendPost();
+			sendPost.send(inputJson, path);
+
+
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .build();
+//HTTP Client
+public class SendPost{
+    public SendPost(){}
+    public boolean send(String inputJson, String path){
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofString(inputJson))
+                    .header("Content-Type", "application/json")
+                    .uri(URI.create("http://localhost:3000"+path))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // print response body
+            System.out.println(response.body());
+            return (response.body() == "OK");
+        } catch (IOException ex) { //yo bitte checken
+            System.out.println (ex.toString());
+
+        }catch (Exception e){
+            System.out.println("Something went wrong.");
+        }
+        return false;
+    }
+}
+
+
+
+
+
+
+@RestController
+public class Checkout {
+    private String userId;
+    private String jsonCart;
+    @PostMapping(path = "/checkout", consumes = "application/json", produces = "application/json")
+    public String checkout(@RequestBody Cart cart) {
+        try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(cart);
+            jsonCart = json;
+        }catch (Exception e){
+            System.out.println("Something went wrong.");
+        }
+        return "Customer information saved successfully ::." + cart.getCostumerId() + " " + cart.getPrice() ;
+    }
+
+    public void doShipment(){	}
+    public void saveTransactionInDb(){	}
+}
