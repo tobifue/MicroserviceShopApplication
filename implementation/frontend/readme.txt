@@ -6,7 +6,7 @@ cmd in the act path (../frontend):
 npm install
 node index.js
 
-connect with brower
+connect with browser
 http://localhost:3003/
 
 
