@@ -1,4 +1,4 @@
-package ase.checkout.itemHandler;
+package ase.checkout.itemhandler;
 
 public class Item {
     private String name;

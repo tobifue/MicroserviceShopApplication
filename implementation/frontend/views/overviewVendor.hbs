@@ -1,0 +1,89 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<body>
+  <header>
+    <h1>
+      Vendor Page
+    </h1>
+  </header>
+
+  <main>
+    <h1>
+      Sell item ( inventory Service )
+    </h1>
+    <form action="/addItem" method="post">
+      <label for="vendor">Vendor:(notwendig?)</label><br>
+      <input type="text" id="vendor" name="vendor" value=""><br>
+
+      <label for="name">Item name:</label><br>
+      <input type="text" id="name" name="name" value=""><br>
+
+      <label for="quantity">Quantity:</label><br>
+      <input type="number" id="quantity" name="quantity" value=""><br>
+
+      <label for="price">Price:</label><br>
+      <input type="number" id="price" name="price" value=""><br>
+
+      <input type="submit" value="Submit">
+    </form>
+    <h1>
+      list of items
+    </h1>
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+          <th>Vendor </th>
+          <th>Item name</th>
+          <th>Quantity</th>
+          <th>new Quantity</th>
+          <th>Price</th>
+          <th>Price recommendation</th>
+          <th>new price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{# each items}}
+        <tr>
+          <form action="/changeItem" method="post">
+          <td>{{ this.vendor}}</td>
+          <td>{{ this.name }}</td>
+          <td>{{ this.quantity}}</td>
+          <td><input style="width: 5em" type="number" id="newQuantity" name="newQuantity" value={{ this.quantity}}></td>
+          <td>{{ this.price }}</td>
+          <td>{{ this.priceRecommendation }}</td>
+          <td>
+            <input style="width: 5em" type="number" id="newPrice" name="newPrice" value={{ this.price }}>
+            <input type="hidden" id="nameId" name="name" value={{ this.name}}>
+            <input type="hidden" id="vendorId" name="vendor" value={{ this.vendor}}>
+            <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
+            <input type="hidden" id="priceId" name="price" value={{ this.price }}>
+            <input type="hidden" id="priceRecommendationId" name="priceRecommendation" value={{ this.priceRecommendation
+              }}>
+            <input type="submit" value="Submit">
+          </td>
+          </form>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  </main>
+  <footer>
+  </footer>
+
+  <!-- Your web-app is https, so your scripts need to be too -->
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+    integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+  <!--<script src="/client.js"></script> -->
+
+
+</body>
+
+</html>
