@@ -1,0 +1,5 @@
+/.metadata/
+/.idea/*
+/.gradle/*
+.DS_Store
+.idea
