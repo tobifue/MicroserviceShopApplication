@@ -19,13 +19,11 @@ import ase.gateway.util.NetworkUtil;
 @RequestMapping("history")
 public class TxHistoryController {
 
-	private static final String prefix = "";
 	private static final String serviceName = "txhistory";
 
-	@RequestMapping(value = prefix + "/generate/{type}/{userid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/generate/{type}/{userid}", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory(@PathVariable String type, @PathVariable Long userid) {
-		System.out.println("generate/{type}/{userid}");
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName),
 					String.format("generate/%s/%s", type, userid));
@@ -37,10 +35,9 @@ public class TxHistoryController {
 		}
 	}
 
-	@RequestMapping(value = prefix + "/generate/{userid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/generate/{userid}", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory(@PathVariable Long userid) {
-		System.out.println("generate/userid}");
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("generate/%s", userid));
 		} catch (RestClientException e) {
@@ -52,10 +49,9 @@ public class TxHistoryController {
 		}
 	}
 
-	@RequestMapping(value = prefix + "/generate", method = RequestMethod.GET)
+	@RequestMapping(value = "/generate", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory() {
-		System.out.println("generate");
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "generate");
 		} catch (RestClientException e) {
@@ -67,9 +63,8 @@ public class TxHistoryController {
 		}
 	}
 
-	@PostMapping(path = prefix + "/add", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String addTransaction(@RequestBody Map<String, Object> transaction) {
-		System.out.println("add");
 		try {
 			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "add", transaction);
 		} catch (RestClientException | IOException e) {
