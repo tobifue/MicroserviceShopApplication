@@ -1,5 +1,7 @@
 package ase.gateway.util;
 
+import java.util.Map;
+
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +28,8 @@ public final class NetworkUtil {
 	 * 
 	 * @throws RestClientException
 	 */
-	public static String httpPost(String serviceAddress, String endpoint, String message) throws RestClientException {
+	public static String httpPost(String serviceAddress, String endpoint, Map<String, Object> message)
+			throws RestClientException {
 		return new RestTemplate().postForObject(String.format("%s/%s", serviceAddress, endpoint), message,
 				String.class);
 	}
