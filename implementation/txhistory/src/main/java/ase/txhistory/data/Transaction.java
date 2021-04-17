@@ -16,12 +16,16 @@ public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long txid;
-	private final Long buyerId;
-	private final Long sellerId;
+	private Long buyerId;
+	private Long sellerId;
 	private final Date date;
-	private final double price;
-	private final String itemTitle;
-	private final int count;
+	private double price;
+	private String itemTitle;
+	private int count;
+
+	public Transaction() {
+		this.date = new Date();
+	}
 
 	public Transaction(Long buyerId, Long sellerId, double price, String itemTitle, int count) {
 		this.buyerId = buyerId;
@@ -81,4 +85,29 @@ public class Transaction {
 		return count;
 	}
 
+	// necessary for reflection, otherwise final
+
+	public void setBuyerId(Long buyerId) {
+		this.buyerId = buyerId;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public void setItemTitle(String itemTitle) {
+		this.itemTitle = itemTitle;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public void setSellerId(Long sellerId) {
+		this.sellerId = sellerId;
+	}
+
+	public void setTxid(Long txid) {
+		this.txid = txid;
+	}
 }

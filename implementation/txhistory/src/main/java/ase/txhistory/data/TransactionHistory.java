@@ -1,5 +1,6 @@
 package ase.txhistory.data;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,15 @@ public class TransactionHistory {
 
 	public enum IdType {
 		BUYER, SELLER;
+
+		public static IdType parse(String input) throws InvalidParameterException {
+			if (input.equals("buyer"))
+				return BUYER;
+			else if (input.equals("seller"))
+				return SELLER;
+			else
+				throw new InvalidParameterException("Input: " + input + "is not a valid IdType!");
+		}
 	}
 
 	public static String generate(IdType type, TransactionHistoryRepository repository, Long userId) {
@@ -16,14 +26,22 @@ public class TransactionHistory {
 		JSONArray j = new JSONArray();
 		for (Transaction t : txs)
 			j.add(t.toJsonObject());
+		System.out.println(j.toJSONString());
 		return j.toJSONString();
+	}
+
+	public static String generate(TransactionHistoryRepository repository, Long userId) {
+		return generate(null, repository, userId);
 	}
 
 	private static List<Transaction> findAll(IdType type, TransactionHistoryRepository repository, Long userId) {
 		List<Transaction> allTx = repository.findAll();
 		List<Transaction> result = new ArrayList<>();
 		for (Transaction tx : allTx) {
-			if (type == IdType.BUYER ? tx.getBuyerId().equals(userId) : tx.getSellerId().equals(userId))
+			// if type == null then select all tx's where id was involved, otherwise select
+			// after specific type
+			if (type == null ? tx.getBuyerId().equals(userId) || tx.getSellerId().equals(userId)
+					: type == IdType.BUYER ? tx.getBuyerId().equals(userId) : tx.getSellerId().equals(userId))
 				result.add(tx);
 		}
 		return result;
