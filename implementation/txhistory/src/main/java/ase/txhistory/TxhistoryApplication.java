@@ -25,7 +25,7 @@ import ase.txhistory.data.TransactionHistoryRepository;
 
 @EnableJpaRepositories("ase.txhistory.*")
 @EntityScan("ase.txhistory.*")
-@ComponentScan(basePackages = { "ase.gateway.*" })
+@ComponentScan(basePackages = { "ase.txhistory.*" })
 @RestController
 @SpringBootApplication
 public class TxhistoryApplication {
