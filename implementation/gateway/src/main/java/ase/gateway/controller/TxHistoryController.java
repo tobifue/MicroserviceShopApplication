@@ -21,6 +21,13 @@ public class TxHistoryController {
 
 	private static final String serviceName = "txhistory";
 
+	/**
+	 * @param type   : either "buyer" or "seller", lists all transactions where user
+	 *               appears as buyer or seller respectively
+	 * @param userid : the userid of the user
+	 * @return lists all transactions where the user was involved in in a specific
+	 *         role
+	 */
 	@RequestMapping(value = "/generate/{type}/{userid}", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory(@PathVariable String type, @PathVariable Long userid) {
@@ -35,6 +42,10 @@ public class TxHistoryController {
 		}
 	}
 
+	/**
+	 * @param
+	 * @return ists all transactions where the user was involved in
+	 */
 	@RequestMapping(value = "/generate/{userid}", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory(@PathVariable Long userid) {
@@ -49,6 +60,10 @@ public class TxHistoryController {
 		}
 	}
 
+	/**
+	 * 
+	 * @return a list of all transactions
+	 */
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)
 	@ResponseBody
 	public String generateHistory() {
@@ -63,6 +78,12 @@ public class TxHistoryController {
 		}
 	}
 
+	/**
+	 * 
+	 * @param transaction in format { "buyerId" : "1", "sellerId": "2", "price":
+	 *                    "10", "itemTitle": "nice product", "count" : "1" }
+	 * @return the transaction
+	 */
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String addTransaction(@RequestBody Map<String, Object> transaction) {
 		try {
