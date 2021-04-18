@@ -13,6 +13,37 @@ app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 var port = 3003;
 var costumerId = '1';
+var ipAdress; // = "172.20.112.1";
+var getDockerHost = require('get-docker-host');
+var isInDocker = require('is-in-docker');
+var checkDocker = function () {
+    return new Promise(function (resolve, reject) {
+        if (isInDocker()) {
+            getDockerHost(function (error, result) {
+                if (result) {
+                    resolve(result);
+                }
+                else {
+                    reject(error);
+                }
+            });
+        }
+        else {
+            resolve(null);
+        }
+    });
+};
+checkDocker().then(function (addr) {
+    if (addr) {
+        ipAdress = addr;
+        console.log('Docker host is ' + addr);
+    }
+    else {
+        console.log('Not in Docker');
+    }
+})["catch"](function (error) {
+    console.log('Could not find Docker host: ' + error);
+});
 app.get('/', function (req, res, next) {
     res.render(__dirname + '/views/index.hbs');
 });
@@ -32,8 +63,8 @@ var Item = /** @class */ (function () {
 var HttpOption = /** @class */ (function () {
     function HttpOption(path, method, host, port, headers) {
         if (method === void 0) { method = 'POST'; }
-        if (host === void 0) { host = 'localhost'; }
-        if (port === void 0) { port = 8080; }
+        if (host === void 0) { host = ipAdress; }
+        if (port === void 0) { port = 9080; }
         if (headers === void 0) { headers = { "Content-Type": "application/json" }; }
         this.host = host;
         this.port = port;
@@ -45,7 +76,7 @@ var HttpOption = /** @class */ (function () {
 }());
 //Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
-    var httpreqGetItems = http.get("http://localhost:8080/inventory/getItems/1", function (response) {
+    var httpreqGetItems = http.get("http://" + ipAdress + ":8080/inventory/getItems/1", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {

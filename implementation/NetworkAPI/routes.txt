@@ -6,9 +6,8 @@ Item {
     price: number;
     vendor: string;
     priceRecommendation:number;
-    //evtl wäre eine id hilfreich
 }
-path: '/gateway' Port: 8081 Type:JSON method: POST
+path: '/' Port: 8081 Type:JSON method: POST
 
 
 Commands:   -/getItems() ->return all items

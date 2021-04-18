@@ -54,7 +54,7 @@ app.listen(port, function() {
 
 //sending a http request
 
-   
+   /*
 var options = {
     host: 'localhost',
     port: 8081,
@@ -84,3 +84,32 @@ var http = require('http');
         httpreq2.write(JSON.stringify(data));
         httpreq2.end(); 
 
+*/
+
+var options = {
+    host: 'localhost',
+    port: 8080,
+    path: '/cart/addItemToCart',
+    method: 'POST',
+    headers: {
+		"Content-Type": "application/json"
+	}
+}
+
+let data = { "buyerId" : "1", "sellerId": "2", "price":
+                 "10", "itemTitle": "nice product", "count" : "1" }
+
+var http = require('http');
+        var httpreq2 = http.request(options, function (response) {
+            let data ="";
+            response.on('data', function (chunk) {
+            data+=chunk;
+             });
+             response.on('end', function() {
+                 console.log(data)
+             })
+           });
+        httpreq2.write(JSON.stringify(data));
+        httpreq2.end(); 
+
+        

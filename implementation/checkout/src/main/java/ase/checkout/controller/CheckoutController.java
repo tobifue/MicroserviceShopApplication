@@ -16,10 +16,12 @@ public class CheckoutController {
 
     @PostMapping(path = "/checkout", consumes = "application/json", produces = "application/json")
     public String checkout(@RequestBody Cart cart) {
+        System.out.println("lolo");
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(cart);
             jsonCart = json;
+            System.out.println(jsonCart);
         } catch (Exception e) {
             System.out.println("Something went wrong.");
         }
