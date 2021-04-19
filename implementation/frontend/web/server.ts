@@ -16,7 +16,7 @@ app.set('view engine', '.hbs');
 
 const port = 3003;
 const costumerId = '1';
-const gatewayIp = process.env.GATEWAYIP || "localhost";//
+const gatewayIp = process.env.GATEWAYIP || "localhost";
 
 const getDockerHost = require('get-docker-host');
 const isInDocker = require('is-in-docker');
@@ -39,16 +39,18 @@ app.listen(port, function () {
 
 
 class Item {
-    name: string;
+    itemId:string;
+    itemName: string;
     quantity: number;
     price: number;
-    vendor: string;
+    vendorId: string;
     priceRecommendation: number;
-    constructor(name: string, quantity: number, price: number, vendor: string, priceRecommendation: number) {
-        this.name = name;
+    constructor(itemId: string, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
+        this.itemId = itemId;
+        this.itemName = itemName;
         this.quantity = quantity;
         this.price = price;
-        this.vendor = vendor;
+        this.vendorId = vendorId;
         this.priceRecommendation = priceRecommendation;
     }
 }

@@ -5,5 +5,7 @@ docker-compose run -e GATEWAYIP=172.20.112.1 --service-ports app
 
 Change the gatewayip to yours
 
+The gateway have to run before, its atm not crash save
+
 
 
