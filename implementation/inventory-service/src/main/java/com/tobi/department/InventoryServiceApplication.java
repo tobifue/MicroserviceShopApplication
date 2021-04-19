@@ -1,7 +1,11 @@
 package com.tobi.department;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tobi.department.entity.Inventory;
 import com.tobi.department.service.InventoryService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,22 +26,32 @@ public class InventoryServiceApplication {
 	private InventoryService inventoryService;
 
 	//create Item
-	@PostMapping("/")
-	public Inventory saveItem(@RequestBody Inventory inventory){
+	@SneakyThrows
+	@PostMapping(path ="/", consumes = "application/json", produces = "application/json")
+	public String saveItem(@RequestBody Inventory inventory){
 
-		return inventoryService.saveItem(inventory);
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
+
+		return json;
 	}
 
 	//get Item
-	@GetMapping("/{id}")
-	public Inventory findByItemId(@PathVariable("id")Long itemId){
-		return inventoryService.findByItemId(itemId);
+	@SneakyThrows
+	@GetMapping(path = "/{id}", produces = "application/json")
+	public String findByItemId(@PathVariable("id")Long itemId){
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(inventoryService.findByItemId(itemId));
+
+		return json;
 	}
 
 	//get List of all Items from Vendor
+	@SneakyThrows
 	@RequestMapping(value="/vendor/{id}")
-	@GetMapping
-	public @ResponseBody List<Inventory> findAllObjects(@PathVariable("id")Integer id) {
+	@GetMapping(produces = "application/json")
+	public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
 
 		List<Inventory> inventories = new ArrayList<Inventory>();
 		List<Inventory> v_inventories = new ArrayList<Inventory>();
@@ -53,30 +67,42 @@ public class InventoryServiceApplication {
 			}
 		}
 
-		return v_inventories;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(v_inventories);
+
+		return json;
 	}
 
-        @RequestMapping(value="/vendor")
-        @GetMapping
-        public @ResponseBody List<Inventory> findAllObjects() {
+        @SneakyThrows
+		@RequestMapping(value="/vendor")
+        @GetMapping(consumes="application/json", produces ="application/json")
+        public @ResponseBody String findAllObjects() {
 
             List<Inventory> inventories = new ArrayList<Inventory>();
 
             inventories = inventoryService.findByVendorId();
 
-            return inventories;
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			String json = ow.writeValueAsString(inventories);
+
+            return json;
         }
 
 	//update Item
-	@RequestMapping(value = "/update/{id}")
+	@SneakyThrows
+	@RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
 	@PutMapping
-	public Inventory update(@PathVariable("id") Long departmentId, @RequestBody Inventory dep) {
+	public String update(@PathVariable("id") Long departmentId, @RequestBody Inventory dep) throws JsonProcessingException {
 		Inventory inventory = inventoryService.findByItemId(departmentId);
 		inventory.setPrice(dep.getPrice());
 		inventory.setVendorId(dep.getVendorId());
+		inventory.setQuantity(dep.getQuantity());
 		//code
 
-		return inventoryService.saveItem(inventory);
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
+
+		return json;
 	}
 
 	//delete Item
