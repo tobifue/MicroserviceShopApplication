@@ -12,7 +12,7 @@ import ase.gateway.util.AdressUtil;
 import ase.gateway.util.NetworkUtil;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("account")
 public class AccountController {
 
     private static final String serviceName = "account-service";

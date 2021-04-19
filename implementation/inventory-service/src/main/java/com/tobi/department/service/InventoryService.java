@@ -17,22 +17,22 @@ public class InventoryService {
     private InventoryRepository inventoryRepository;
 
     public Inventory saveItem(Inventory inventory) {
-        log.info("Inside saveDepartment method of DepartmentService");
+        log.info("Inside saveItem of InventoryService");
         return inventoryRepository.save(inventory);
     }
 
     public Inventory findByItemId(Long itemId) {
-        log.info("Inside findDepartmentById method of DepartmentService");
+        log.info("Inside findByItemId of InventoryService");
         return inventoryRepository.findByItemId(itemId);
     }
 
     public List<Inventory> findByVendorId() {
-        log.info("Inside findDepartmentById method of DepartmentService");
+        log.info("Inside findByVendorId of InventoryService");
         return inventoryRepository.findAll();
     }
 
     public void deleteByItemId(Long itemId) {
-        log.info("Inside findDepartmentById method of DepartmentService");
+        log.info("Inside deleteByItemId of InventoryService");
         inventoryRepository.deleteById(itemId);
     }
 
