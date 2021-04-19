@@ -9,15 +9,3 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
-    private Integer profit;
-    private Integer vendorId;
-}

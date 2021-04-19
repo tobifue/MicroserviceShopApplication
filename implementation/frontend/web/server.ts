@@ -17,7 +17,7 @@ app.set('view engine', '.hbs');
 const port = 3003;
 const costumerId = '1';
 const gatewayIp = process.env.GATEWAYIP || "localhost";
-
+console.log("IP used: " + gatewayIp);
 const getDockerHost = require('get-docker-host');
 const isInDocker = require('is-in-docker');
 
@@ -39,7 +39,7 @@ app.listen(port, function () {
 
 
 class Item {
-    itemId:string;
+    itemId: string;
     itemName: string;
     quantity: number;
     price: number;
@@ -86,10 +86,11 @@ class HttpOption {
 
 //Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
-    const httpreqGetItems = http.get("http://"+gatewayIp+":8080/inventory/getItems/1", response => {
+    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/1", response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
+            console.log("vendor 1:", items)
             if (JSON.parse(items).command == "ToDo") {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
             } else {
@@ -141,15 +142,15 @@ app.post('/changeItem', function (req, res, next) {
 
 
 app.get('/costumer', function (req, res, next) {
-    const httpreqGetItems = http.get("http://"+gatewayIp+":8080/inventory/getItems", response => {
+    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor", response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
-            const httpreqGenerateHistory = http.get("http://"+gatewayIp+":8080/history/getItems/buyer/1", response => {
+            const httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/1", response => {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
-                    console.log("History for byuer 1:", items)
+                    console.log("History for byuer 1:", items);
                     if (JSON.parse(items).command == "ToDo") {
                         res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("ITemId", "To Do", 24, 70, "ich", 65)] });
                     } else {
@@ -218,7 +219,7 @@ app.post('/checkout', function (req, res, next) {
 app.post('/rateItem', function (req, res, next) {
     let data: InventorySendInterface = {
         command: "/rateItem",
-        item:new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price)
+        item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/gateway/rateItem"), function (response) {
         response.on('end', function () {

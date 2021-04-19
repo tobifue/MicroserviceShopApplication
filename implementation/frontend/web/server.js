@@ -14,6 +14,7 @@ app.set('view engine', '.hbs');
 var port = 3003;
 var costumerId = '1';
 var gatewayIp = process.env.GATEWAYIP || "localhost";
+console.log("IP used: " + gatewayIp);
 var getDockerHost = require('get-docker-host');
 var isInDocker = require('is-in-docker');
 app.get('/', function (req, res, next) {
@@ -49,10 +50,11 @@ var HttpOption = /** @class */ (function () {
 }());
 //Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
-    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/getItems/1", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/1", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
+            console.log("vendor 1:", items);
             if (JSON.parse(items).command == "ToDo") {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
             }
@@ -97,7 +99,7 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.end();
 });
 app.get('/costumer', function (req, res, next) {
-    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/getItems", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {

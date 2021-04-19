@@ -1,3 +1,4 @@
+
 package com.tobi.department.controller;
 
 import com.tobi.department.entity.Inventory;
@@ -53,7 +54,18 @@ public class InventoryController {
 
         return v_inventories;
     }
+/*
+    @RequestMapping(value="/vendor")
+    @GetMapping
+    public @ResponseBody List<Inventory> findAllObjects() {
 
+        List<Inventory> inventories = new ArrayList<Inventory>();
+
+        inventories = inventoryService.findByVendorId();
+
+        return inventories;
+    }
+*/
     //update Item
     @RequestMapping(value = "/update/{id}")
     @PutMapping
