@@ -18,9 +18,9 @@ public class AccountController {
     private static final String serviceName = "account-service";
 
     @GetMapping("/vendor/{id}")
-    public String getProfitByVendorId(@PathVariable("id") Long vendorId){
+    public String getProfitByVendorId(@PathVariable("id")Long vendorId){
         try {
-            return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("%d", vendorId));
+            return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/vendor/%s", vendorId));
         } catch (RestClientException e) {
             e.printStackTrace();
             return e.getMessage();
