@@ -1,7 +1,11 @@
-package com.tobi.department.controller;
 
+package com.tobi.department.controller;
+/*
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tobi.department.entity.Inventory;
 import com.tobi.department.service.InventoryService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +37,10 @@ public class InventoryController {
     }
 
     //get List of all Items from Vendor
+    @SneakyThrows
     @RequestMapping(value="/vendor/{id}")
-    @GetMapping
-    public @ResponseBody List<Inventory> findAllObjects(@PathVariable("id")Integer id) {
+    @GetMapping(produces = "application/json")
+    public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
 
         List<Inventory> inventories = new ArrayList<Inventory>();
         List<Inventory> v_inventories = new ArrayList<Inventory>();
@@ -51,8 +56,12 @@ public class InventoryController {
             }
         }
 
-        return v_inventories;
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(v_inventories);
+
+        return json;
     }
+
 
     //update Item
     @RequestMapping(value = "/update/{id}")
@@ -61,6 +70,7 @@ public class InventoryController {
         Inventory inventory = inventoryService.findByItemId(departmentId);
         inventory.setPrice(dep.getPrice());
         inventory.setVendorId(dep.getVendorId());
+        inventory.setQuantity(dep.getQuantity());
         //code
 
         return inventoryService.saveItem(inventory);
@@ -75,3 +85,4 @@ public class InventoryController {
         return "Delete successfull";
     }
 }
+*/

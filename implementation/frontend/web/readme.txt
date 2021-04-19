@@ -4,11 +4,11 @@ install nodejs and npm
 
 cmd in the act path (../frontend):
 npm install
-node index.js
+node server.js
 
 connect with browser
 http://localhost:3003/
 
 
 to change something edit index.ts and compile it with 
-cmd: tsc index.ts
+cmd: tsc server.ts

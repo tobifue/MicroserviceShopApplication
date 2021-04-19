@@ -1,7 +1,8 @@
 package com.tobi.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tobi.user.VO.Item;
-import com.tobi.user.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -17,22 +19,15 @@ import java.util.List;
 public class AccountService {
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private RestTemplate restTemplate;
-/*
-    public User saveUser(User user) {
-        log.info("Inside saveUser of UserService");
-        return accountRepository.save(user);
-    }
-*/
-    public Integer getItemsByVendorId(Long id) {
+
+    public Double getItemsByVendorId(Long id) {
         log.info("Inside getUserWithDepartment of UserService");
 
-        Integer profit = 0;
+        Double profit = 0.0;
+        Long vendorId = 0L;
         ResponseEntity<List<Item>> responseEntity =
-                restTemplate.exchange("http://INVENTORY-SERVICE/inventory/vendor/" +id,
+                restTemplate.exchange("http://localhost:8080/history/generate/seller/" +id,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Item>>() {
                         });
         List<Item> listOfItems = responseEntity.getBody();
@@ -40,7 +35,6 @@ public class AccountService {
         for (Item it : listOfItems){
             profit += it.getPrice();
         }
-
 
         return profit;
     }

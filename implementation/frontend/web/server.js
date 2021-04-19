@@ -13,37 +13,9 @@ app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 var port = 3003;
 var costumerId = '1';
-var ipAdress; // = "172.20.112.1";
+var gatewayIp = process.env.GATEWAYIP || "localhost"; //
 var getDockerHost = require('get-docker-host');
 var isInDocker = require('is-in-docker');
-var checkDocker = function () {
-    return new Promise(function (resolve, reject) {
-        if (isInDocker()) {
-            getDockerHost(function (error, result) {
-                if (result) {
-                    resolve(result);
-                }
-                else {
-                    reject(error);
-                }
-            });
-        }
-        else {
-            resolve(null);
-        }
-    });
-};
-checkDocker().then(function (addr) {
-    if (addr) {
-        ipAdress = addr;
-        console.log('Docker host is ' + addr);
-    }
-    else {
-        console.log('Not in Docker');
-    }
-})["catch"](function (error) {
-    console.log('Could not find Docker host: ' + error);
-});
 app.get('/', function (req, res, next) {
     res.render(__dirname + '/views/index.hbs');
 });
@@ -63,7 +35,7 @@ var Item = /** @class */ (function () {
 var HttpOption = /** @class */ (function () {
     function HttpOption(path, method, host, port, headers) {
         if (method === void 0) { method = 'POST'; }
-        if (host === void 0) { host = ipAdress; }
+        if (host === void 0) { host = gatewayIp; }
         if (port === void 0) { port = 9080; }
         if (headers === void 0) { headers = { "Content-Type": "application/json" }; }
         this.host = host;
@@ -76,7 +48,7 @@ var HttpOption = /** @class */ (function () {
 }());
 //Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
-    var httpreqGetItems = http.get("http://" + ipAdress + ":8080/inventory/getItems/1", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/getItems/1", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
@@ -124,11 +96,11 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.end();
 });
 app.get('/costumer', function (req, res, next) {
-    var httpreqGetItems = http.get("http://localhost:8080/inventory/getItems", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/getItems", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
-            var httpreqGenerateHistory = http.get("http://localhost:8080/history/getItems/buyer/1", function (response) {
+            var httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/1", function (response) {
                 var history = "";
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
