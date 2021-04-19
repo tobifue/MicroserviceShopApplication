@@ -16,37 +16,11 @@ app.set('view engine', '.hbs');
 
 const port = 3003;
 const costumerId = '1';
-let ipAdress;// = "172.20.112.1";
+const gatewayIp = process.env.GATEWAYIP || "localhost";//
 
 const getDockerHost = require('get-docker-host');
 const isInDocker = require('is-in-docker');
 
-let checkDocker = () => {
-    return new Promise((resolve, reject) => {
-        if (isInDocker()) {
-            getDockerHost((error, result) => {
-                if (result) {
-                    resolve(result);
-                } else {
-                    reject(error);
-                }
-            });
-        } else {
-            resolve(null);
-        }
-    });
-};
-
-checkDocker().then((addr) => {
-    if (addr) {
-        ipAdress=addr;
-        console.log('Docker host is ' + addr);
-    } else {
-        console.log('Not in Docker');
-    }
-}).catch((error) => {
-    console.log('Could not find Docker host: ' + error);
-});
 
 
 app.get('/', function (req, res, next) {
@@ -98,7 +72,7 @@ class HttpOption {
     path: string;
     method: string;
     headers: { "Content-Type": string };
-    constructor(path: string, method: string = 'POST', host: string = ipAdress, port: number = 9080, headers: { "Content-Type": string } = { "Content-Type": "application/json" }) {
+    constructor(path: string, method: string = 'POST', host: string = gatewayIp, port: number = 9080, headers: { "Content-Type": string } = { "Content-Type": "application/json" }) {
         this.host = host;
         this.port = port;
         this.path = path;
@@ -110,7 +84,7 @@ class HttpOption {
 
 //Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
-    const httpreqGetItems = http.get("http://"+ipAdress+":8080/inventory/getItems/1", response => {
+    const httpreqGetItems = http.get("http://"+gatewayIp+":8080/inventory/getItems/1", response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
@@ -165,11 +139,11 @@ app.post('/changeItem', function (req, res, next) {
 
 
 app.get('/costumer', function (req, res, next) {
-    const httpreqGetItems = http.get("http://localhost:8080/inventory/getItems", response => {
+    const httpreqGetItems = http.get("http://"+gatewayIp+":8080/inventory/getItems", response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
-            const httpreqGenerateHistory = http.get("http://localhost:8080/history/getItems/buyer/1", response => {
+            const httpreqGenerateHistory = http.get("http://"+gatewayIp+":8080/history/getItems/buyer/1", response => {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {

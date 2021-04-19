@@ -2,6 +2,8 @@
 version: "3"
 services:
   app:
+    environment:
+      - GATEWAYIP=172.20.112.1
     build: ./web
     command: npm start
     ports:

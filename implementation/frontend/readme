@@ -1,0 +1,5 @@
+in the docker.compose.yml change the Gatewayip to the adress where it run
+the default one is my machine.
+
+docker-compose build
+docker-compose up
