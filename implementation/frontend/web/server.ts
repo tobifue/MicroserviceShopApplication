@@ -91,7 +91,7 @@ app.get('/vendor', function (req, res, next) {
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
             if (JSON.parse(items).command == "ToDo") {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("To Do", 24, 70, "ich", 65)] });
+                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
             } else {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items).items });
             }
@@ -104,7 +104,7 @@ app.get('/vendor', function (req, res, next) {
 app.post('/addItem', function (req, res, next) {
     let data: InventorySendInterface = {
         command: "/addItem",
-        item: new Item(req.body.name, req.body.quantity, req.body.price, req.body.vendor, req.body.price)
+        item: new Item("", req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/inventory/addItem"), function (response) {
         let items: string = "";
@@ -124,7 +124,7 @@ app.post('/addItem', function (req, res, next) {
 app.post('/changeItem', function (req, res, next) {
     let data: InventorySendInterface = {
         command: "/addItem",
-        item: new Item(req.body.name, req.body.newQuantity, req.body.newPrice, req.body.vendor, req.body.price)
+        item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, req.body.vendorId, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/inventory/addItem"), function (response) {
         response.on('end', function () {
@@ -151,7 +151,7 @@ app.get('/costumer', function (req, res, next) {
                 response.on('end', function () {
                     console.log("History for byuer 1:", items)
                     if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("ITemId", "To Do", 24, 70, "ich", 65)] });
                     } else {
                         res.render(__dirname + '/views/overviewCostumer.hbs', { items: JSON.parse(items).items, buyedItems: JSON.parse(history) });
                     }
@@ -165,7 +165,7 @@ app.get('/costumer', function (req, res, next) {
 app.post('/addToCart', function (req, res, next) {
     let data: InventorySendInterface = {
         command: "/addItemToCart",
-        item: new Item(req.body.name, req.body.newPiece, req.body.price, req.body.vendor, req.body.price)
+        item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, req.body.vendorId, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/cart/addItemToCart"), function (response) {
         let items: string = "";
@@ -193,7 +193,7 @@ app.post('/markProduct', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/costumer');
     });
-    httpreq.write(JSON.stringify({ costumer: costumerId, item: new Item(req.body.name, 0, req.body.price, req.body.vendor, req.body.price) }));
+    httpreq.write(JSON.stringify({ costumer: costumerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
     httpreq.end();
 });
 
@@ -218,8 +218,7 @@ app.post('/checkout', function (req, res, next) {
 app.post('/rateItem', function (req, res, next) {
     let data: InventorySendInterface = {
         command: "/rateItem",
-        item: new Item(req.body.name, 0, req.body.price, req.body.vendor, req.body.price)
-
+        item:new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/gateway/rateItem"), function (response) {
         response.on('end', function () {
