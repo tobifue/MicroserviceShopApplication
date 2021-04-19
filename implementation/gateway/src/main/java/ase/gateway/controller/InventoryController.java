@@ -68,4 +68,33 @@ public class InventoryController {
 		}
 	}
 
+	@RequestMapping(value = "/update/{id}")
+	@PutMapping
+	public String update(@PathVariable("id") Long departmentId, @RequestBody Map<String, Object> inventory) {
+		try {
+			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId, inventory));
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
+	//delete Item
+	@RequestMapping(value = "/delete/{id}")
+	@PostMapping
+	public String delete(@PathVariable("id") Long departmentId) {
+		try {
+			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/delete/%s", departmentId));
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
 }
