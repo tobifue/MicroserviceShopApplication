@@ -20,7 +20,7 @@ public class AccountController {
     }
 */
     @GetMapping("/{id}")
-    public Integer getProfitByVendorId(@PathVariable("id") Long userId){
+    public Double getProfitByVendorId(@PathVariable("id") Long userId){
 
         log.info("Inside getUserWithDepartment of UserController");
         return accountService.getItemsByVendorId(userId);

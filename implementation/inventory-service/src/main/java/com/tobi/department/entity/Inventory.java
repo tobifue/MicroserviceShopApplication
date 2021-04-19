@@ -18,10 +18,12 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long itemId;
-    private Integer price;
+    private Double price;
     private Integer vendorId;
     private Integer quantity;
     public String itemName;
+    public Double priceRecommendation;
+
 /*
     public Long get_departmentId() {
         return departmentId;
