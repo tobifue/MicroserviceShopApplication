@@ -1,25 +1,26 @@
 package ase.gateway.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
+/*
 @RestController
 @RequestMapping("checkout")
 public class CheckoutController {
-	private static final String serviceName = "checkout";
+    private static final String serviceName = "checkout-service";
 
-	/**
-	 * @param
-	 * @return ists all transactions where the user was involved in
-	 */
-	@RequestMapping(value = "/checkout/{userid}", method = RequestMethod.GET)
-	@ResponseBody
-	public String checkout(@PathVariable Long userid) {
-		System.out.println("/checkout in CheckoutController is called with ID: " + userid);
-		String outputJson = "{ \"command\":\"ToDo\"}";
-		return outputJson;
-	}
+
+    @GetMapping("/checkout/{costumerId}")
+    public String checkout(@PathVariable Long costumerId) {
+        System.out.println("/checkout in CheckoutController is called with ID: " + costumerId);
+        try {
+            String cart = NetworkUtil.httpGet(AdressUtil.loadAdress("cart-service"), "/" + costumerId);
+            Map<String, Object> result = new ObjectMapper().readValue(cart, HashMap.class);
+            return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/" + costumerId, result);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
 }
+*/

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import ase.checkout.itemhandler.*;
 
+import java.util.Map;
+
 
 @RestController
 public class CheckoutController {
@@ -14,7 +16,7 @@ public class CheckoutController {
 
 
     @GetMapping("/checkout/{costumerId}")
-    public String checkout(@PathVariable("costumerId") Long costumerId) {
+    public String checkout(@PathVariable("costumerId") Long costumerId, Map<String, Object> Cart) {
         System.out.println("lolo");
         try {
             /*ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
