@@ -70,7 +70,7 @@ public class MarkedProductController {
 	 *                      "itemTitle" }
 	 * @return
 	 */
-	@PostMapping(path = "/update", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String markProduct(@RequestBody Map<String, Object> markedProduct) {
 		try {
 			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/update", markedProduct);
