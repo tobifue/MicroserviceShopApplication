@@ -91,7 +91,7 @@ public class InventoryServiceApplication {
 	//update Item
 	@SneakyThrows
 	@RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
-	@PutMapping
+	@PostMapping
 	public String update(@PathVariable("id") Long departmentId, @RequestBody Inventory dep) throws JsonProcessingException {
 		Inventory inventory = inventoryService.findByItemId(departmentId);
 		inventory.setPrice(dep.getPrice());

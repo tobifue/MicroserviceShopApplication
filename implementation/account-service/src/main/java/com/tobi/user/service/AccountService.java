@@ -27,7 +27,7 @@ public class AccountService {
         Double profit = 0.0;
         Long vendorId = 0L;
         ResponseEntity<List<Item>> responseEntity =
-                restTemplate.exchange("http://localhost:8080/history/generate/" +id,
+                restTemplate.exchange("http://localhost:8080/history/generate/seller/" +id,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Item>>() {
                         });
         List<Item> listOfItems = responseEntity.getBody();

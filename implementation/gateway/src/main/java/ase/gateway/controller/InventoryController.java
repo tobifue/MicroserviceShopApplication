@@ -69,10 +69,10 @@ public class InventoryController {
 	}
 
 	@RequestMapping(value = "/update/{id}")
-	@PutMapping
+	@PostMapping
 	public String update(@PathVariable("id") Long departmentId, @RequestBody Map<String, Object> inventory) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId, inventory));
+			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId), inventory);
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
