@@ -1,11 +1,16 @@
 package ase.gateway.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
 import ase.gateway.util.AdressUtil;
@@ -17,9 +22,8 @@ public class InventoryController {
 
 	private static final String serviceName = "inventory-service";
 
-
 	@PostMapping("/")
-	public String saveItem(@RequestBody Map<String, Object> inventory){
+	public String saveItem(@RequestBody Map<String, Object> inventory) {
 		try {
 			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/", inventory);
 		} catch (RestClientException | IOException e) {
@@ -27,9 +31,10 @@ public class InventoryController {
 			return e.getMessage();
 		}
 	}
-	//get Item
+
+	// get Item
 	@GetMapping("/{id}")
-	public String findByItemId(@PathVariable("id")Long itemId){
+	public String findByItemId(@PathVariable("id") Long itemId) {
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("%d", itemId));
 		} catch (RestClientException e) {
@@ -42,7 +47,7 @@ public class InventoryController {
 	}
 
 	@GetMapping("/vendor/{id}")
-	public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
+	public @ResponseBody String findAllObjects(@PathVariable("id") Integer id) {
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("vendor/%s", id));
 		} catch (RestClientException e) {
@@ -72,7 +77,8 @@ public class InventoryController {
 	@PostMapping
 	public String update(@PathVariable("id") Long departmentId, @RequestBody Map<String, Object> inventory) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId), inventory);
+			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId),
+					inventory);
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -82,7 +88,7 @@ public class InventoryController {
 		}
 	}
 
-	//delete Item
+	// delete Item
 	@RequestMapping(value = "/delete/{id}")
 	@PostMapping
 	public String delete(@PathVariable("id") Long departmentId) {
