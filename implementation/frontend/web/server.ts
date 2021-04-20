@@ -74,7 +74,7 @@ class HttpOption {
     path: string;
     method: string;
     headers: { "Content-Type": string };
-    constructor(path: string, method: string = 'POST', host: string = gatewayIp, port: number = 9080, headers: { "Content-Type": string } = { "Content-Type": "application/json" }) {
+    constructor(path: string, method: string = 'POST', host: string = gatewayIp, port: number = 8080, headers: { "Content-Type": string } = { "Content-Type": "application/json" }) {
         this.host = host;
         this.port = port;
         this.path = path;
@@ -90,11 +90,10 @@ app.get('/vendor', function (req, res, next) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
-            console.log("vendor 1:", items)
-            if (JSON.parse(items).command == "ToDo") {
+            if (items != null) {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
             } else {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items).items });
+                res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items) });
             }
         })
     })
@@ -103,11 +102,8 @@ app.get('/vendor', function (req, res, next) {
 
 
 app.post('/addItem', function (req, res, next) {
-    let data: InventorySendInterface = {
-        command: "/addItem",
-        item: new Item("", req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price)
-    }
-    let httpreq = http.request(new HttpOption("/inventory/addItem"), function (response) {
+    let data =new Item("", req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
+    let httpreq = http.request(new HttpOption("/inventory/"), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
@@ -117,6 +113,7 @@ app.post('/addItem', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/vendor');
     });
+    console.log(JSON.stringify(data));
     httpreq.write(JSON.stringify(data));
     httpreq.end();
 });
@@ -150,11 +147,10 @@ app.get('/costumer', function (req, res, next) {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
-                    console.log("History for byuer 1:", items);
                     if (JSON.parse(items).command == "ToDo") {
                         res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("ITemId", "To Do", 24, 70, "ich", 65)] });
                     } else {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: JSON.parse(items).items, buyedItems: JSON.parse(history) });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: JSON.parse(items), buyedItems: JSON.parse(history) });
                     }
                 })
             })
@@ -164,11 +160,7 @@ app.get('/costumer', function (req, res, next) {
 
 
 app.post('/addToCart', function (req, res, next) {
-    let data: InventorySendInterface = {
-        command: "/addItemToCart",
-        item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, req.body.vendorId, req.body.price)
-    }
-    let httpreq = http.request(new HttpOption("/cart/addItemToCart"), function (response) {
+    let httpreq = http.request(new HttpOption("/cart/addItemToCart/1"), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
@@ -179,8 +171,8 @@ app.post('/addToCart', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/costumer');
     });
-    console.log("addItem DAta:", data);
-    httpreq.write(JSON.stringify(data));
+    console.log("addItem DAta:", new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price));
+    httpreq.write(JSON.stringify(new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price)));
     httpreq.end();
 });
 
@@ -201,7 +193,7 @@ app.post('/markProduct', function (req, res, next) {
 
 
 app.post('/checkout', function (req, res, next) {
-    let httpreq = http.request(new HttpOption("/gateway/checkout" + costumerId, 'GET'), function (response) {
+    let httpreq =http.get("http://" + gatewayIp + ":8080/history/checkout/1", response => {
         response.on('end', function () {
             res.redirect('/costumer');
         })

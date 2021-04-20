@@ -2,9 +2,7 @@ package ase.checkout.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ase.checkout.itemhandler.*;
 
@@ -14,14 +12,15 @@ public class CheckoutController {
     private String userId;
     private String jsonCart;
 
-    @PostMapping(path = "/checkout", consumes = "application/json", produces = "application/json")
-    public String checkout(@RequestBody Cart cart) {
+
+    @GetMapping("/checkout/{costumerId}")
+    public String checkout(@PathVariable("costumerId") Long costumerId) {
         System.out.println("lolo");
         try {
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            /*ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(cart);
-            jsonCart = json;
-            System.out.println(jsonCart);
+            jsonCart = json;*/
+            System.out.println(costumerId);
         } catch (Exception e) {
             System.out.println("Something went wrong.");
         }

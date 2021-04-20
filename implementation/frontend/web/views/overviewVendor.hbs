@@ -20,16 +20,16 @@
     </h1>
     <form action="/addItem" method="post">
       <label for="vendor">Vendor:(notwendig?)</label><br>
-      <input type="text" id="vendor" name="vendor" value=""><br>
+      <input type="text" id="vendor" name="vendorId" value={{ this.vendorId}}><br>
 
       <label for="name">Item name:</label><br>
-      <input type="text" id="name" name="name" value=""><br>
+      <input type="text" id="name" name="itemName" value={{ this.itemName }}><br>
 
       <label for="quantity">Quantity:</label><br>
-      <input type="number" id="quantity" name="quantity" value=""><br>
+      <input type="number" id="quantity" name="quantity" value=1><br>
 
       <label for="price">Price:</label><br>
-      <input type="number" id="price" name="price" value=""><br>
+      <input type="number" id="price" name="price" value=10><br>
 
       <input type="submit" value="Submit">
     </form>
@@ -52,21 +52,24 @@
         {{# each items}}
         <tr>
           <form action="/changeItem" method="post">
-          <td>{{ this.vendorId}}</td>
-          <td>{{ this.itemName }}</td>
-          <td>{{ this.quantity}}</td>
-          <td><input style="width: 5em" type="number" id="newQuantity" name="newQuantity" value={{ this.quantity}}></td>
-          <td>{{ this.price }}</td>
-          <td>{{ this.priceRecommendation }}</td>
-          <td>
-            <input style="width: 5em" type="number" id="newPrice" name="newPrice" value={{ this.price }}>
-              <input type="hidden" id="itemId" name="name" value={{ this.itemId }}>            <input type="hidden" id="nameId" name="name" value={{ this.itemName}}>
-            <input type="hidden" id="vendorId" name="vendor" value={{ this.vendorId}}>
-            <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
-            <input type="hidden" id="priceId" name="price" value={{ this.price }}>
-            <input type="hidden" id="priceRecommendationId" name="priceRecommendation" value={{ this.priceRecommendation }}>
-            <input type="submit" value="Submit">
-          </td>
+            <td>{{ this.vendorId}}</td>
+            <td>{{ this.itemName }}</td>
+            <td>{{ this.quantity}}</td>
+            <td><input style="width: 5em" type="number" id="newQuantity" name="newQuantity" value={{ this.quantity}}>
+            </td>
+            <td>{{ this.price }}</td>
+            <td>{{ this.priceRecommendation }}</td>
+            <td>
+              <input style="width: 5em" type="number" id="newPrice" name="newPrice" value={{ this.price }}>
+              <input type="hidden" id="itemId" name="name" value={{ this.itemId }}>
+              <input type="hidden" id="nameId" name="name" value={{ this.itemName}}>
+              <input type="hidden" id="vendorId" name="vendor" value={{ this.vendorId}}>
+              <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
+              <input type="hidden" id="priceId" name="price" value={{ this.price }}>
+              <input type="hidden" id="priceRecommendationId" name="priceRecommendation" value={{
+                this.priceRecommendation }}>
+              <input type="submit" value="Submit">
+            </td>
           </form>
         </tr>
         {{/each}}

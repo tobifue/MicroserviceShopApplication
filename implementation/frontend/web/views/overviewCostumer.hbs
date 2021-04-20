@@ -42,14 +42,14 @@
             </form>
           </td>
           <form action="/addToCart" method="post">
-            <td>{{ this.name }}</td>
+            <td>{{ this.itemName }}</td>
             <td>{{ this.quantity}}</td>
             <td>{{ this.price }}</td>
             <td>
               <input style="width: 5em" type="number" id="newPiece" name="newPiece" max={{ this.quantity}} value=>
-              <input type="hidden" id="itemId" name="name" value={{ this.itemId }}>
-              <input type="hidden" id="nameId" name="name" value={{ this.itemName}}>
-              <input type="hidden" id="vendorId" name="vendor" value={{ this.vendorId}}>
+              <input type="hidden" id="itemId" name="itemId" value={{ this.itemId }}>
+              <input type="hidden" id="nameId" name="itemName" value={{ this.itemName}}>
+              <input type="hidden" id="vendorId" name="vendorId" value={{ this.vendorId}}>
               <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
               <input type="hidden" id="priceId" name="price" value={{ this.price }}>
               <input type="submit" value="add to cart">
@@ -62,9 +62,6 @@
     <form action="/checkout" method="post">
       <input type="submit" value="checkout Cart">
     </form>
-
-
-
     <h1>
       list of buyed items
     </h1>
