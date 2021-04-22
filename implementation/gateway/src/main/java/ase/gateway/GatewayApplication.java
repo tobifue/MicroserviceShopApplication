@@ -1,5 +1,6 @@
 package ase.gateway;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import ase.gateway.controller.TrafficController;
 import ase.gateway.user.UserRepository;
 
 @EnableJpaRepositories("ase.gateway.*")
@@ -16,6 +18,9 @@ import ase.gateway.user.UserRepository;
 @SpringBootApplication(scanBasePackages = { "ase.gateway" })
 public class GatewayApplication {
 
+	@Autowired
+	private TrafficController trafficController;
+
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
@@ -23,6 +28,7 @@ public class GatewayApplication {
 	@Bean
 	public CommandLineRunner demo(UserRepository repository) {
 		return (args) -> {
+
 			// Testcode, manipulate as necessary
 
 //			repository.save(new Vendor());

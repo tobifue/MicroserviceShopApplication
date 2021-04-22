@@ -7,19 +7,20 @@ public class Message {
 	// captures network event
 	private final Map<String, Object> payload;
 	private final String category;
-	private final String destination; // ServiceConnection
+	private final String endpoint; // ServiceConnection
 	private final String httpMethod;
 
-	private Message(Map<String, Object> payload, String category, String destination, String httpMethod) {
+	private Message(Map<String, Object> payload, String category, String endpoint, String httpMethod) {
 		this.payload = payload;
 		this.category = category;
-		this.destination = destination;
+		this.endpoint = endpoint;
 		this.httpMethod = httpMethod;
 	}
 
-	public Message createInstance(Map<String, Object> payload, String category, String destination, String httpMethod) {
+	public static Message createInstance(Map<String, Object> payload, String category, String endpoint,
+			String httpMethod) {
 		// TODO validate parameters
-		return new Message(payload, category, destination, httpMethod);
+		return new Message(payload, category, endpoint, httpMethod);
 	}
 
 	public Map<String, Object> getPayload() {
@@ -30,8 +31,8 @@ public class Message {
 		return category;
 	}
 
-	public String getDestination() {
-		return destination;
+	public String getEndpoint() {
+		return endpoint;
 	}
 
 	public String getHttpMethod() {
