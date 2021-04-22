@@ -27,12 +27,12 @@ import ase.rating.data.RatingService;
 @SpringBootApplication
 public class RatingApplication {
 
-	@Autowired
-	private RatingRepository repository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(RatingApplication.class, args);
 	}
+
+	@Autowired
+	private RatingRepository repository;
 
 	@RequestMapping(value = "/rating/{itemId}", method = RequestMethod.GET)
 	@ResponseBody
