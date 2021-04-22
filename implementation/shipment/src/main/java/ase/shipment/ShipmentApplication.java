@@ -1,8 +1,11 @@
 package ase.shipment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import ase.shipment.controller.ShipmentController;
 import ase.shipment.data.Shipment;
@@ -32,6 +37,9 @@ public class ShipmentApplication {
 
 	private ShipmentRepository repository;
 	private ShipmentController controller;
+
+	@Value("${server.port}")
+	private String port;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShipmentApplication.class, args);
@@ -99,12 +107,43 @@ public class ShipmentApplication {
 		return "Cleared all transactions";
 	}
 
+	private void registerWithGateway() {
+		try {
+			Map<String, Object> registrationDetails = new HashMap<>();
+			registrationDetails.put("endpoints", new ArrayList<String>() {
+				private static final long serialVersionUID = 1L;
+				{
+					// put highest level endpoints here
+					add("/show");
+					add("/start");
+					add("/stop");
+					add("/clearAll");
+					add("/print");
+				}
+			});
+			registrationDetails.put("category", "shipment");
+			registrationDetails.put("ip", "http://localhost:" + port);
+			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+					registrationDetails, String.class);
+		} catch (RestClientException e) {
+			System.out.println("Could not reach Gateway, retrying in 5 seconds");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			registerWithGateway();
+		}
+		System.out.println("Successfully registered with gateway!");
+	}
+
 	@Bean
 	public CommandLineRunner loadRepository(ShipmentRepository repository) {
 		return (args) -> {
 			this.repository = repository;
 			printRepositoryToConsole();
 			this.controller = new ShipmentController(repository);
+			registerWithGateway();
 		};
 	}
 
