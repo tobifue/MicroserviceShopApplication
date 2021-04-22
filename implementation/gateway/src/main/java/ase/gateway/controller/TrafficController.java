@@ -24,8 +24,11 @@ public class TrafficController {
 	@SuppressWarnings("unchecked")
 	@PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
 	public void registerNewService(@RequestBody Map<String, Object> details) {
-		activeConnections
-				.add(new ServiceConnection((List<String>) details.get("categories"), (String) details.get("ip")));
+		ServiceConnection conn = new ServiceConnection((List<String>) details.get("categories"),
+				(String) details.get("ip"));
+		activeConnections.add(conn);
+		System.out.println(conn.getSubscribedCategories());
+		System.out.println(conn.getIp());
 	}
 
 }
