@@ -92,7 +92,10 @@ public class TxhistoryApplication {
 			registrationDetails.put("endpoints", new ArrayList<String>() {
 				private static final long serialVersionUID = 1L;
 				{
-					// put endpoints here
+					// put highest level endpoints here
+					add("/generate");
+					add("/print");
+					add("/clearAll");
 					add("/add");
 				}
 			});

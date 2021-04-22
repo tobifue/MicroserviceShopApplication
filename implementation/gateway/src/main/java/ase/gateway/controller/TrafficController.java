@@ -32,6 +32,7 @@ public class TrafficController {
 				(String) details.get("category"), (String) details.get("ip"));
 		activeConnections.add(conn);
 		System.out.println(conn.getSubscribedEndpoints());
+		System.out.println(conn.getCategory());
 		System.out.println(conn.getIp());
 	}
 
@@ -53,8 +54,13 @@ public class TrafficController {
 	public static List<ServiceConnection> getSubscribedConnections(String category, String endpoint) {
 		List<ServiceConnection> result = new ArrayList<ServiceConnection>();
 		for (ServiceConnection s : activeConnections) {
-			if (s.getCategory().equals(category) && s.getSubscribedEndpoints().contains(endpoint))
-				result.add(s);
+			if (s.getCategory().equals(category)) {
+				for (String ep : s.getSubscribedEndpoints()) {
+					// this way the service can subscribe to endpoints that contain pathvariables
+					if (endpoint.contains(ep))
+						result.add(s);
+				}
+			}
 		}
 		return result;
 	}
