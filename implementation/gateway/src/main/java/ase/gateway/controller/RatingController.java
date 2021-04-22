@@ -53,7 +53,7 @@ public class RatingController {
 
 	@RequestMapping(value = "/checkRatings", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkRatings(@PathVariable long itemId) {
+	public String checkRatings() {
 		try {
 			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "checkRatings");
 		} catch (RestClientException e) {
