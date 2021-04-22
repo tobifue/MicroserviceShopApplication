@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
+import ase.gateway.traffic.Message;
 import ase.gateway.util.AdressUtil;
 import ase.gateway.util.NetworkUtil;
 
@@ -85,8 +86,9 @@ public class TxHistoryController {
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String addTransaction(@RequestBody Map<String, Object> transaction) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "add", transaction);
-		} catch (RestClientException | IOException e) {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(transaction, "history", "/add", "POST"));
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
