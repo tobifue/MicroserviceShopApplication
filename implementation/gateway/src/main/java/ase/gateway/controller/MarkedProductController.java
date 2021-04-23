@@ -1,6 +1,5 @@
 package ase.gateway.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.util.AdressUtil;
-import ase.gateway.util.NetworkUtil;
+import ase.gateway.traffic.Message;
 
 @RestController
 @RequestMapping("markedproduct")
@@ -25,11 +23,10 @@ public class MarkedProductController {
 	@ResponseBody
 	public String showAllProductsForUser(@PathVariable Long userid) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/show/%s", userid));
+
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "markedproduct", "/show", "GET"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -39,11 +36,9 @@ public class MarkedProductController {
 	@ResponseBody
 	public String showAllMarkedProducts() {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/showall"));
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "markedproduct", "/showall", "GET"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -57,8 +52,9 @@ public class MarkedProductController {
 	@PostMapping(path = "/update", consumes = "application/json", produces = "application/json")
 	public String processUpdate(@RequestBody Map<String, Object> productUpdate) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/update", productUpdate);
-		} catch (RestClientException | IOException e) {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "markedproduct", "/update", "POST"));
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -70,11 +66,12 @@ public class MarkedProductController {
 	 *                      "itemTitle" }
 	 * @return
 	 */
-	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/mark", consumes = "application/json", produces = "application/json")
 	public String markProduct(@RequestBody Map<String, Object> markedProduct) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/update", markedProduct);
-		} catch (RestClientException | IOException e) {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "markedproduct", "/mark", "POST"));
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
