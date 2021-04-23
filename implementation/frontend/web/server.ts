@@ -39,19 +39,32 @@ app.listen(port, function () {
 
 
 class Item {
-    itemId: string;
+    itemId: number;
     itemName: string;
     quantity: number;
     price: number;
     vendorId: string;
     priceRecommendation: number;
-    constructor(itemId: string, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
+    constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.quantity = quantity;
         this.price = price;
         this.vendorId = vendorId;
         this.priceRecommendation = priceRecommendation;
+    }
+}
+
+class rating{
+    costumerId:string;
+    itemId:number;
+    itemName:string;
+    rating:number;
+    constructor(costumerId: string, itemId: number, itemName: string, rating: number){
+        this.costumerId = costumerId;
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.rating = rating;
     }
 }
 
@@ -91,7 +104,7 @@ app.get('/vendor', function (req, res, next) {
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
             if (items != null) {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
+                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, "ich", 65)] });
             } else {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items) });
             }
@@ -102,7 +115,7 @@ app.get('/vendor', function (req, res, next) {
 
 
 app.post('/addItem', function (req, res, next) {
-    let data =new Item("", req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
+    let data =new Item(0, req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
     let httpreq = http.request(new HttpOption("/inventory/"), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
@@ -148,9 +161,9 @@ app.get('/costumer', function (req, res, next) {
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
                     if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("ITemId", "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)],items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     } else {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: JSON.parse(items), buyedItems: JSON.parse(history) });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)],items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                 })
             })
@@ -193,7 +206,8 @@ app.post('/markProduct', function (req, res, next) {
 
 
 app.post('/checkout', function (req, res, next) {
-    let httpreq =http.get("http://" + gatewayIp + ":8080/history/checkout/1", response => {
+    console.log("checkout called");
+    let httpreq =http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", response => {
         response.on('end', function () {
             res.redirect('/costumer');
         })
@@ -209,11 +223,7 @@ app.post('/checkout', function (req, res, next) {
 
 
 app.post('/rateItem', function (req, res, next) {
-    let data: InventorySendInterface = {
-        command: "/rateItem",
-        item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price)
-    }
-    let httpreq = http.request(new HttpOption("/gateway/rateItem"), function (response) {
+    let httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
             res.redirect('/costumer');
         })
@@ -221,7 +231,8 @@ app.post('/rateItem', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/costumer');
     });
-    httpreq.write(JSON.stringify(data));
+    console.log("rating item"+JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)) )
+    httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
 });
 

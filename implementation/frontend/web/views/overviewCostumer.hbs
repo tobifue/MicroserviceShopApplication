@@ -76,10 +76,11 @@
         {{# each buyedItems}}
         <tr>
           <form action="/rateItem" method="post">
-            <td>{{ this.name }}</td>
+            <td>{{ this.itemName }}</td>
             <td>
               <input style="width: 5em" type="number" id="rate" name="rate" max=5 value=>
-              <input type="hidden" id="nameId" name="name" value={{ this.name}}>
+              <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
+              <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
               <input type="submit" value="OK">
             </td>
           </form>

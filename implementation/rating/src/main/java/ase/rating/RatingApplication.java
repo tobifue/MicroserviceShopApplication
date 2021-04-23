@@ -52,6 +52,8 @@ public class RatingApplication {
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Rating addTransaction(@RequestBody Rating rating) {
+
+		System.out.println("To follwing item is rated:"+rating);
 		return repository.save(rating);
 	}
 

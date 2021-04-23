@@ -34,6 +34,15 @@ var Item = /** @class */ (function () {
     }
     return Item;
 }());
+var rating = /** @class */ (function () {
+    function rating(costumerId, itemId, itemName, rating) {
+        this.costumerId = costumerId;
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.rating = rating;
+    }
+    return rating;
+}());
 var HttpOption = /** @class */ (function () {
     function HttpOption(path, method, host, port, headers) {
         if (method === void 0) { method = 'POST'; }
@@ -55,7 +64,7 @@ app.get('/vendor', function (req, res, next) {
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
             if (items != null) {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item("itemId_1", "Itemname: ToDO", 24, 70, "ich", 65)] });
+                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, "ich", 65)] });
             }
             else {
                 res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items) });
@@ -64,7 +73,7 @@ app.get('/vendor', function (req, res, next) {
     });
 });
 app.post('/addItem', function (req, res, next) {
-    var data = new Item("", req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
+    var data = new Item(0, req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
     var httpreq = http.request(new HttpOption("/inventory/"), function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -105,10 +114,10 @@ app.get('/costumer', function (req, res, next) {
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
                     if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: [new Item("ITemId", "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                     else {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { items: JSON.parse(items), buyedItems: JSON.parse(history) });
+                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                 });
             });
@@ -144,7 +153,8 @@ app.post('/markProduct', function (req, res, next) {
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
-    var httpreq = http.get("http://" + gatewayIp + ":8080/history/checkout/1", function (response) {
+    console.log("checkout called");
+    var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
         response.on('end', function () {
             res.redirect('/costumer');
         });
@@ -156,11 +166,7 @@ app.post('/checkout', function (req, res, next) {
     httpreq.end();
 });
 app.post('/rateItem', function (req, res, next) {
-    var data = {
-        command: "/rateItem",
-        item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price)
-    };
-    var httpreq = http.request(new HttpOption("/gateway/rateItem"), function (response) {
+    var httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
             res.redirect('/costumer');
         });
@@ -168,6 +174,7 @@ app.post('/rateItem', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/costumer');
     });
-    httpreq.write(JSON.stringify(data));
+    console.log("rating item" + JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
+    httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
 });

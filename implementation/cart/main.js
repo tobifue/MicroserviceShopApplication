@@ -39,6 +39,7 @@ app.use(express.json());
 
 
 
+
 app.post('/addItem/:userId', function (req, res, next) {
     const userId = req.params.userId;
     const bdy = req.body;
@@ -54,8 +55,17 @@ app.post('/addItem/:userId', function (req, res, next) {
 });
 
 app.get('/getCart/:userId', function (req, res, next) {
+
     const userId = req.params.userId;
+    console.log("get card called: ", carts);
     res.send(JSON.stringify(carts.get(userId)));
+});
+
+app.get('/deleteCart/:userId', function (req, res, next) {
+    const userId = req.params.userId;
+    console.log("delete card called: ", carts);
+    carts.delete(userId);
+    res.send("OK");
 });
 
 app.listen(port, function () {
@@ -63,32 +73,31 @@ app.listen(port, function () {
 });
 
 
-/*
+let registration = {
+    "endpoints":["/addItem","/getCart", "/deleteCart"],
+    "category": "cart",
+    "ip": "http://localhost:8085"
+}
 
-var options = {
+let options = {
     host: 'localhost',
     port: 8080,
-    path: '/cart/addItemToCart',
+    path: '/register/new',
     method: 'POST',
     headers: {
         "Content-Type": "application/json"
     }
 }
+let http = require('http');
+let httpreq2 = http.request(options, function (response) {
+    let data = "";
+    response.on('data', function (chunk) {
+        data += chunk;
+    });
+    response.on('end', function () {
+        console.log(data)
+    })
+});
+httpreq2.write(JSON.stringify(registration));
+httpreq2.end();
 
-let data = { "buyerId" : "1", "sellerId": "2", "price":
-                 "10", "itemTitle": "nice product", "count" : "1" }
-
-var http = require('http');
-        var httpreq2 = http.request(options, function (response) {
-            let data ="";
-            response.on('data', function (chunk) {
-            data+=chunk;
-             });
-             response.on('end', function() {
-                 console.log(data)
-             })
-           });
-        httpreq2.write(JSON.stringify(data));
-        httpreq2.end();
-
-        */

@@ -42,6 +42,7 @@ public class Rating {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[rtnID: " + rtnId);
 		sb.append("; ItemTitle: " + itemTitle);
+		sb.append("; itemId: " + itemId);
 		sb.append("; Rating: " + rating);
 		sb.append("]");
 		return sb.toString();
