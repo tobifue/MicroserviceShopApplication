@@ -1,6 +1,5 @@
 package ase.gateway.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,24 +11,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.util.AdressUtil;
-import ase.gateway.util.NetworkUtil;
+import ase.gateway.traffic.Message;
 
 @RestController
 @RequestMapping("rating")
 public class RatingController {
 
-	private static final String serviceName = "rating";
+	// private static final String serviceName = "rating";
 
 	@RequestMapping(value = "/{itemId}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getRating(@PathVariable Long itemId) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/%s", itemId));
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "rating", String.format("/%s", itemId), "GET"));
 		} catch (RestClientException e) {
-			return e.getMessage();
-		} catch (IOException e) {
-			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
@@ -43,8 +39,9 @@ public class RatingController {
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String addTransaction(@RequestBody Map<String, Object> rating) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "add", rating);
-		} catch (RestClientException | IOException e) {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(rating, "rating", "/add", "POST"));
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -55,10 +52,9 @@ public class RatingController {
 	@ResponseBody
 	public String checkRatings() {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "checkRatings");
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "rating", "/checkRatings", "GET"));
 		} catch (RestClientException e) {
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}

@@ -1,6 +1,5 @@
 package ase.gateway.controller;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,23 +11,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.util.AdressUtil;
-import ase.gateway.util.NetworkUtil;
+import ase.gateway.traffic.Message;
 
 @RestController
 @RequestMapping("notification")
 public class NotificationController {
 
-	private static final String serviceName = "notification";
+	// private static final String serviceName = "notification";
 
 	@RequestMapping(value = "/checkItems", method = RequestMethod.GET)
 	@ResponseBody
 	public String checkItems() {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "checkItems");
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "notification", "/checkItems", "GET"));
 		} catch (RestClientException e) {
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -38,10 +35,9 @@ public class NotificationController {
 	@ResponseBody
 	public String checkPrice(@PathVariable long itemId) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("checkPrice/%s", itemId));
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "notification", String.format("/checkPrice/%s", itemId), "GET"));
 		} catch (RestClientException e) {
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -55,8 +51,9 @@ public class NotificationController {
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	public String addTransaction(@RequestBody Map<String, Object> notification) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "add", notification);
-		} catch (RestClientException | IOException e) {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(notification, "notification", "/add", "POST"));
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
