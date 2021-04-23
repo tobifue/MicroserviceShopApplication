@@ -100,7 +100,7 @@ public class MarkedproductApplication {
 					add("/print");
 				}
 			});
-			registrationDetails.put("category", "history");
+			registrationDetails.put("category", "markedproduct");
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
