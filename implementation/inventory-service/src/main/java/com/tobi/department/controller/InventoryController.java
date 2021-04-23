@@ -1,12 +1,15 @@
 
 package com.tobi.department.controller;
-/*
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.tobi.department.entity.Inventory;
+import com.tobi.department.entity.Item;
+import com.tobi.department.entity.ItemFactory;
+import com.tobi.department.repository.InventoryRepository;
 import com.tobi.department.service.InventoryService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,17 +24,20 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
+
     //create Item
     @PostMapping("/")
-    public Inventory saveDepartment(@RequestBody Inventory inventory){
+    public Item saveDepartment(@RequestBody Item inventory){
 
+        Item newItem = ItemFactory.createInstance(inventory.getItemId(), inventory.getPrice(),inventory.getVendorId(), inventory.getQuantity(), inventory.getItemName(), inventory.getPriceRecommendation());
         log.info("Inside saceDepartment method of DepartmentController");
-        return inventoryService.saveItem(inventory);
+        return inventoryService.saveItem(newItem);
     }
+
 
     //get Item
     @GetMapping("/{id}")
-    public Inventory findByItemId(@PathVariable("id")Long itemId){
+    public Item findByItemId(@PathVariable("id")Long itemId){
         log.info("Inside findDepartmentById method of DepartmentController");
         return inventoryService.findByItemId(itemId);
     }
@@ -42,12 +48,12 @@ public class InventoryController {
     @GetMapping(produces = "application/json")
     public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
 
-        List<Inventory> inventories = new ArrayList<Inventory>();
-        List<Inventory> v_inventories = new ArrayList<Inventory>();
+        List<Item> inventories = new ArrayList<Item>();
+        List<Item> v_inventories = new ArrayList<Item>();
 
         inventories = inventoryService.findByVendorId();
 
-        for(Inventory dep : inventories) {
+        for(Item dep : inventories) {
             if(dep.getVendorId()==id){
                 v_inventories.add(dep);
             }
@@ -66,8 +72,8 @@ public class InventoryController {
     //update Item
     @RequestMapping(value = "/update/{id}")
     @PutMapping
-    public Inventory update(@PathVariable("id") Long departmentId, @RequestBody Inventory dep) {
-        Inventory inventory = inventoryService.findByItemId(departmentId);
+    public Item update(@PathVariable("id") Long departmentId, @RequestBody Item dep) {
+        Item inventory = inventoryService.findByItemId(departmentId);
         inventory.setPrice(dep.getPrice());
         inventory.setVendorId(dep.getVendorId());
         inventory.setQuantity(dep.getQuantity());
@@ -85,4 +91,3 @@ public class InventoryController {
         return "Delete successfull";
     }
 }
-*/

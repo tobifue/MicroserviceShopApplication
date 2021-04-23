@@ -3,16 +3,24 @@ package com.tobi.department;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.tobi.department.entity.Inventory;
+import com.tobi.department.entity.Item;
+import com.tobi.department.repository.InventoryRepository;
 import com.tobi.department.service.InventoryService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @SpringBootApplication
@@ -28,7 +36,7 @@ public class InventoryServiceApplication {
 	//create Item
 	@SneakyThrows
 	@PostMapping(path ="/", consumes = "application/json", produces = "application/json")
-	public String saveItem(@RequestBody Inventory inventory){
+	public String saveItem(@RequestBody Item inventory){
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
@@ -53,12 +61,12 @@ public class InventoryServiceApplication {
 	@GetMapping(produces = "application/json")
 	public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
 
-		List<Inventory> inventories = new ArrayList<Inventory>();
-		List<Inventory> v_inventories = new ArrayList<Inventory>();
+		List<Item> inventories = new ArrayList<Item>();
+		List<Item> v_inventories = new ArrayList<Item>();
 
 		inventories = inventoryService.findByVendorId();
 
-		for(Inventory dep : inventories) {
+		for(Item dep : inventories) {
 			if(dep.getVendorId()==id){
 				v_inventories.add(dep);
 			}
@@ -78,7 +86,7 @@ public class InventoryServiceApplication {
         @GetMapping(consumes="application/json", produces ="application/json")
         public @ResponseBody String findAllObjects() {
 
-            List<Inventory> inventories = new ArrayList<Inventory>();
+            List<Item> inventories = new ArrayList<Item>();
 
             inventories = inventoryService.findByVendorId();
 
@@ -92,8 +100,8 @@ public class InventoryServiceApplication {
 	@SneakyThrows
 	@RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
 	@PostMapping
-	public String update(@PathVariable("id") Long departmentId, @RequestBody Inventory dep) throws JsonProcessingException {
-		Inventory inventory = inventoryService.findByItemId(departmentId);
+	public String update(@PathVariable("id") Long departmentId, @RequestBody Item dep) throws JsonProcessingException {
+		Item inventory = inventoryService.findByItemId(departmentId);
 		inventory.setPrice(dep.getPrice());
 		inventory.setVendorId(dep.getVendorId());
 		inventory.setQuantity(dep.getQuantity());
@@ -112,6 +120,45 @@ public class InventoryServiceApplication {
 
 		inventoryService.deleteByItemId(departmentId);
 		return "Delete successfull";
+	}
+	@Value("${server.port}")
+	private String port;
+
+	private void registerWithGateway() {
+		try {
+			Map<String, Object> registrationDetails = new HashMap<>();
+			registrationDetails.put("endpoints", new ArrayList<String>() {
+				private static final long serialVersionUID = 1L;
+				{
+					// put highest level endpoints here
+					add("/");
+					add("/update");
+					add("/delete");
+					add("/vendor");
+				}
+			});
+			registrationDetails.put("category", "inventory");
+			registrationDetails.put("ip", "http://localhost:" + port);
+			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+					registrationDetails, String.class);
+		} catch (RestClientException e) {
+			System.out.println("Could not reach Gateway, retrying in 5 seconds");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			registerWithGateway();
+		}
+		System.out.println("Successfully registered with gateway!");
+	}
+
+	@Bean
+	public CommandLineRunner registerWithGateWay() {
+		return (args) -> {
+			// register with gateway in commandlineRunner
+			registerWithGateway();
+		};
 	}
 
 }

@@ -3,6 +3,7 @@ package ase.gateway.controller;
 import java.io.IOException;
 import java.util.Map;
 
+import ase.gateway.traffic.Message;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,11 +37,9 @@ public class InventoryController {
 	@GetMapping("/{id}")
 	public String findByItemId(@PathVariable("id") Long itemId) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("%d", itemId));
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "inventory", String.format("/%s", itemId), "GET"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -49,11 +48,9 @@ public class InventoryController {
 	@GetMapping("/vendor/{id}")
 	public @ResponseBody String findAllObjects(@PathVariable("id") Integer id) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("vendor/%s", id));
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "inventory", String.format("/vendor/%s", id), "GET"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -63,11 +60,9 @@ public class InventoryController {
 	@ResponseBody
 	public String findAllObjects() {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "vendor");
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "inventory", String.format("/vendor"), "GET"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -77,12 +72,9 @@ public class InventoryController {
 	@PostMapping
 	public String update(@PathVariable("id") Long departmentId, @RequestBody Map<String, Object> inventory) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), String.format("update/%s", departmentId),
-					inventory);
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(inventory, "inventory", String.format("/update/%s", departmentId), "POST"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -93,11 +85,9 @@ public class InventoryController {
 	@PostMapping
 	public String delete(@PathVariable("id") Long departmentId) {
 		try {
-			return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), String.format("/delete/%s", departmentId));
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null,"inventory",String.format("/delete/%s", departmentId), "POST"));
 		} catch (RestClientException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		} catch (IOException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
