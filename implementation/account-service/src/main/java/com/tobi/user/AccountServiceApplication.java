@@ -4,14 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.tobi.user.service.AccountService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @SpringBootApplication
@@ -27,11 +34,52 @@ public class AccountServiceApplication {
 	@SneakyThrows
 	@GetMapping(path = "/vendor/{id}", produces="application/json")
 	public String getProfitByVendorId(@PathVariable("id") Long vendorId){
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String json = ow.writeValueAsString(accountService.getItemsByVendorId(vendorId));
+		String json = "";
+		try {
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			json = ow.writeValueAsString(accountService.getItemsByVendorId(vendorId));
+		} catch (Exception e) {
+			System.out.println("Something went wrong.");
+		}
 		return json;
 	}
+	@Value("${server.port}")
+	private String port;
 
+	private void registerWithGateway() {
+		try {
+			Map<String, Object> registrationDetails = new HashMap<>();
+			registrationDetails.put("endpoints", new ArrayList<String>() {
+				private static final long serialVersionUID = 1L;
+				{
+					// put highest level endpoints here
+					add("/vendor");
+
+				}
+			});
+			registrationDetails.put("category", "account");
+			registrationDetails.put("ip", "http://localhost:" + port);
+			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+					registrationDetails, String.class);
+		} catch (RestClientException e) {
+			System.out.println("Could not reach Gateway, retrying in 5 seconds");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			registerWithGateway();
+		}
+		System.out.println("Successfully registered with gateway!");
+	}
+
+	@Bean
+	public CommandLineRunner registerWithGateWay() {
+		return (args) -> {
+			// register with gateway in commandlineRunner
+			registerWithGateway();
+		};
+	}
 	@Bean
 	public RestTemplate restTemplate(){
 		return new RestTemplate();

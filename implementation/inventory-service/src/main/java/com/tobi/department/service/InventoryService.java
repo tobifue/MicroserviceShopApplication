@@ -1,6 +1,6 @@
 package com.tobi.department.service;
 
-import com.tobi.department.entity.Inventory;
+import com.tobi.department.entity.Item;
 
 import com.tobi.department.repository.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +16,17 @@ public class InventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    public Inventory saveItem(Inventory inventory) {
+    public Item saveItem(Item inventory) {
         log.info("Inside saveItem of InventoryService");
         return inventoryRepository.save(inventory);
     }
 
-    public Inventory findByItemId(Long itemId) {
+    public Item findByItemId(Long itemId) {
         log.info("Inside findByItemId of InventoryService");
         return inventoryRepository.findByItemId(itemId);
     }
 
-    public List<Inventory> findByVendorId() {
+    public List<Item> findByVendorId() {
         log.info("Inside findByVendorId of InventoryService");
         return inventoryRepository.findAll();
     }

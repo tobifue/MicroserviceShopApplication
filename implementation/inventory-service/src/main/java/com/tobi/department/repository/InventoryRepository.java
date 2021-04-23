@@ -1,12 +1,12 @@
 package com.tobi.department.repository;
 
-import com.tobi.department.entity.Inventory;
+import com.tobi.department.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+public interface InventoryRepository extends JpaRepository<Item, Long> {
 
-    Inventory findByItemId(Long ItemId);
+    Item findByItemId(Long ItemId);
 
 }

@@ -1,4 +1,4 @@
-package com.tobi.user.VO;
+package com.tobi.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

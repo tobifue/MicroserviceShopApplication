@@ -10,6 +10,9 @@ import net.minidev.json.JSONObject;
 @Entity
 public class MarkedProduct {
 
+	public MarkedProduct() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
