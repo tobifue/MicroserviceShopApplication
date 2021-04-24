@@ -1,32 +1,40 @@
 package ase.notification.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationService {
 
-	public static List<Notification> checkPrice(NotificationRepository repository) {
-		double newPrice, price;
-		String itemTitle, buyerEmail;
+	public static void checkShipping(long itemId, NotificationRepository repository) {
+		String itemName, email, shippingStatus, emailBody;
 		List<Notification> allNt = repository.findAll();
-		List<Notification> result = new ArrayList<>();
 		for (Notification nt : allNt) {
-			price = nt.getPrice();
-			newPrice = 3;
-			if (newPrice < price)
-				result.add(nt);
-			buyerEmail = nt.getEmail();
-			itemTitle = nt.getItemTitle();
-			sendNotification(newPrice, price, buyerEmail, itemTitle);
-		}
-		return result;
+			email = nt.getEmail();
+			itemName = nt.getItemName();
+			emailBody = nt.getEmailBody();
+			shippingStatus = nt.getShippingStatus();
+			String finalEmail = String
+					.format(emailBody + shippingStatus + " for Item: " + itemName + " sendto: " + email);
+			System.out.println(finalEmail);
 
+		}
 	}
 
-	public static void sendNotification(double newPrice, double price, String buyerEmail, String itemTitle) {
-		String finalNotification = String.format("Item %s now costs %np instead of %p", itemTitle, newPrice, price);
-		System.out.println(finalNotification);
+	public static void checkPrice(long itemId, NotificationRepository repository, double newPrice) {
+		String itemName, email, emailBody;
+		double price;
+		List<Notification> allNt = repository.findAll();
+		for (Notification nt : allNt) {
+			email = nt.getEmail();
+			itemName = nt.getItemName();
+			emailBody = nt.getEmailBody();
+			price = nt.getPrice();
+			if (newPrice < price) {
+				String finalEmail = String.format(emailBody + price + " for Item: " + itemName + " sendto: " + email);
+				System.out.println(finalEmail);
 
+			}
+
+		}
 	}
 
 }

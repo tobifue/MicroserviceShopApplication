@@ -10,56 +10,96 @@ import net.minidev.json.JSONObject;
 @Entity
 public class Notification {
 
+	public enum EmailBody {
+
+		shipmentEmail("Your current shipment status: "),
+
+		markedProductEmail("The price of your marked product has changed to: ");
+
+		private String body;
+
+		EmailBody(String body) {
+			this.body = body;
+		}
+
+		public String getBody() {
+			return body;
+		}
+
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long nid;
-	private Long buyerId;
+	private Long customerid;
 	private Long itemId;
-	private String itemTitle;
+	private String itemName;
 	private double price;
 	private double newPrice;
-	private String buyerEmail;
+	private String email;
+	private String shippingStatus;
+	private String emailBody;
 
 	public Notification() {
+		this.emailBody = EmailBody.shipmentEmail.getBody();
 	}
 
-	public Notification(Long buyerId, Long itemId, double price, String itemTitle, double newPrice, String buyerEmail) {
-		this.buyerId = buyerId;
+	public Notification(Long customerid, Long itemId, double price, String itemName, double newPrice,
+			String shippingStatus, String email) {
+		this.customerid = customerid;
 		this.itemId = itemId;
-		this.itemTitle = itemTitle;
+		this.itemName = itemName;
 		this.price = price;
-		this.itemTitle = itemTitle;
 		this.newPrice = newPrice;
-		this.buyerEmail = buyerEmail;
+		this.shippingStatus = shippingStatus;
+		this.email = email;
+		this.emailBody = EmailBody.shipmentEmail.getBody();
 	};
 
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
-		j.put("buyerid", buyerId);
+		j.put("customerid", customerid);
 		j.put("itemId", itemId);
 		j.put("price", price);
-		j.put("itemtitle", itemTitle);
+		j.put("itemName", itemName);
+		j.put("shippingStatus", shippingStatus);
+		j.put("email", email);
 		return j;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("; Buyer: " + buyerId);
+		sb.append("customer: " + customerid);
 		sb.append("; Item: " + itemId);
-		sb.append("; itemTitle: " + itemTitle);
-		sb.append("; itemTitle: " + itemTitle);
+		sb.append("; itemName: " + itemName);
 		sb.append("; price: " + price);
+		sb.append("; shippingStatus " + shippingStatus);
+		sb.append("; email " + email);
 		sb.append("]");
 		return sb.toString();
+	}
+
+	public void updateEmailBody() {
+		switch (emailBody) {
+		case "Your current shipment status: ":
+			setEmailBody(EmailBody.shipmentEmail.getBody());
+			break;
+		case "The price of your marked product has changed to: ":
+			setEmailBody(EmailBody.markedProductEmail.getBody());
+			break;
+		default:
+			setEmailBody(EmailBody.shipmentEmail.getBody());
+			break;
+		}
 	}
 
 	public Long getNid() {
 		return nid;
 	}
 
-	public Long getBuyerId() {
-		return buyerId;
+	public Long getcustomerid() {
+		return customerid;
 	}
 
 	public Long getItemId() {
@@ -74,12 +114,24 @@ public class Notification {
 		return price;
 	}
 
-	public String getItemTitle() {
-		return itemTitle;
+	public String getItemName() {
+		return itemName;
 	}
 
 	public String getEmail() {
-		return buyerEmail;
+		return email;
+	}
+
+	public String getShippingStatus() {
+		return shippingStatus;
+	}
+
+	public String getEmailBody() {
+		return emailBody;
+	}
+
+	public void setEmailBody(String emailBody) {
+		this.emailBody = emailBody;
 	}
 
 }

@@ -19,12 +19,12 @@ public class RatingController {
 
 	// private static final String serviceName = "rating";
 
-	@RequestMapping(value = "/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRating/{itemId}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getRating(@PathVariable Long itemId) {
 		try {
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "rating", String.format("/%s", itemId), "GET"));
+					Message.createInstance(null, "rating", String.format("/getRating/%s", itemId), "GET"));
 		} catch (RestClientException e) {
 			return e.getMessage();
 		}
@@ -37,7 +37,7 @@ public class RatingController {
 	 */
 
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
-	public String addTransaction(@RequestBody Map<String, Object> rating) {
+	public String addRating(@RequestBody Map<String, Object> rating) {
 		try {
 			return TrafficController
 					.sendMessageToSingleRecipient(Message.createInstance(rating, "rating", "/add", "POST"));

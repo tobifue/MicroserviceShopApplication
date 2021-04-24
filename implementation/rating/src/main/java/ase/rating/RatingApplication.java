@@ -43,17 +43,15 @@ public class RatingApplication {
 	@Value("${server.port}")
 	private String port;
 
-	@RequestMapping(value = "/rating/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRating/{itemId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getRating(@PathVariable String itemId) {
+	public String getRating(@PathVariable Long itemId) {
 		return RatingService.getRating(repository, itemId);
 	}
 
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Rating addTransaction(@RequestBody Rating rating) {
-
-		System.out.println("To follwing item is rated:"+rating);
 		return repository.save(rating);
 	}
 
@@ -73,8 +71,7 @@ public class RatingApplication {
 				{
 					// put highest level endpoints here
 					add("/checkRatings");
-					add("/checkPrice");
-					add("/rating");
+					add("/getRating");
 					add("/add");
 				}
 			});

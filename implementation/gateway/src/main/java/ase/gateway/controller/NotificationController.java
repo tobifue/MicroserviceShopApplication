@@ -31,12 +31,34 @@ public class NotificationController {
 		}
 	}
 
-	@RequestMapping(value = "/checkPrice/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/shipping/{itemId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkPrice(@PathVariable long itemId) {
+	public String checkShipping(@PathVariable Long itemId) {
 		try {
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "notification", String.format("/checkPrice/%s", itemId), "GET"));
+					Message.createInstance(null, "notification", String.format("/shipping/%s", itemId), "GET"));
+		} catch (RestClientException e) {
+			return e.getMessage();
+		}
+	}
+
+	@RequestMapping(value = "/price/{itemId}/{newPrice}", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkPrice(@PathVariable Long itemId, @PathVariable double newPrice) {
+		try {
+			return TrafficController.sendMessageToSingleRecipient(Message.createInstance(null, "notification",
+					String.format("/price/%s/%s", itemId, newPrice), "GET"));
+		} catch (RestClientException e) {
+			return e.getMessage();
+		}
+	}
+
+	@RequestMapping(value = "/clearAll", method = RequestMethod.GET)
+	@ResponseBody
+	public String clearAll() {
+		try {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "notification", "/clearAll", "GET"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();

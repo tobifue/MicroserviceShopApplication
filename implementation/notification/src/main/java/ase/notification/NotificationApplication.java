@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ase.notification.data.Notification;
 import ase.notification.data.NotificationRepository;
+import ase.notification.data.NotificationService;
 
 @EnableJpaRepositories("ase.notification.*")
 @EntityScan("ase.notification.*")
@@ -50,35 +51,26 @@ public class NotificationApplication {
 			System.out.println(t);
 	}
 
-	@RequestMapping(value = "/checkPrice/{itemId}", method = RequestMethod.GET)
-	public void checkPrice(@PathVariable long itemId) {
-		double newPrice, price;
-		String itemTitle, buyerEmail;
-		List<Notification> allNt = repository.findAll();
-		List<Notification> result = new ArrayList<>();
-		for (Notification nt : allNt) {
-			if (nt.getItemId().equals(itemId)) {
-				price = nt.getPrice();
-				newPrice = 3;
-				if (newPrice < price)
-					result.add(nt);
-				buyerEmail = nt.getEmail();
-				itemTitle = nt.getItemTitle();
-				sendNotification(newPrice, price, buyerEmail, itemTitle);
-			}
-		}
-	}
-
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Notification addTransaction(@RequestBody Notification notification) {
 		return repository.save(notification);
 	}
 
-	public static void sendNotification(double newPrice, double price, String buyerEmail, String itemTitle) {
-		String finalNotification = String.format("Item %s now costs %f instead of %f", itemTitle, newPrice, price);
-		System.out.println(finalNotification);
+	@RequestMapping(value = "/shipping/{itemId}", method = RequestMethod.GET)
+	public void callShipping(@PathVariable long itemId) {
+		NotificationService.checkShipping(itemId, repository);
+	}
 
+	@RequestMapping(value = "/price/{itemId}/{newPrice}", method = RequestMethod.GET)
+	public void callPrice(@PathVariable long itemId, @PathVariable double newPrice) {
+		NotificationService.checkPrice(itemId, repository, newPrice);
+	}
+
+	@RequestMapping(value = "/clearAll", method = RequestMethod.GET)
+	public String clearAllTransactions() {
+		repository.deleteAll();
+		return "Cleared all transactions";
 	}
 
 	private void registerWithGateway() {
@@ -91,6 +83,10 @@ public class NotificationApplication {
 					add("/checkItems");
 					add("/checkPrice");
 					add("/add");
+					add("/shipping");
+					add("/price");
+					add("/clearAll");
+
 				}
 			});
 			registrationDetails.put("category", "notification");
