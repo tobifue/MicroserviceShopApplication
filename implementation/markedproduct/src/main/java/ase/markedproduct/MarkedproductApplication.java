@@ -49,7 +49,7 @@ public class MarkedproductApplication {
 	public List<MarkedProduct> showAllProductsForUser(@PathVariable Long userid) {
 		List<MarkedProduct> result = new ArrayList<>();
 		for (MarkedProduct item : repository.findAll()) {
-			if (item.getBuyerId().equals(userid) || item.getSellerId().equals(userid))
+			if (item.getVendorId().equals(userid) || item.getCustomerId().equals(userid))
 				result.add(item);
 		}
 		return result;
@@ -102,6 +102,7 @@ public class MarkedproductApplication {
 			});
 			registrationDetails.put("category", "markedproduct");
 			registrationDetails.put("ip", "http://localhost:" + port);
+			System.out.println(port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
 		} catch (RestClientException e) {
@@ -119,6 +120,7 @@ public class MarkedproductApplication {
 	@Bean
 	public CommandLineRunner loadRepository(MarkedProductRepository repository) {
 		return (args) -> {
+			registerWithGateway();
 			this.repository = repository;
 			this.updateController = new UpdateController();
 			printRepositoryToConsole();

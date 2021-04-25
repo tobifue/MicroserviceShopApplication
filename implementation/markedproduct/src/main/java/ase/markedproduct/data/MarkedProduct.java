@@ -23,11 +23,11 @@ public class MarkedProduct {
 	private String itemName;
 
 	public MarkedProduct(Long customerId, Long vendorId, double price, String email, String itemName) {
-		this.buyerId = customerId;
-		this.sellerId = vendorId;
+		this.customerId = customerId;
+		this.vendorId = vendorId;
 		this.price = price;
 		this.email = email;
-		this.itemTitle = itemName;
+		this.itemName = itemName;
 	};
 
 	public JSONObject toJsonObject() {
