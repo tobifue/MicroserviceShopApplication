@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 var port = 3003;
-var costumerId = '1';
+var customerId = '1';
 var gatewayIp = process.env.GATEWAYIP || "localhost";
 console.log("IP used: " + gatewayIp);
 var getDockerHost = require('get-docker-host');
@@ -35,8 +35,8 @@ var Item = /** @class */ (function () {
     return Item;
 }());
 var rating = /** @class */ (function () {
-    function rating(costumerId, itemId, itemName, rating) {
-        this.costumerId = costumerId;
+    function rating(customerId, itemId, itemName, rating) {
+        this.customerId = customerId;
         this.itemId = itemId;
         this.itemName = itemName;
         this.rating = rating;
@@ -57,7 +57,6 @@ var HttpOption = /** @class */ (function () {
     }
     return HttpOption;
 }());
-//Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
     var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/1", function (response) {
         var items = "";
@@ -104,7 +103,7 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.write(JSON.stringify(data));
     httpreq.end();
 });
-app.get('/costumer', function (req, res, next) {
+app.get('/customer', function (req, res, next) {
     var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -114,10 +113,10 @@ app.get('/costumer', function (req, res, next) {
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
                     if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewcustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                     else {
-                        res.render(__dirname + '/views/overviewCostumer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewcustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                 });
             });
@@ -130,11 +129,11 @@ app.post('/addToCart', function (req, res, next) {
         response.on('data', function (chunk) { items += chunk; });
         response.on('end', function () {
             console.log(items);
-            res.redirect('/costumer');
+            res.redirect('/customer');
         });
     });
     httpreq.on('error', function (err) {
-        res.redirect('/costumer');
+        res.redirect('/customer');
     });
     console.log("addItem DAta:", new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price));
     httpreq.write(JSON.stringify(new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price)));
@@ -143,24 +142,24 @@ app.post('/addToCart', function (req, res, next) {
 app.post('/markProduct', function (req, res, next) {
     var httpreq = http.request(new HttpOption("/productMark/markItem"), function (response) {
         response.on('end', function () {
-            res.redirect('/costumer');
+            res.redirect('/customer');
         });
     });
     httpreq.on('error', function (err) {
-        res.redirect('/costumer');
+        res.redirect('/customer');
     });
-    httpreq.write(JSON.stringify({ costumer: costumerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
+    httpreq.write(JSON.stringify({ customer: customerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
     console.log("checkout called");
     var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
         response.on('end', function () {
-            res.redirect('/costumer');
+            res.redirect('/customer');
         });
     });
     httpreq.on('error', function (err) {
-        res.redirect('/costumer');
+        res.redirect('/customer');
     });
     httpreq.write();
     httpreq.end();
@@ -168,13 +167,27 @@ app.post('/checkout', function (req, res, next) {
 app.post('/rateItem', function (req, res, next) {
     var httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
-            res.redirect('/costumer');
+            res.redirect('/customer');
         });
     });
     httpreq.on('error', function (err) {
-        res.redirect('/costumer');
+        res.redirect('/customer');
     });
     console.log("rating item" + JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
+});
+app.get('/Administrator', function (req, res, next) {
+    //TODO get this from gateway
+    res.render(__dirname + '/views/overviewAdmin.hbs', { services: {
+            ratingService: "up",
+            inventoryService: "up",
+            cartService: "up",
+            priceadjustmentService: "down",
+            notificationService: "up",
+            markedProductService: "up",
+            checkoutService: "up",
+            historyService: "up",
+            shipmentService: "up"
+        } });
 });

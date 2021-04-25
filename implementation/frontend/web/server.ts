@@ -97,7 +97,6 @@ class HttpOption {
 }
 
 
-//Todo only items from this vendor!!
 app.get('/vendor', function (req, res, next) {
     const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/1", response => {
         let items: string = "";
@@ -234,6 +233,22 @@ app.post('/rateItem', function (req, res, next) {
     console.log("rating item"+JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)) )
     httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
+});
+
+
+app.get('/Administrator', function (req, res, next) {
+    //TODO get this from gateway
+    res.render(__dirname + '/views/overviewAdmin.hbs', { services:{
+        ratingService:"up",
+        inventoryService:"up",
+        cartService:"up",
+        priceadjustmentService:"down",
+        notificationService:"up",
+        markedProductService:"up",
+        checkoutService:"up",
+        historyService:"up",
+        shipmentService:"up"
+    } });
 });
 
 
