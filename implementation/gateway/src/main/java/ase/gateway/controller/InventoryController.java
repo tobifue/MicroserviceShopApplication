@@ -1,21 +1,10 @@
 package ase.gateway.controller;
 
-import java.io.IOException;
-import java.util.Map;
-
 import ase.gateway.traffic.Message;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.util.AdressUtil;
-import ase.gateway.util.NetworkUtil;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
@@ -26,8 +15,11 @@ public class InventoryController {
 	@PostMapping("/")
 	public String saveItem(@RequestBody Map<String, Object> inventory) {
 		try {
-			return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/", inventory);
-		} catch (RestClientException | IOException e) {
+			//return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/", inventory);
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(inventory, "inventory", String.format("/"), "GET"));
+
+		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
