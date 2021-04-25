@@ -13,7 +13,7 @@ public class RateItemController {
 
 	@PostMapping(path = "/rateItem", consumes = "application/json", produces = "application/json")
 	/**
-	 * @param item in format { "costumer": "String", "item" : {"vendor" : "2",
+	 * @param item in format { "customer": "String", "item" : {"vendor" : "2",
 	 *             "price" : "10", "quantity" : "1", "priceRecommendation" : "1"}} }
 	 * @return (" { \ " command \ " : \ " Okay \ " } ") or ("{
 	 *         \"command\":\"Error\"}")

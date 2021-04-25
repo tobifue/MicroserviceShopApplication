@@ -18,16 +18,16 @@ import java.util.Map;
 public class CheckoutController {
 	private static final String serviceName = "checkout-service";
 
-	@GetMapping("/checkout/{costumerId}")
+	@GetMapping("/checkout/{customerId}")
 	@ResponseBody
-	public String checkout(@PathVariable Long costumerId) {
-		System.out.println("/checkout in CheckoutController is called with ID: " + costumerId);
+	public String checkout(@PathVariable Long customerId) {
+		System.out.println("/checkout in CheckoutController is called with ID: " + customerId);
 		try {
 			String cart = TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "cart", String.format("/getCart/%s", costumerId), "GET"));
+					Message.createInstance(null, "cart", String.format("/getCart/%s", customerId), "GET"));
 
 			TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "cart", String.format("/deleteCart/%s", costumerId), "GET"));
+					Message.createInstance(null, "cart", String.format("/deleteCart/%s", customerId), "GET"));
 
 			System.out.println("/checkout in CheckoutController is called with ID: " + cart);
 
@@ -39,19 +39,19 @@ public class CheckoutController {
 			JSONArray jsonArray = jsonObject.getJSONArray("list");
 			for (int i = 0; i < jsonArray.length(); i++) {
 				Map<String, Object> item = new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), HashMap.class);
-				item.put("vendorId", costumerId.toString());
+				item.put("vendorId", customerId.toString());
 				System.out.println(item); // display usernames
 				TrafficController.sendMessageToSingleRecipient(
-						Message.createInstance(item, "history", String.format("/add", costumerId), "POST"));
+						Message.createInstance(item, "history", String.format("/add", customerId), "POST"));
 				TrafficController.sendMessageToSingleRecipient(
-						Message.createInstance(item, "shipment", String.format("/add", costumerId), "POST"));
+						Message.createInstance(item, "shipment", String.format("/add", customerId), "POST"));
 			}
 			//Map<String, Object> result = new ObjectMapper().readValue(cart, HashMap.class);
 			//Map<String, Object> sol = new ObjectMapper().readValue(jsonArray.getJSONObject(i), HashMap.class);
-			//System.out.println("nested array" + costumerId);
+			//System.out.println("nested array" + customerId);
 
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "checkout", String.format("/checkout/%s", costumerId), "GET"));
+					Message.createInstance(null, "checkout", String.format("/checkout/%s", customerId), "GET"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();

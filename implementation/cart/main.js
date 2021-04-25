@@ -12,7 +12,7 @@ class Item {
 
 class Cart {
     constructor(id) {
-        this.costumerId = id;
+        this.customerId = id;
         this.list = [];
     }
 
