@@ -16,26 +16,26 @@ public class MarkedProduct {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private Long buyerId;
-	private Long sellerId;
+	private Long customerId;
+	private Long vendorId;
 	private double price;
 	private String email;
-	private String itemTitle;
+	private String itemName;
 
-	public MarkedProduct(Long buyerId, Long sellerId, double price, String email, String itemTitle) {
-		this.buyerId = buyerId;
-		this.sellerId = sellerId;
+	public MarkedProduct(Long customerId, Long vendorId, double price, String email, String itemName) {
+		this.buyerId = customerId;
+		this.sellerId = vendorId;
 		this.price = price;
 		this.email = email;
-		this.itemTitle = itemTitle;
+		this.itemTitle = itemName;
 	};
 
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
-		j.put("buyerid", buyerId);
-		j.put("sellerid", sellerId);
+		j.put("customerId", customerId);
+		j.put("vendorId", vendorId);
 		j.put("price", price);
-		j.put("itemtitle", itemTitle);
+		j.put("itemName", itemName);
 		return j;
 	}
 
@@ -43,9 +43,9 @@ public class MarkedProduct {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[itemid: " + id);
-		sb.append("; Buyer: " + buyerId);
-		sb.append("; Seller: " + sellerId);
-		sb.append(" |" + itemTitle + ", price: " + price + "€|]");
+		sb.append("; Customer: " + customerId);
+		sb.append("; Vendor: " + vendorId);
+		sb.append(" |" + itemName + ", price: " + price + "€|]");
 		return sb.toString();
 	}
 
@@ -53,12 +53,12 @@ public class MarkedProduct {
 		return id;
 	}
 
-	public Long getBuyerId() {
-		return buyerId;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	public Long getSellerId() {
-		return sellerId;
+	public Long getVendorId() {
+		return vendorId;
 	}
 
 	public double getPrice() {
@@ -69,18 +69,18 @@ public class MarkedProduct {
 		return email;
 	}
 
-	public String getItemTitle() {
-		return itemTitle;
+	public String getItemName() {
+		return itemName;
 	}
 
 	// necessary for reflection, otherwise final
 
-	public void setBuyerId(Long buyerId) {
-		this.buyerId = buyerId;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
-	public void setItemTitle(String itemTitle) {
-		this.itemTitle = itemTitle;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 
 	public void setEmail(String email) {
@@ -91,8 +91,8 @@ public class MarkedProduct {
 		this.price = price;
 	}
 
-	public void setSellerId(Long sellerId) {
-		this.sellerId = sellerId;
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
 
 }
