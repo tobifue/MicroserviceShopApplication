@@ -26,7 +26,6 @@ public class CheckoutController {
 
     @RequestMapping(value = "/checkout/{costumerId}", method = RequestMethod.GET)
     public String checkout(@PathVariable("costumerId") Long costumerId, Map<String, Object> cart) {
-        System.out.println("lolo");
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(cart);

@@ -23,6 +23,10 @@ public class CheckoutController {
 	public String checkout(@PathVariable Long customerId) {
 		System.out.println("/checkout in CheckoutController is called with ID: " + customerId);
 		try {
+
+			//der Teil sollte ins Service!!!!!
+
+
 			String cart = TrafficController.sendMessageToSingleRecipient(
 					Message.createInstance(null, "cart", String.format("/getCart/%s", customerId), "GET"));
 
@@ -31,9 +35,6 @@ public class CheckoutController {
 
 			System.out.println("/checkout in CheckoutController is called with ID: " + cart);
 
-			/*TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "history", String.format("/add"), "POST"));
-*/
 
 			JSONObject jsonObject = new JSONObject(cart);
 			JSONArray jsonArray = jsonObject.getJSONArray("list");
@@ -46,19 +47,13 @@ public class CheckoutController {
 				TrafficController.sendMessageToSingleRecipient(
 						Message.createInstance(item, "shipment", String.format("/add", customerId), "POST"));
 			}
-			//Map<String, Object> result = new ObjectMapper().readValue(cart, HashMap.class);
-			//Map<String, Object> sol = new ObjectMapper().readValue(jsonArray.getJSONObject(i), HashMap.class);
-			//System.out.println("nested array" + customerId);
 
 			return TrafficController.sendMessageToSingleRecipient(
 					Message.createInstance(null, "checkout", String.format("/checkout/%s", customerId), "GET"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
-		} /*catch (IOException e) {
-			e.printStackTrace();
-			return e.getMessage();
-		}*/ catch (JSONException e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		} catch (JsonMappingException e) {
