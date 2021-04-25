@@ -148,7 +148,7 @@ app.post('/markProduct', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/customer');
     });
-    httpreq.write(JSON.stringify({ customer: customerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
+    httpreq.write(JSON.stringify({ customerId: customerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
@@ -190,4 +190,14 @@ app.get('/Administrator', function (req, res, next) {
             historyService: "up",
             shipmentService: "up"
         } });
+});
+var id;
+app.post('/login', function (req, res) {
+    id = req.body.ID;
+    if (id == 1) { //customer
+        res.redirect('/customer');
+    }
+    else {
+        res.redirect('/vendor');
+    }
 });
