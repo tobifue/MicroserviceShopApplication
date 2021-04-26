@@ -1,17 +1,10 @@
 package ase.gateway.controller;
 
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import ase.gateway.traffic.Message;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.traffic.Message;
+import java.util.Map;
 
 @RestController
 @RequestMapping("markedproduct")
@@ -68,9 +61,10 @@ public class MarkedProductController {
 	 */
 	@PostMapping(path = "/mark", consumes = "application/json", produces = "application/json")
 	public String markProduct(@RequestBody Map<String, Object> markedProduct) {
+		System.out.println("markedProduct is called : " + markedProduct);
 		try {
 			return TrafficController
-					.sendMessageToSingleRecipient(Message.createInstance(null, "markedproduct", "/mark", "POST"));
+					.sendMessageToSingleRecipient(Message.createInstance(markedProduct, "markedproduct", "/mark", "POST"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();

@@ -75,6 +75,8 @@ public class MarkedproductApplication {
 	@PostMapping(path = "/mark", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public MarkedProduct markItem(@RequestBody MarkedProduct markedProduct) {
+
+		System.out.println(markedProduct);
 		return repository.save(markedProduct);
 	}
 
