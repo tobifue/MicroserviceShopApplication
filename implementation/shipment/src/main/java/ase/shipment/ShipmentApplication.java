@@ -60,7 +60,7 @@ public class ShipmentApplication {
 	public String showAllShipmentsForUserId(@PathVariable Long userid) {
 		List<Shipment> result = new ArrayList<>();
 		for (Shipment spmt : repository.findAll()) {
-			if (spmt.getBuyerId().equals(userid) || spmt.getSellerId().equals(userid))
+			if (spmt.getCustomerId().equals(userid) || spmt.getVendorId().equals(userid))
 				result.add(spmt);
 		}
 		JSONArray j = new JSONArray();

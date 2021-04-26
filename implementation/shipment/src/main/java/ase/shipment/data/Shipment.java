@@ -38,13 +38,13 @@ public class Shipment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long shipmentid;
 	private Long itemid;
-	private Long buyerId;
-	private Long sellerId;
+	private Long customerId;
+	private Long vendorId;
 	private String email;
 	private final Date date;
 	private double price;
-	private String itemTitle;
-	private int count;
+	private String itemName;
+	private int quantity;
 	private String shippingStatus; // not an enum for easy serialization
 
 	public Shipment() {
@@ -52,15 +52,16 @@ public class Shipment {
 		this.shippingStatus = ShippingStatus.ORDER_RECEIVED.getTitle();
 	}
 
-	public Shipment(Long buyerId, Long sellerId, Long itemid, String email, double price, String itemTitle, int count) {
-		this.buyerId = buyerId;
-		this.sellerId = sellerId;
+	public Shipment(Long customerId, Long vendorId, Long itemid, String email, double price, String itemName,
+			int quantity) {
+		this.customerId = customerId;
+		this.vendorId = vendorId;
 		this.itemid = itemid;
 		this.email = email;
 		this.price = price;
-		this.itemTitle = itemTitle;
+		this.itemName = itemName;
 		this.shippingStatus = ShippingStatus.ORDER_RECEIVED.getTitle();
-		this.count = count;
+		this.quantity = quantity;
 		this.date = new Date();
 	};
 
@@ -68,9 +69,9 @@ public class Shipment {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[Shipment: " + shipmentid);
-		sb.append("; Buyer: " + buyerId);
-		sb.append("; Seller: " + sellerId);
-		sb.append(" |" + itemTitle + ", price: " + price + "€, count: " + count + "|");
+		sb.append("; Customer: " + customerId);
+		sb.append("; Vendor: " + vendorId);
+		sb.append(" |" + itemName + ", price: " + price + "€, quantity: " + quantity + "|");
 		sb.append(" status: " + shippingStatus);
 		sb.append("; email: " + email);
 		return sb.toString();
@@ -80,12 +81,12 @@ public class Shipment {
 		JSONObject j = new JSONObject();
 		j.put("shipmentid", shipmentid);
 		j.put("itemid", itemid);
-		j.put("buyerid", buyerId);
-		j.put("sellerid", sellerId);
+		j.put("customerid", customerId);
+		j.put("vendorid", vendorId);
 		j.put("email", email);
 		j.put("price", price);
-		j.put("itemtitle", itemTitle);
-		j.put("count", count);
+		j.put("itemname", itemName);
+		j.put("quantity", quantity);
 		j.put("shippingstatus", shippingStatus);
 		j.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(date));
 		return j;
@@ -110,12 +111,12 @@ public class Shipment {
 		return shipmentid;
 	}
 
-	public Long getBuyerId() {
-		return buyerId;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	public Long getSellerId() {
-		return sellerId;
+	public Long getVendorId() {
+		return vendorId;
 	}
 
 	public Long getItemId() {
@@ -134,54 +135,52 @@ public class Shipment {
 		return price;
 	}
 
-	public String getItemTitle() {
-		return itemTitle;
+	public String getItemName() {
+		return itemName;
 	}
 
-	public int getCount() {
-		return count;
+	public int getQuantity() {
+		return quantity;
 	}
 
 	public String getShippingStatus() {
 		return shippingStatus;
 	}
 
-	// necessary for reflection, otherwise final
-
-	public void setBuyerId(Long buyerId) {
-		this.buyerId = buyerId;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public void setItemTitle(String itemTitle) {
-		this.itemTitle = itemTitle;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public void setSellerId(Long sellerId) {
-		this.sellerId = sellerId;
-	}
-
-	public void setShipmentId(Long shipmentid) {
+	public void setShipmentid(Long shipmentid) {
 		this.shipmentid = shipmentid;
+	}
+
+	public void setItemid(Long itemid) {
+		this.itemid = itemid;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public void setShippingStatus(String shippingStatus) {
-		this.shippingStatus = shippingStatus;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
-	public void setItemid(Long itemid) {
-		this.itemid = itemid;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setShippingStatus(String shippingStatus) {
+		this.shippingStatus = shippingStatus;
 	}
 
 }
