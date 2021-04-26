@@ -126,11 +126,11 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,526,162)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="27" clip-path="url(#clipPath8)" stroke="none"
-      >-buyerid</text
+      >-customerId</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,526,162)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="41" clip-path="url(#clipPath8)" stroke="none"
-      >-sellerid</text
+      >-vendorId</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,526,162)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="55" clip-path="url(#clipPath8)" stroke="none"
@@ -142,11 +142,11 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,526,162)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="83" clip-path="url(#clipPath8)" stroke="none"
-      >-itemTitle</text
+      >-itemName</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,526,162)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="97" clip-path="url(#clipPath8)" stroke="none"
-      >-count</text
+      >-quantity</text
     ></g
     ><g font-size="11px" transform="translate(526,134)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" font-weight="bold" stroke-opacity="1"
     ><text x="25" xml:space="preserve" y="11" clip-path="url(#clipPath9)" stroke="none"
