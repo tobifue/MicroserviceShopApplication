@@ -30,7 +30,7 @@ public class InventoryController {
     public Item saveDepartment(@RequestBody Item inventory){
 
         Item newItem = ItemFactory.createInstance(inventory.getItemId(), inventory.getPrice(),inventory.getVendorId(), inventory.getQuantity(), inventory.getItemName(), inventory.getPriceRecommendation());
-        log.info("Inside saceDepartment method of DepartmentController");
+        log.info("Inside saveDepartment method of DepartmentController");
         return inventoryService.saveItem(newItem);
     }
 

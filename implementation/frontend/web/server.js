@@ -14,9 +14,7 @@ app.set('view engine', '.hbs');
 var port = 3003;
 var customerId = '1';
 var gatewayIp = process.env.GATEWAYIP || "localhost";
-console.log("IP used: " + gatewayIp);
-var getDockerHost = require('get-docker-host');
-var isInDocker = require('is-in-docker');
+console.log("IP used for gateway: " + gatewayIp);
 app.get('/', function (req, res, next) {
     res.render(__dirname + '/views/index.hbs');
 });
@@ -58,16 +56,23 @@ var HttpOption = /** @class */ (function () {
     return HttpOption;
 }());
 app.get('/vendor', function (req, res, next) {
-    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/1", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
-            if (items != null) {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, "ich", 65)] });
-            }
-            else {
-                res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items) });
-            }
+            console.log("loaded items:", items);
+            var httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/2", function (response) {
+                var profit = "";
+                response.on('data', function (chunk) { profit += chunk; });
+                response.on("end", function () {
+                    if (items == null) {
+                        res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, "ich", 65)], profit: "134,32" });
+                    }
+                    else {
+                        res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items), profit: profit || "134,32" });
+                    }
+                });
+            });
         });
     });
 });
@@ -104,7 +109,7 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.end();
 });
 app.get('/customer', function (req, res, next) {
-    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
@@ -113,10 +118,10 @@ app.get('/customer', function (req, res, next) {
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
                     if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewcustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewCustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
                     }
                     else {
-                        res.render(__dirname + '/views/overviewcustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
+                        res.render(__dirname + '/views/overviewCustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: JSON.parse(items) });
                     }
                 });
             });
@@ -140,7 +145,7 @@ app.post('/addToCart', function (req, res, next) {
     httpreq.end();
 });
 app.post('/markProduct', function (req, res, next) {
-    var httpreq = http.request(new HttpOption("/productMark/markItem"), function (response) {
+    var httpreq = http.request(new HttpOption("/markedproduct/mark"), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
         });
@@ -148,12 +153,24 @@ app.post('/markProduct', function (req, res, next) {
     httpreq.on('error', function (err) {
         res.redirect('/customer');
     });
-    httpreq.write(JSON.stringify({ customerId: customerId, item: new Item(req.body.itemId, req.body.itemName, 0, req.body.price, req.body.vendor, req.body.price) }));
+    httpreq.write(JSON.stringify({ vendorId: req.body.vendorId, costumerId: "1", price: req.body.price, email: "keine mail boys", itemName: req.body.itemName }));
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
     console.log("checkout called");
     var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
+        response.on('end', function () {
+            res.redirect('/customer');
+        });
+    });
+    httpreq.on('error', function (err) {
+        res.redirect('/customer');
+    });
+    httpreq.write();
+    httpreq.end();
+});
+app.post('/deleteItem', function (req, res, next) {
+    var httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
         });
@@ -179,7 +196,8 @@ app.post('/rateItem', function (req, res, next) {
 });
 app.get('/Administrator', function (req, res, next) {
     //TODO get this from gateway
-    res.render(__dirname + '/views/overviewAdmin.hbs', { services: {
+    res.render(__dirname + '/views/overviewAdmin.hbs', {
+        services: {
             ratingService: "up",
             inventoryService: "up",
             cartService: "up",
@@ -189,7 +207,8 @@ app.get('/Administrator', function (req, res, next) {
             checkoutService: "up",
             historyService: "up",
             shipmentService: "up"
-        } });
+        }
+    });
 });
 var id;
 app.post('/login', function (req, res) {
@@ -197,7 +216,10 @@ app.post('/login', function (req, res) {
     if (id == 1) { //customer
         res.redirect('/customer');
     }
-    else {
+    else if (id == 2) { //customer
         res.redirect('/vendor');
+    }
+    else {
+        res.redirect('/administrator');
     }
 });

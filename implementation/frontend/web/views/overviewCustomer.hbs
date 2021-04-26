@@ -32,7 +32,7 @@
         {{# each items}}
         <tr>
           <td>
-            <form action="/markItem" method="post">
+            <form action="/markProduct" method="post">
               <input type="hidden" id="itemId" name="name" value={{ this.itemId }}>
               <input type="hidden" id="itemNameId" name="name" value={{ this.itemName }}>
               <input type="hidden" id="vendorId" name="vendor" value={{ this.vendorId }}>
@@ -83,6 +83,7 @@
               <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
               <input type="submit" value="OK">
             </td>
+          </form>
           </form>
         </tr>
         {{/each}}

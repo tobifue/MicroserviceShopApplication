@@ -16,9 +16,9 @@ public class InventoryController {
 	public String saveItem(@RequestBody Map<String, Object> inventory) {
 		try {
 			//return NetworkUtil.httpPost(AdressUtil.loadAdress(serviceName), "/", inventory);
+			System.out.println("/inventory add item: " + inventory);
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(inventory, "inventory", String.format("/"), "GET"));
-
+					Message.createInstance(inventory, "inventory", String.format("/"), "POST"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
