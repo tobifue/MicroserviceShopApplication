@@ -95,7 +95,7 @@ public class RatingApplication {
 	public CommandLineRunner loadRepository(RatingRepository repository) {
 		return (args) -> {
 			this.repository = repository;
-			printRepositoryToConsole();
+			//printRepositoryToConsole();
 			// register with gateway in commandlineRunner
 			registerWithGateway();
 		};
