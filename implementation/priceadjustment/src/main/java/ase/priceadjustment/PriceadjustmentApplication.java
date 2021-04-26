@@ -66,6 +66,7 @@ public class PriceadjustmentApplication {
 	public CommandLineRunner initialize() {
 		return (args) -> {
 			this.scraper = new PriceScraper();
+			registerWithGateway();
 		};
 	}
 

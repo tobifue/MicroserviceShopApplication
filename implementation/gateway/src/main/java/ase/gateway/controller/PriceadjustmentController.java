@@ -11,10 +11,10 @@ import org.springframework.web.client.RestClientException;
 import ase.gateway.traffic.Message;
 
 @RestController
-@RequestMapping("priceadjust")
+@RequestMapping("pricecrawler")
 public class PriceadjustmentController {
 
-	private static String serviceName = "priceadjust";
+	private static String serviceName = "pricecrawler";
 
 	/**
 	 * 
