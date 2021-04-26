@@ -48,6 +48,17 @@ public class InventoryController {
 		}
 	}
 
+	@GetMapping("/items/")
+	public @ResponseBody String findAllItems() {
+		try {
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "inventory", String.format("/items/"), "GET"));
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
 	@RequestMapping(value = "/vendor", method = RequestMethod.GET)
 	@ResponseBody
 	public String findAllObjects() {

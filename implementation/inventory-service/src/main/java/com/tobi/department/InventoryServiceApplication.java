@@ -64,7 +64,7 @@ public class InventoryServiceApplication {
 		List<Item> inventories = new ArrayList<Item>();
 		List<Item> v_inventories = new ArrayList<Item>();
 
-		inventories = inventoryService.findByVendorId();
+		inventories = inventoryService.findAllItems();
 
 		for(Item dep : inventories) {
 			if(dep.getVendorId()==id){
@@ -81,6 +81,20 @@ public class InventoryServiceApplication {
 		return json;
 	}
 
+	@SneakyThrows
+	@RequestMapping(value="/items/")
+	@GetMapping(produces = "application/json")
+	public @ResponseBody String findAllItems() throws JsonProcessingException {
+
+		List<Item> itemss = new ArrayList<Item>();
+
+		itemss = inventoryService.findAllItems();
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(itemss);
+
+		return json;
+	}
+
         @SneakyThrows
 		@RequestMapping(value="/vendor")
         @GetMapping(consumes="application/json", produces ="application/json")
@@ -88,7 +102,7 @@ public class InventoryServiceApplication {
 
             List<Item> inventories = new ArrayList<Item>();
 
-            inventories = inventoryService.findByVendorId();
+            inventories = inventoryService.findAllItems();
 
 			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 			String json = ow.writeValueAsString(inventories);
@@ -135,6 +149,7 @@ public class InventoryServiceApplication {
 					add("/update");
 					add("/delete");
 					add("/vendor");
+					add("/items/");
 				}
 			});
 			registrationDetails.put("category", "inventory");

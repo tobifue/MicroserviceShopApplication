@@ -1,6 +1,7 @@
 
 package com.tobi.department.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tobi.department.entity.Item;
@@ -42,6 +43,22 @@ public class InventoryController {
         return inventoryService.findByItemId(itemId);
     }
 
+    //get all items
+    @SneakyThrows
+    @RequestMapping(value="/items/{id}")
+    @GetMapping(produces = "application/json")
+    public @ResponseBody String findAllItems(@PathVariable("id")Integer id) throws JsonProcessingException {
+
+        List<Item> itemss = new ArrayList<Item>();
+
+        log.info("Inside findDepartmentById method of DepartmentController");
+        itemss = inventoryService.findAllItems();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(itemss);
+
+        return json;
+    }
+
     //get List of all Items from Vendor
     @SneakyThrows
     @RequestMapping(value="/vendor/{id}")
@@ -51,7 +68,7 @@ public class InventoryController {
         List<Item> inventories = new ArrayList<Item>();
         List<Item> v_inventories = new ArrayList<Item>();
 
-        inventories = inventoryService.findByVendorId();
+        inventories = inventoryService.findAllItems();
 
         for(Item dep : inventories) {
             if(dep.getVendorId()==id){

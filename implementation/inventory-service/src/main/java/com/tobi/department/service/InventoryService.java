@@ -26,7 +26,7 @@ public class InventoryService {
         return inventoryRepository.findByItemId(itemId);
     }
 
-    public List<Item> findByVendorId() {
+    public List<Item> findAllItems() {
         log.info("Inside findByVendorId of InventoryService");
         return inventoryRepository.findAll();
     }
