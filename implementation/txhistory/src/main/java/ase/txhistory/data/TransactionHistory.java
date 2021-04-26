@@ -40,8 +40,8 @@ public class TransactionHistory {
 		for (Transaction tx : allTx) {
 			// if type == null then select all tx's where id was involved, otherwise select
 			// after specific type
-			if (type == null ? tx.getBuyerId().equals(userId) || tx.getSellerId().equals(userId)
-					: type == IdType.BUYER ? tx.getBuyerId().equals(userId) : tx.getSellerId().equals(userId))
+			if (type == null ? tx.getCustomerId().equals(userId) || tx.getVendorId().equals(userId)
+					: type == IdType.BUYER ? tx.getCustomerId().equals(userId) : tx.getVendorId().equals(userId))
 				result.add(tx);
 		}
 		return result;

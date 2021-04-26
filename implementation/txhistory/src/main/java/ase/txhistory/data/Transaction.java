@@ -16,33 +16,33 @@ public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long txid;
-	private Long buyerId;
-	private Long sellerId;
+	private Long customerId;
+	private Long vendorId;
 	private final Date date;
 	private double price;
-	private String itemTitle;
-	private int count;
+	private String itemName;
+	private int quantity;
 
 	public Transaction() {
 		this.date = new Date();
 	}
 
-	public Transaction(Long buyerId, Long sellerId, double price, String itemTitle, int count) {
-		this.buyerId = buyerId;
-		this.sellerId = sellerId;
+	public Transaction(Long customerId, Long vendorId, double price, String itemName, int quantity) {
+		this.customerId = customerId;
+		this.vendorId = vendorId;
 		this.price = price;
-		this.itemTitle = itemTitle;
-		this.count = count;
+		this.itemName = itemName;
+		this.quantity = quantity;
 		this.date = new Date();
-	};
+	}
 
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
-		j.put("buyerid", buyerId);
-		j.put("sellerid", sellerId);
+		j.put("customerid", customerId);
+		j.put("vendorid", vendorId);
 		j.put("price", price);
-		j.put("itemtitle", itemTitle);
-		j.put("count", count);
+		j.put("itemname", itemName);
+		j.put("quantity", quantity);
 		j.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(date));
 		return j;
 	}
@@ -51,9 +51,9 @@ public class Transaction {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[TxID: " + txid);
-		sb.append("; Buyer: " + buyerId);
-		sb.append("; Seller: " + sellerId);
-		sb.append(" |" + itemTitle + ", price: " + price + "€, count: " + count + "|]");
+		sb.append("; Customer: " + customerId);
+		sb.append("; Vendor: " + vendorId);
+		sb.append(" |" + itemName + ", price: " + price + "€, quantity: " + quantity + "|]");
 		return sb.toString();
 	}
 
@@ -61,53 +61,52 @@ public class Transaction {
 		return txid;
 	}
 
-	public Long getBuyerId() {
-		return buyerId;
+	public void setTxid(Long txid) {
+		this.txid = txid;
 	}
 
-	public Long getSellerId() {
-		return sellerId;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	public Date getDate() {
-		return date;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public Long getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
 
 	public double getPrice() {
 		return price;
 	}
 
-	public String getItemTitle() {
-		return itemTitle;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	// necessary for reflection, otherwise final
-
-	public void setBuyerId(Long buyerId) {
-		this.buyerId = buyerId;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public void setItemTitle(String itemTitle) {
-		this.itemTitle = itemTitle;
-	}
-
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
-	public void setSellerId(Long sellerId) {
-		this.sellerId = sellerId;
+	public String getItemName() {
+		return itemName;
 	}
 
-	public void setTxid(Long txid) {
-		this.txid = txid;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
 }
