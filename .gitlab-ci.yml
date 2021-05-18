@@ -24,6 +24,6 @@
         - implementation/cart/container/
       script: 
         - cd implementation/cart/container
-        - sudo chown -R gitlab-runner container
+        - ls -all
         - npm install
         - npm run test
