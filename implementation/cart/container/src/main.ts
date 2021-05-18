@@ -118,9 +118,9 @@ let connect = () => {
         })
     }).on("error", (err) => {
         counter++;
-        if (counter == topLimit)return;
-        console.log("Error: ", err.message);
-        console.log("Try again");
+        //if (counter == topLimit)return;
+        //console.log("Error: ", err.message);
+        //console.log("Try again");
         connect();
     });
 

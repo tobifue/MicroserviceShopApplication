@@ -98,10 +98,9 @@ var connect = function () {
         });
     }).on("error", function (err) {
         counter++;
-        if (counter == topLimit)
-            return;
-        console.log("Error: ", err.message);
-        console.log("Try again");
+        //if (counter == topLimit)return;
+        //console.log("Error: ", err.message);
+        //console.log("Try again");
         connect();
     });
     httpreq2.write(JSON.stringify(registration));
