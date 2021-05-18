@@ -23,6 +23,6 @@
         paths:
         - implementation/cart/container/
       script: 
-        - ls
+        - cd implementation/cart/container
         - npm install
         - npm run test
