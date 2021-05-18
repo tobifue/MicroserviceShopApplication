@@ -28,4 +28,4 @@
         - cd implementation/cart/container
         - npm install -g mocha
         - npm install
-        - npm run test --timeout 10000 --exit
+        - npm run test
