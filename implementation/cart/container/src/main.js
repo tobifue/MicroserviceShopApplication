@@ -84,6 +84,8 @@ var options = {
         "Content-Type": "application/json"
     }
 };
+var counter = 0;
+var topLimit = 20;
 var http = require('http');
 var connect = function () {
     var httpreq2 = http.request(options, function (response) {
@@ -95,7 +97,11 @@ var connect = function () {
             console.log(data);
         });
     }).on("error", function (err) {
+        counter++;
+        if (counter == topLimit)
+            return;
         console.log("Error: ", err.message);
+        console.log("Try again");
         connect();
     });
     httpreq2.write(JSON.stringify(registration));

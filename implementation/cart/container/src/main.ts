@@ -102,8 +102,12 @@ let options = {
         "Content-Type": "application/json"
     }
 }
+
+let counter = 0;
+const topLimit = 20;
 let http = require('http');
 let connect = () => {
+
     let httpreq2 = http.request(options, function (response) {
         let data = "";
         response.on('data', function (chunk) {
@@ -113,6 +117,8 @@ let connect = () => {
             console.log(data)
         })
     }).on("error", (err) => {
+        counter++;
+        if (counter == topLimit)return;
         console.log("Error: ", err.message);
         console.log("Try again");
         connect();
