@@ -30,6 +30,14 @@
         - npm run test
 
     release_upload:
-      image: registry.gitlab.com/gitlab-org/release-cli:v0.1.0
+      stage: release
+      image: registry.gitlab.com/gitlab-org/release-cli:latest
+      needs:
+        - job: test
+          artifacts: true
+      rules:
+        - if: '$RELEASE == "True"'
+        - if: '$CI_COMMIT_BRANCH == "master"'
+
       script:
         - release-cli create --name="My Release" --description="My Release description"
