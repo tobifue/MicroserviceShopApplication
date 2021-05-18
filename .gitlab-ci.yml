@@ -24,7 +24,6 @@
         - implementation/cart/container/
       script: 
         - cd implementation/cart/container
-        - npm config set user 0
-        - npm config set unsafe-perm true
+        - sudo chown -R gitlab-runner container
         - npm install
         - npm run test
