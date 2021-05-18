@@ -5,10 +5,10 @@
   "name": "Cart",
   "version": "0.0.1",
   "description": "What am I about?",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node main.js",
-    "test": "mocha"
+    "start": "node src/main.js",
+    "test": "mocha --exit"
   },
   "dependencies": {
     "chai": "^4.3.4",
