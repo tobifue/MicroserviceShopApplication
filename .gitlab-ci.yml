@@ -25,5 +25,5 @@
         - cd implementation/cart/container
         - npm install -g mocha
         - npm install
-        - nohup node npm start &
+        - nohup npm start &
         - npm run test
