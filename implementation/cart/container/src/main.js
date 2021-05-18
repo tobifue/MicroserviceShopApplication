@@ -1,5 +1,12 @@
-var Item = /** @class */ (function () {
-    function Item(itemId, itemName, quantity, price, vendorId, priceRecommendation) {
+/*
+class Item {
+    itemId: number;
+    itemName: string;
+    quantity: number;
+    price: number;
+    vendorId: string;
+    priceRecommendation: number;
+    constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.quantity = quantity;
@@ -7,19 +14,25 @@ var Item = /** @class */ (function () {
         this.vendorId = vendorId;
         this.priceRecommendation = priceRecommendation;
     }
-    return Item;
-}());
-var Cart = /** @class */ (function () {
-    function Cart(id) {
+}
+
+
+class Cart {
+    customerId:number;
+    list:Item[];
+    constructor(id:number) {
         this.customerId = id;
         this.list = [];
     }
-    Cart.prototype.add = function (item) {
-        this.list.push(item);
+
+    add(item:Item) {
+        this.list.push(item)
         return this;
-    };
-    return Cart;
-}());
+    }
+}
+*/
+var Item = require("./cart").Item;
+var Cart = require("./cart").Cart;
 var carts = new Map();
 var express = require('express');
 var app = express();
@@ -72,14 +85,20 @@ var options = {
     }
 };
 var http = require('http');
-var httpreq2 = http.request(options, function (response) {
-    var data = "";
-    response.on('data', function (chunk) {
-        data += chunk;
+var connect = function () {
+    var httpreq2 = http.request(options, function (response) {
+        var data = "";
+        response.on('data', function (chunk) {
+            data += chunk;
+        });
+        response.on('end', function () {
+            console.log(data);
+        });
+    }).on("error", function (err) {
+        console.log("Error: ", err.message);
+        connect();
     });
-    response.on('end', function () {
-        console.log(data);
-    });
-});
-httpreq2.write(JSON.stringify(registration));
-httpreq2.end();
+    httpreq2.write(JSON.stringify(registration));
+    httpreq2.end();
+};
+connect();

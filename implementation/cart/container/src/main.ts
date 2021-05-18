@@ -3,7 +3,7 @@
 
 
 
-
+/*
 class Item {
     itemId: number;
     itemName: string;
@@ -34,11 +34,10 @@ class Cart {
         this.list.push(item)
         return this;
     }
-
-
 }
-
-
+*/
+const Item = require("./cart").Item;
+const Cart = require("./cart").Cart;
 
 let carts = new Map();
 
@@ -87,11 +86,11 @@ console.log("IP used: " + gatewayIp);
 
 
 var ip = require("ip");
-console.log ( ip.address() );
+console.log(ip.address());
 let registration = {
-    "endpoints":["/addItem","/getCart", "/deleteCart"],
+    "endpoints": ["/addItem", "/getCart", "/deleteCart"],
     "category": "cart",
-    "ip": ip.address()+":8085"
+    "ip": ip.address() + ":8085"
 }
 
 let options = {
@@ -104,15 +103,22 @@ let options = {
     }
 }
 let http = require('http');
-let httpreq2 = http.request(options, function (response) {
-    let data = "";
-    response.on('data', function (chunk) {
-        data += chunk;
+let connect = () => {
+    let httpreq2 = http.request(options, function (response) {
+        let data = "";
+        response.on('data', function (chunk) {
+            data += chunk;
+        });
+        response.on('end', function () {
+            console.log(data)
+        })
+    }).on("error", (err) => {
+        console.log("Error: ", err.message);
+        console.log("Try again");
+        connect();
     });
-    response.on('end', function () {
-        console.log(data)
-    })
-});
-httpreq2.write(JSON.stringify(registration));
-httpreq2.end();
 
+    httpreq2.write(JSON.stringify(registration));
+    httpreq2.end();
+}
+connect();
