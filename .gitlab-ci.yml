@@ -18,4 +18,9 @@
 
     cart_testing:
       stage: test
-      script: npm test
+      artifacts:
+        paths:
+        - implementation/cart/container/node_modules/
+      script: 
+        - npm install
+        - npm run test
