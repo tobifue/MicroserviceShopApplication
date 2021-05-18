@@ -18,9 +18,6 @@
 
     cart_testing:
       stage: test
-      before_script:
-        - npm install
-        - nohup node npm start &
       artifacts:
         paths:
         - implementation/cart/container/
@@ -28,4 +25,5 @@
         - cd implementation/cart/container
         - npm install -g mocha
         - npm install
+        - nohup node npm start &
         - npm run test
