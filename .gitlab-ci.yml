@@ -40,4 +40,4 @@
         - if: '$CI_COMMIT_BRANCH == "master"'
 
       script:
-        - release-cli create --name="My Release" --description="My Release description" --tag-name "$TAG" 
+        - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
