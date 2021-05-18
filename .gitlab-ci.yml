@@ -20,7 +20,7 @@
       stage: test
       artifacts:
         paths:
-        - implementation/cart/container/node_modules/
+        - implementation/cart/container/
       script: 
         - npm install
         - npm run test
