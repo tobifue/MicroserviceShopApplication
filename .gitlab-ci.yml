@@ -19,6 +19,7 @@
         #- implementation/cart/container/node_modules/
 
     cart_start:
+      parallel: 2
       image: node:latest
       stage: build
       artifacts:
@@ -31,6 +32,7 @@
 
 
     cart_testing:
+      parallel: 2
       image: node:latest
       stage: test
       artifacts:
