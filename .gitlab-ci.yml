@@ -36,7 +36,7 @@
       artifacts:
         paths:
         - implementation/cart/container/
-      need:
+      needs:
         - job: cart_start
           artifacts: true
       script: 
@@ -51,7 +51,7 @@
         artifacts:
           paths:
           - implementation/test
-        need:
+        needs:
           - job: cart_testing
             artifacts: true
         script: 
