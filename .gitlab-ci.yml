@@ -35,7 +35,7 @@
       stage: test
       environment:
 #        - GATEWAYIP=$CI_SERVER_HOST
-        - GATEWAYIP=172.20.112.1
+        - GATEWAYIP : $CI_SERVER_HOST
       artifacts:
         paths:
         - implementation/cart/container/
