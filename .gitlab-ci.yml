@@ -37,7 +37,7 @@
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
       variables:
-        GATEWAYIP: "$CI_SERVER_NAME"
+        GATEWAYIP: "$CI_JOB_URL"
       artifacts:
         paths:
         - implementation/cart/container/
@@ -60,7 +60,7 @@
         - cd implementation/test
         - npm install -g mocha
         - npm install
-        - mocha endToEndTest.js
+        - mocha endToEndTest.js --exit
 
     release_upload:
       stage: release
