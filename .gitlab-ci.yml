@@ -34,7 +34,8 @@
       image: node:latest
       stage: test
       environment:
-        - GATEWAYIP=$CI_SERVER_HOST
+#        - GATEWAYIP=$CI_SERVER_HOST
+        - GATEWAYIP=172.20.112.1
       artifacts:
         paths:
         - implementation/cart/container/
