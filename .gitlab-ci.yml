@@ -37,7 +37,7 @@
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
       variables:
-        GATEWAYIP: "$CI_JOB_URL"
+        GATEWAYIP: "$host_ip"
       artifacts:
         paths:
         - implementation/cart/container/
