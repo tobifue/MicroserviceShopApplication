@@ -27,7 +27,7 @@
       script: 
         - cd implementation/cart/container
         - npm install
-        - npm start &
+        - npm start
 
 
     cart_testing:
