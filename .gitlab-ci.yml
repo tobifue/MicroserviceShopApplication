@@ -36,9 +36,6 @@
       artifacts:
         paths:
         - implementation/cart/container/
-      needs:
-        - job: cart_start
-          artifacts: true
       script: 
         - cd implementation/cart/container
         - npm install -g mocha
