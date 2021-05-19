@@ -1,39 +1,70 @@
-    image: node:latest
+
 
     stages:
       - build
       - test
+      - integrationTest
       - release
 
-    cache:
-      paths:
-        - implementation/cart/container/node_modules/
+#    cache:
+#      paths:
+ #       - implementation/cart/container/node_modules/
+#
+ #   install_dependencies:
+  ##    stage: build
+    #  script:
+     #   - npm install
+      #artifacts:
+       # paths:
+        #- implementation/cart/container/node_modules/
 
-    install_dependencies:
+    cart_start:
+      image: node:latest
       stage: build
-      script:
-        - npm install
-      artifacts:
-        paths:
-        - implementation/cart/container/node_modules/
-
-    cart_testing:
-      stage: test
       artifacts:
         paths:
         - implementation/cart/container/
       script: 
         - cd implementation/cart/container
+        - npm install
+        - npm start 
+
+
+    cart_testing:
+      image: node:latest
+      stage: test
+      artifacts:
+        paths:
+        - implementation/cart/container/
+        need:
+          - job: cart_start
+            artifacts: true
+      script: 
+        - cd implementation/cart/container
         - npm install -g mocha
         - npm install
-        - nohup npm start &
         - npm run test
+
+    integration_test:
+        image: node:latest
+        stage: integrationTest
+        artifacts:
+          paths:
+          - implementation/test
+        need:
+          - job: cart_testing
+            artifacts: true
+        script: 
+        - cd implementation/test
+        - npm install -g mocha
+        - npm install
+        - mocha endToEndTest.js
 
     release_upload:
       stage: release
       image: registry.gitlab.com/gitlab-org/release-cli:latest
       needs:
-        - job: cart_testing
+        - job: integration_test
           artifacts: true
       rules:
         - if: '$RELEASE == "True"'
