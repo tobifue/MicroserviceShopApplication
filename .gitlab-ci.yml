@@ -33,9 +33,11 @@
     cart_testing:
       image: node:latest
       stage: test
-      environment:
+#      environment:
 #        - GATEWAYIP=$CI_SERVER_HOST
-        - GATEWAYIP : '$CI_SERVER_HOST'
+#        - GATEWAYIP : '$CI_SERVER_HOST'
+      variables:
+        GATEWAYIP: "$CI_SERVER_HOST"
       artifacts:
         paths:
         - implementation/cart/container/
