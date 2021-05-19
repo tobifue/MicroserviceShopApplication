@@ -1,7 +1,7 @@
 var expect  = require('chai').expect;
 var request = require('request');
 const supertest= require("supertest");
-let api = supertest('http://172.17.0.5:8085');
+let api = supertest((process.env.GATEWAYIP || "localhost")+':8085');
 
 it('expect return a 200 respronse', function (done){
     api.get('/getCart/1')
