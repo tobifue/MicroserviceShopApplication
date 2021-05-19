@@ -37,7 +37,7 @@
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
       variables:
-        GATEWAYIP: "$host_ip"
+        GATEWAYIP: "tcp://docker"
       artifacts:
         paths:
         - implementation/cart/container/
