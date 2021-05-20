@@ -37,7 +37,7 @@
       services:
         - name: node:latest
           alias: app
-          command: ["npm start"]
+          command: ["ls"]
       image: node:latest      
       stage: test
 #      environment:
