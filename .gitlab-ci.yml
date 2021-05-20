@@ -5,6 +5,8 @@ stages:
   - release
   - cleanup
 
+variables:
+  cartIp: "localhost"
 
 integration_test_fast:
   before_script: 
@@ -31,7 +33,7 @@ integration_test_connect:
   script:
     - cd implementation/cart/container
     - npm install
-    - npm start
+    - npm start GATEWAYIP=172.20.112.1
 
 
 install_dependencies:
