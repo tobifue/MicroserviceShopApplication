@@ -17,7 +17,7 @@ integration_test_fast:
     paths:
       - implementation/cart/container/
   script:
-    - 'RUN apt-get update \
+    - 'apt-get update \
         && apt-get install -y \
           apt-transport-https \
           build-essential \
