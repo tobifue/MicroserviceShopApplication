@@ -11,8 +11,6 @@ variables:
 integration_test_fast:
   image: ubuntu:latest
   stage: test
-  variables:
-    GATEWAYIP: $cartIp
   artifacts:
     paths:
       - implementation/cart/container/
@@ -22,6 +20,12 @@ integration_test_fast:
     - apt-transport-https 
     - build-essential 
     - make
+    - apt install nodejs npm
+    - cd implementation/cart/container
+    - npm start --host=app &
+    - npm install -g mocha
+    - npm install
+    - npm run test
 
 
 
