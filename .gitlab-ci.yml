@@ -15,8 +15,8 @@ integration_test_fast:
     paths:
       - implementation/cart/container/
   script:
-    - apt-get update | O_NONBLOCK
-    - apt install nodejs npm | O_NONBLOCK
+    - apt-get update 
+    - apt -y install nodejs npm 
     - cd implementation/cart/container
     - npm start --host=app &
     - npm install -g mocha
