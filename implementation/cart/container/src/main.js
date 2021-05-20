@@ -70,6 +70,7 @@ var gatewayIp = process.env.GATEWAYIP || "localhost";
 console.log("IP used: " + gatewayIp);
 var ip = require("ip");
 console.log(ip.address());
+process.env.GATEWAYIP = ip.address();
 var registration = {
     "endpoints": ["/addItem", "/getCart", "/deleteCart"],
     "category": "cart",
