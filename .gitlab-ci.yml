@@ -37,7 +37,7 @@
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
       variables:
-        GATEWAYIP: "$DOCKER_AUTH_CONFIG"
+        GATEWAYIP: "tcp://localhost"
       artifacts:
         paths:
         - implementation/cart/container/
