@@ -22,6 +22,8 @@ cart_testing:
     - npm install
     - npm run test
 
+## add services to test
+
 
 integration_test:
   image: ubuntu:latest
@@ -35,7 +37,7 @@ integration_test:
     - echo $TZ > /etc/timezone
     - apt -y install nodejs npm 
     - cd implementation/cart/container
-    #install Java things here
+    #install and run Java things here
     - npm start --host=app &
     - npm install -g mocha
     - npm install
