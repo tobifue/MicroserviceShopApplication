@@ -1,41 +1,3 @@
-
-
-
-
-
-/*
-class Item {
-    itemId: number;
-    itemName: string;
-    quantity: number;
-    price: number;
-    vendorId: string;
-    priceRecommendation: number;
-    constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.quantity = quantity;
-        this.price = price;
-        this.vendorId = vendorId;
-        this.priceRecommendation = priceRecommendation;
-    }
-}
-
-
-class Cart {
-    customerId:number;
-    list:Item[];
-    constructor(id:number) {
-        this.customerId = id;
-        this.list = [];
-    }
-
-    add(item:Item) {
-        this.list.push(item)
-        return this;
-    }
-}
-*/
 const Item = require("./cart").Item;
 const Cart = require("./cart").Cart;
 
@@ -82,12 +44,9 @@ app.listen(port, function () {
 });
 
 const gatewayIp = process.env.GATEWAYIP || "localhost";
-//console.log("IP used: " + gatewayIp);
-
-
 var ip = require("ip");
 console.log(ip.address());
-process.env.GATEWAYIP=ip.address();
+
 
 let registration = {
     "endpoints": ["/addItem", "/getCart", "/deleteCart"],
@@ -105,8 +64,7 @@ let options = {
     }
 }
 
-let counter = 0;
-const topLimit = 200;
+
 let http = require('http');
 let connect = () => {
 
@@ -119,10 +77,6 @@ let connect = () => {
             console.log(data)
         })
     }).on("error", (err) => {
-        counter++;
-        //if (counter == topLimit)return;
-        //console.log("Error: ", err.message);
-        //console.log("Try again");
         connect();
     });
 
