@@ -7,8 +7,9 @@
       - release
 
 
-      
+
     install_dependencies:
+      image: node:latest 
       stage: build
       script:
         - npm install
