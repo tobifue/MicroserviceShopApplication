@@ -13,9 +13,6 @@ integration_test_fast:
   artifacts:
     paths:
       - implementation
-  needs:
-    - job: cart_testing
-      artifacts: true
   script:   
     - cd implementation/cart/container 
     - ls
