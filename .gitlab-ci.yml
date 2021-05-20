@@ -16,10 +16,6 @@ integration_test_fast:
       - implementation/cart/container/
   script:
     - apt-get update 
-    - apt-get install -y 
-    - apt-get apt-transport-https 
-    - build-essential 
-    - make
     - apt install nodejs npm
     - cd implementation/cart/container
     - npm start --host=app &
