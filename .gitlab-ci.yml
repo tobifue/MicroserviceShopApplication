@@ -36,9 +36,12 @@
     cart_testing:
       image: node:latest
       stage: test
-#      environment:
-#        - GATEWAYIP=$CI_SERVER_HOST
-#        - GATEWAYIP : '$CI_SERVER_HOST'
+      services:
+        cart_start:
+          build: ./container
+          command: npm start
+          ports:
+            - "8085:8085"
       variables:
         GATEWAYIP: cart_start
       artifacts:
