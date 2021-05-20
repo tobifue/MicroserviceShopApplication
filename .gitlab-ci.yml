@@ -33,18 +33,11 @@
     cart_testing:
       image: node:latest
       stage: test
-      services:
-        cart_start:
-          build: implementation/cart/container/
-          command: 
-            - cd implementation/cart/container
-            - npm install -g mocha
-            - npm install
-            - npm start
-          ports:
-            - "8085:8085"
+#      environment:
+#        - GATEWAYIP=$CI_SERVER_HOST
+#        - GATEWAYIP : '$CI_SERVER_HOST'
       variables:
-        - GATEWAYIP: cart_start
+        GATEWAYIP: "http://localhost"
       artifacts:
         paths:
         - implementation/cart/container/
