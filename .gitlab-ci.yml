@@ -5,38 +5,8 @@ stages:
   - release
   - cleanup
 
-variables:
-  cartIp: "localhost"
-
-integration_test_fast:
-  image: ubuntu:latest
-  stage: build
-  artifacts:
-    paths:
-      - implementation/cart/container/
-  script:
-    - apt-get update 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-    - apt -y install nodejs npm 
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
 
 
-
-
-
-install_dependencies:
-  image: node:latest
-  stage: build
-  script:
-    - npm install
-  artifacts:
-    paths:
-      - implementation/cart/container/node_modules/
 
 
 
@@ -57,27 +27,25 @@ cart_testing:
     - npm run test
 
 
-
-
-integration_test:
-  #add Java services
-  image: docker:latest
+integration_test_fast:
+  image: ubuntu:latest
   stage: integrationTest
   artifacts:
     paths:
-      - implementation
-  needs:
-    - job: cart_testing
-      artifacts: true
-  script:   
-    - cd implementation/cart/container 
-    - ls
-    - docker-compose build -t my-docker-image .
-    - docker-compose run my-docker-image /script/to/run/tests
-    - cd ../../test
+      - implementation/cart/container/
+  script:
+    - apt-get update 
+    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
+    - echo $TZ > /etc/timezone
+    - apt -y install nodejs npm 
+    - cd implementation/cart/container
+    #install Java things here
+    - npm start --host=app &
     - npm install -g mocha
     - npm install
-    - mocha endToEndTest.js --exit
+    - npm run test
+
+
 
 release_upload:
   stage: release
