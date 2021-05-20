@@ -58,9 +58,3 @@ release_upload:
   script:
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
 
-
-cleanup:
-  stage: cleanup
-  when: always
-  script:
-    - docker rmi ${IMAGE} || true
