@@ -14,7 +14,7 @@ integration_test_fast:
   stage: build
   image: docker:latest
   script:
-    - sudo docker
+    - apt-get update
 
 
 install_dependencies:
