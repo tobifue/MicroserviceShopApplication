@@ -4,30 +4,19 @@ stages:
   - integrationTest
   - release
 
-
+variables:
+  IMAGE: foobar:${CI_COMMIT_SHA}
 
 integration_test_fast:
-  #add Java services
-  image: docker:latest
   stage: build
-  services:
-    - docker:dind 
-  artifacts:
-    paths:
-      - implementation
-  before_script:
-      - apt-get remove docker docker-engine docker.io containerd runc
-  script:   
-    - cd implementation/cart 
-    - ls
-    - apk add --no-cache docker-compose
-    - docker-compose build
-    - docker-compose run
-    - cd ../../test
-    - npm install -g mocha
-    - npm install
-    - mocha endToEndTest.js --exit
-
+  image:docker: latest
+  script:
+    - cd implementation/cart/container
+    - >
+      docker build
+      -f Dockerfile
+      -t ${IMAGE}
+      --pull .
 
 
 install_dependencies:
