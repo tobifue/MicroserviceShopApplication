@@ -18,6 +18,8 @@ integration_test_fast:
   script:   
     - cd implementation/cart 
     - ls
+    - service docker start
+    - apt-get remove docker docker-engine docker.io containerd runc
     - apk add --no-cache docker-compose
     - docker-compose build
     - docker-compose run
