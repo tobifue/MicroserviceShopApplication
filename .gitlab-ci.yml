@@ -39,11 +39,6 @@
           alias: app
       image: node:latest      
       stage: test
-#      environment:
-#        - GATEWAYIP=$CI_SERVER_HOST
-#        - GATEWAYIP : '$CI_SERVER_HOST'
-      #variables:
-        #GATEWAYIP: app
       artifacts:
         paths:
         - implementation/cart/container/
@@ -55,6 +50,10 @@
         - npm run test
 
     integration_test:
+        services:
+        - name: node:latest
+          alias: app
+        #add Java services
         image: node:latest
         stage: integrationTest
         artifacts:
@@ -64,10 +63,14 @@
           - job: cart_testing
             artifacts: true
         script: 
-        - cd implementation/test
+        - cd implementation/cart/container 
+        - npm start --host=app &
+        - cd ../../test
         - npm install -g mocha
         - npm install
         - mocha endToEndTest.js --exit
+
+
 
     release_upload:
       stage: release
