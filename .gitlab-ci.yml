@@ -43,10 +43,10 @@ integration_test:
     - job: cart_testing
       artifacts: true
   script:   
-    - cd implementation/cart 
+    - cd implementation/cart/container 
     - docker build -t my-docker-image .
     - docker run my-docker-image /script/to/run/tests
-    - cd implementation/test
+    - cd ../../test
     - npm install -g mocha
     - npm install
     - mocha endToEndTest.js --exit
