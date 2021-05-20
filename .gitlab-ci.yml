@@ -16,6 +16,8 @@ integration_test_fast:
       - implementation/cart/container/
   script:
     - apt-get update 
+    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
+    - echo $TZ > /etc/timezone
     - apt -y install nodejs npm 
     - cd implementation/cart/container
     - npm start --host=app &
