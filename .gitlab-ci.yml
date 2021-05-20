@@ -40,7 +40,7 @@ integration_test:
   stage: integrationTest
   artifacts:
     paths:
-      - implementation/test
+      - implementation
   needs:
     - job: cart_testing
       artifacts: true
