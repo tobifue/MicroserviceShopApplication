@@ -6,10 +6,6 @@ stages:
   - cleanup
 
 
-
-
-
-
 cart_testing:
   services:
     - name: node:latest
@@ -27,7 +23,7 @@ cart_testing:
     - npm run test
 
 
-integration_test_fast:
+integration_test:
   image: ubuntu:latest
   stage: integrationTest
   artifacts:
