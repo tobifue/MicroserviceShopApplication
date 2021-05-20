@@ -6,13 +6,15 @@ stages:
   - cleanup
 
 variables:
-  GATEWAYIP: "localhost"
+  cartIp: "localhost"
 
 integration_test_fast:
   before_script: 
     - export NO_PROXY="127.0.0.1"
   image: node:latest
   stage: build
+  variables:
+    GATEWAYIP: $cartIp
   artifacts:
     paths:
       - implementation/cart/container/
@@ -30,6 +32,8 @@ integration_test_connect:
   artifacts:
     paths:
       - implementation/cart/container/
+  variables:
+    GATEWAYIP: $cartIp
   script:
     - cd implementation/cart/container
     - npm install
