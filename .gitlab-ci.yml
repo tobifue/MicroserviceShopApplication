@@ -34,7 +34,7 @@
 
 
     cart_testing:
-      services:
+      service:
         app:
           environment:
             - GATEWAYIP=172.20.112.1
