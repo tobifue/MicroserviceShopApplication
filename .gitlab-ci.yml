@@ -20,9 +20,6 @@
 
     cart_start:
       image: node:latest
-      services:
-        - name: node:latest
-          alias: cart_start
       stage: test
       artifacts:
         paths:
@@ -47,7 +44,7 @@
           ports:
             - "8085:8085"
       variables:
-        GATEWAYIP: cart_start
+        - GATEWAYIP: cart_start
       artifacts:
         paths:
         - implementation/cart/container/
