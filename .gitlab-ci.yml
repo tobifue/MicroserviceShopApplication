@@ -48,7 +48,7 @@
         paths:
         - implementation/cart/container/
       script: 
-        - cd implementation/cart/container
+        - cd implementation/cart/container &
         - npm start --host=app
         - npm install -g mocha
         - npm install
