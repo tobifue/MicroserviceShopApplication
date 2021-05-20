@@ -10,10 +10,29 @@ variables:
 
 integration_test_fast:
   before_script: export NO_PROXY="127.0.0.1"
+  image: node:latest
   stage: build
-  image: docker:latest
+  artifacts:
+    paths:
+      - implementation/cart/container/
   script:
-    - sudo docker
+    - cd implementation/cart/container
+    - npm install -g mocha
+    - npm install
+    - npm run test
+
+integration_test_connect:
+  before_script: export NO_PROXY="127.0.0.1"
+  image: node:latest
+  stage: build
+  artifacts:
+    paths:
+      - implementation/cart/container/
+  script:
+    - cd implementation/cart/container
+    - npm install
+    - npm run test
+    - npm start --host=app 
 
 
 install_dependencies:
