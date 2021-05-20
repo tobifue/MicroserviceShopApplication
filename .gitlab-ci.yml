@@ -36,9 +36,8 @@
     cart_testing:
       services:
         - name: node:latest
-          entrypoint: ["implementation\cart\container"]
           alias: app
-          command: ["npm start"]
+          command: ["cd implementation/cart/container, npm start"]
       image: node:latest      
       stage: test
 #      environment:
