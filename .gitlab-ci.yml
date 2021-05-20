@@ -29,10 +29,6 @@ integration_test_connect:
     paths:
       - implementation/cart/container/
   script:
-    - cd implementation/cart/container
-    - npm install
-    - npm run test
-    - npm start --host=app 
 
 
 install_dependencies:
