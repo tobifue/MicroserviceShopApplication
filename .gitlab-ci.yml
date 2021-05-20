@@ -12,13 +12,14 @@ integration_test_fast:
   before_script: 
     - export NO_PROXY="127.0.0.1"
   image: node:latest
-  stage: build
+  stage: test
   variables:
     GATEWAYIP: $cartIp
   artifacts:
     paths:
       - implementation/cart/container/
   script:
+    - echo $cartIp
     - cd implementation/cart/container
     - npm install -g mocha
     - npm install
@@ -35,12 +36,10 @@ integration_cart_run:
     - cd implementation/cart/container
     - npm install
     #- npm start
-    - echo $cartIp = npm start
+    - echo cartIp = $(npm start)
   artifacts:
     paths:
       - implementation/cart/container/
-    reports:
-      dotenv: build.env
 
 
 install_dependencies:
