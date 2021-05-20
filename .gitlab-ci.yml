@@ -1,74 +1,64 @@
+stages:
+  - build
+  - test
+  - integrationTest
+  - release
 
+install_dependencies:
+  image: node:latest
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - implementation/cart/container/node_modules/
 
-    stages:
-      - build
-      - test
-      - integrationTest
-      - release
+cart_testing:
+  services:
+    - name: node:latest
+      alias: app
+  image: node:latest
+  stage: test
+  artifacts:
+    paths:
+      - implementation/cart/container/
+  script:
+    - cd implementation/cart/container
+    - npm start --host=app &
+    - npm install -g mocha
+    - npm install
+    - npm run test
 
+integration_test:
+  services:
+    - name: node:latest
+      alias: app
+  #add Java services
+  image: node:latest
+  stage: integrationTest
+  artifacts:
+    paths:
+      - implementation/test
+  needs:
+    - job: cart_testing
+      artifacts: true
+  script:
+    - cd implementation/cart/container
+    - npm start --host=app &
+    - cd ../../test
+    - npm install -g mocha
+    - npm install
+    - mocha endToEndTest.js --exit
 
+release_upload:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: integration_test
+      artifacts: true
+  rules:
+    - if: '$RELEASE == "True"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
-    install_dependencies:
-      image: node:latest 
-      stage: build
-      script:
-        - npm install
-      artifacts:
-        paths:
-        - implementation/cart/container/node_modules/
-
-
-
-
-
-    cart_testing:
-      services:
-        - name: node:latest
-          alias: app
-      image: node:latest      
-      stage: test
-      artifacts:
-        paths:
-        - implementation/cart/container/
-      script: 
-        - cd implementation/cart/container 
-        - npm start --host=app &
-        - npm install -g mocha
-        - npm install
-        - npm run test
-
-    integration_test:
-        services:
-        - name: node:latest
-          alias: app
-        #add Java services
-        image: node:latest
-        stage: integrationTest
-        artifacts:
-          paths:
-          - implementation/test
-        needs:
-          - job: cart_testing
-            artifacts: true
-        script: 
-        - cd implementation/cart/container 
-        - npm start --host=app &
-        - cd ../../test
-        - npm install -g mocha
-        - npm install
-        - mocha endToEndTest.js --exit
-
-
-
-    release_upload:
-      stage: release
-      image: registry.gitlab.com/gitlab-org/release-cli:latest
-      needs:
-        - job: integration_test
-          artifacts: true
-      rules:
-        - if: '$RELEASE == "True"'
-        - if: '$CI_COMMIT_BRANCH == "master"'
-
-      script:
-        - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
+  script:
+    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
