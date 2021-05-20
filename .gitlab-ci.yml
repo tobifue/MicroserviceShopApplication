@@ -15,10 +15,11 @@ integration_test_fast:
   artifacts:
     paths:
       - implementation
+  before_script:
+      - apt-get remove docker docker-engine docker.io containerd runc
   script:   
     - cd implementation/cart 
     - ls
-    - apk remove docker docker-engine docker.io containerd runc
     - apk add --no-cache docker-compose
     - docker-compose build
     - docker-compose run
