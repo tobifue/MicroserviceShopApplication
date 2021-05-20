@@ -13,6 +13,8 @@ install_dependencies:
     paths:
       - implementation/cart/container/node_modules/
 
+
+
 cart_testing:
   services:
     - name: node:latest
@@ -44,8 +46,8 @@ integration_test:
       artifacts: true
   script:   
     - cd implementation/cart/container 
-    - docker build -t my-docker-image .
-    - docker run my-docker-image /script/to/run/tests
+    - docker-compose build -t my-docker-image .
+    - docker-compose run my-docker-image /script/to/run/tests
     - cd ../../test
     - npm install -g mocha
     - npm install
