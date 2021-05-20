@@ -20,8 +20,7 @@
 
     cart_start:
       services:
-        - cart_start
-      image: node:latest
+        - cart_start/node:latest
       stage: test
       artifacts:
         paths:
