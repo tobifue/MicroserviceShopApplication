@@ -30,9 +30,10 @@ integration_test_connect:
   artifacts:
     paths:
       - implementation/cart/container/
+  environment:
+    - GATEWAYIP: "172.20.112.1"
   script:
     - cd implementation/cart/container
-    - echo "172.20.1.1.1" > variables.env
     - npm install
     - npm start
 
