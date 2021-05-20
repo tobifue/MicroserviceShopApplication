@@ -37,7 +37,14 @@
       services:
         - name: node:latest
           alias: app
-          command: ["ls"]
+          artifacts:
+          paths:
+          - implementation/cart/container/
+          script: 
+          - cd implementation/cart/container
+          - npm install -g mocha
+          - npm install
+          - npm run test
       image: node:latest      
       stage: test
 #      environment:
