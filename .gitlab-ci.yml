@@ -33,7 +33,7 @@ integration_test_connect:
   script:
     - cd implementation/cart/container
     - npm install
-    - npm start GATEWAYIP=172.20.112.1
+    - npm start -e GATEWAYIP=172.20.112.1
 
 
 install_dependencies:
