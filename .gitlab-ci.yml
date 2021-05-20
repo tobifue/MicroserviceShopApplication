@@ -29,12 +29,12 @@ cart_testing:
     - npm install
     - npm run test
 
+
+
+
 integration_test:
-  services:
-    - name: node:latest
-      alias: app
   #add Java services
-  image: node:latest
+  image: docker:latest
   stage: integrationTest
   artifacts:
     paths:
@@ -42,10 +42,11 @@ integration_test:
   needs:
     - job: cart_testing
       artifacts: true
-  script:
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - cd ../../test
+  script:   
+    - cd implementation/cart 
+    - docker build -t my-docker-image .
+    - docker run my-docker-image /script/to/run/tests
+    - cd implementation/test
     - npm install -g mocha
     - npm install
     - mocha endToEndTest.js --exit
