@@ -35,15 +35,15 @@
 
     cart_testing:
       services:
-      app:
-        environment:
-          - GATEWAYIP=172.20.112.1
+        app:
+          environment:
+            - GATEWAYIP=172.20.112.1
+          image: node:latest
+          command: npm start
+          ports:
+            - "8085:8085"
         image: node:latest
-        command: npm start
-        ports:
-          - "8085:8085"
-      image: node:latest
-      stage: test
+        stage: test
 #      environment:
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
