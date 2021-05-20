@@ -38,8 +38,12 @@
       stage: test
       services:
         cart_start:
-          build: ./container
-          command: npm start
+          build: implementation/cart/container/
+          command: 
+            - cd implementation/cart/container
+            - npm install -g mocha
+            - npm install
+            - npm start
           ports:
             - "8085:8085"
       variables:
