@@ -9,9 +9,7 @@ variables:
   cartIp: "localhost"
 
 integration_test_fast:
-  before_script: 
-    - export NO_PROXY="127.0.0.1"
-  image: node:latest
+  image: ubuntu:latest
   stage: test
   variables:
     GATEWAYIP: $cartIp
@@ -19,28 +17,14 @@ integration_test_fast:
     paths:
       - implementation/cart/container/
   script:
-    - echo $cartIp
-    - cd implementation/cart/container
-    - npm install -g mocha
-    - npm install
-    - npm run test
+    - 'RUN apt-get update \
+        && apt-get install -y \
+          apt-transport-https \
+          build-essential \
+          make'
 
-integration_cart_run:
-  before_script: 
-    - export NO_PROXY="127.0.0.1"
-  image: node:latest
-  stage: build
-  variables:
-    GATEWAYIP: $cartIp
-  script:
-    - cd implementation/cart/container
-    - npm install
-    #- npm start
-    - cartIp = $(npm start)
-    - echo $cartIp
-  artifacts:
-    paths:
-      - implementation/cart/container/
+
+
 
 
 install_dependencies:
