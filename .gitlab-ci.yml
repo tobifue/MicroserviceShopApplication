@@ -20,7 +20,8 @@
 
     cart_start:
       services:
-        - cart_start/node:latest
+        - name: node:latest
+          alias: cart_start
       stage: test
       artifacts:
         paths:
