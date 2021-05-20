@@ -10,12 +10,15 @@ integration_test_fast:
   #add Java services
   image: docker:latest
   stage: build
+  services:
+    - docker:dind 
   artifacts:
     paths:
       - implementation
   script:   
     - cd implementation/cart 
     - ls
+    - apk add --no-cache docker-compose
     - docker-compose build -t my-docker-image .
     - docker-compose run my-docker-image /script/to/run/tests
     - cd ../../test
