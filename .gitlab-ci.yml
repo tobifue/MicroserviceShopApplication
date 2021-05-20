@@ -32,8 +32,9 @@ integration_test_connect:
       - implementation/cart/container/
   script:
     - cd implementation/cart/container
+    - echo "172.20.1.1.1" > variables.env
     - npm install
-    - npm start -e GATEWAYIP=172.20.112.1
+    - npm start
 
 
 install_dependencies:
