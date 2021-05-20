@@ -64,10 +64,10 @@ app.get('/deleteCart/:userId', function (req, res, next) {
     res.send("OK");
 });
 app.listen(port, function () {
-    console.log('Server started on port: ' + port);
+    ; // console.log('Server started on port: ' + port);
 });
 var gatewayIp = process.env.GATEWAYIP || "localhost";
-console.log("IP used: " + gatewayIp);
+//console.log("IP used: " + gatewayIp);
 var ip = require("ip");
 console.log(ip.address());
 process.env.GATEWAYIP = ip.address();

@@ -78,16 +78,17 @@ app.get('/deleteCart/:userId', function (req, res, next) {
 });
 
 app.listen(port, function () {
-    console.log('Server started on port: ' + port);
+   ;// console.log('Server started on port: ' + port);
 });
 
 const gatewayIp = process.env.GATEWAYIP || "localhost";
-console.log("IP used: " + gatewayIp);
+//console.log("IP used: " + gatewayIp);
 
 
 var ip = require("ip");
 console.log(ip.address());
 process.env.GATEWAYIP=ip.address();
+
 let registration = {
     "endpoints": ["/addItem", "/getCart", "/deleteCart"],
     "category": "cart",

@@ -24,20 +24,23 @@ integration_test_fast:
     - npm install
     - npm run test
 
-integration_test_connect:
+integration_cart_run:
   before_script: 
     - export NO_PROXY="127.0.0.1"
   image: node:latest
   stage: build
-  artifacts:
-    paths:
-      - implementation/cart/container/
   variables:
     GATEWAYIP: $cartIp
   script:
     - cd implementation/cart/container
     - npm install
-    - npm start
+    #- npm start
+    - echo "exportGATEWAYIP="npm start" >> build.env
+  artifacts:
+    paths:
+      - implementation/cart/container/
+    reports:
+      dotenv: build.env
 
 
 install_dependencies:
