@@ -35,7 +35,7 @@ integration_cart_run:
     - cd implementation/cart/container
     - npm install
     #- npm start
-    - echo "export GATEWAYIP="npm start >> build.env
+    - echo $cartIp = npm start
   artifacts:
     paths:
       - implementation/cart/container/
