@@ -19,8 +19,8 @@ integration_test_fast:
     - cd implementation/cart 
     - ls
     - apk add --no-cache docker-compose
-    - docker-compose build -t my-docker-image .
-    - docker-compose run my-docker-image /script/to/run/tests
+    - docker-compose build
+    - docker-compose run
     - cd ../../test
     - npm install -g mocha
     - npm install
