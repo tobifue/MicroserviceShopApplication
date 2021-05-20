@@ -19,6 +19,8 @@
         #- implementation/cart/container/node_modules/
 
     cart_start:
+      services:
+        - cart_start
       image: node:latest
       stage: test
       artifacts:
