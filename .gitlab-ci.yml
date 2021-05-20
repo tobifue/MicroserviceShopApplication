@@ -43,9 +43,8 @@
 #      environment:
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
-      Host: app
       variables:
-        GATEWAYIP: app.HTTPS_PROXY
+        GATEWAYIP: node
       artifacts:
         paths:
         - implementation/cart/container/
