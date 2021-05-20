@@ -4,6 +4,30 @@ stages:
   - integrationTest
   - release
 
+
+
+integration_test_fast:
+  #add Java services
+  image: docker:latest
+  stage: build
+  artifacts:
+    paths:
+      - implementation
+  needs:
+    - job: cart_testing
+      artifacts: true
+  script:   
+    - cd implementation/cart/container 
+    - ls
+    - docker-compose build -t my-docker-image .
+    - docker-compose run my-docker-image /script/to/run/tests
+    - cd ../../test
+    - npm install -g mocha
+    - npm install
+    - mocha endToEndTest.js --exit
+
+
+
 install_dependencies:
   image: node:latest
   stage: build
