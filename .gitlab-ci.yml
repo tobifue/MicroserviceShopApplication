@@ -36,7 +36,8 @@ integration_cart_run:
     - cd implementation/cart/container
     - npm install
     #- npm start
-    - echo cartIp = $(npm start)
+    - cartIp = $(npm start)
+    - echo $cartIp
   artifacts:
     paths:
       - implementation/cart/container/
