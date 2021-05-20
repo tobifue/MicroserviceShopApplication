@@ -10,13 +10,13 @@ variables:
 
 integration_test_fast:
   image: ubuntu:latest
-  stage: test
+  stage: build
   artifacts:
     paths:
       - implementation/cart/container/
   script:
-    - apt-get update 
-    - apt install nodejs npm
+    - apt-get update | O_NONBLOCK
+    - apt install nodejs npm | O_NONBLOCK
     - cd implementation/cart/container
     - npm start --host=app &
     - npm install -g mocha
