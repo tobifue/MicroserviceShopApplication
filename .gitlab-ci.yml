@@ -5,11 +5,10 @@ stages:
   - release
   - cleanup
 
-variables:
-  IMAGE: foobar:${CI_COMMIT_SHA}
 
 integration_test_fast:
-  before_script: export NO_PROXY="127.0.0.1"
+  before_script: 
+    - export NO_PROXY="127.0.0.1"
   image: node:latest
   stage: build
   artifacts:
@@ -22,7 +21,8 @@ integration_test_fast:
     - npm run test
 
 integration_test_connect:
-  before_script: export NO_PROXY="127.0.0.1"
+  before_script: 
+    - export NO_PROXY="127.0.0.1"
   image: node:latest
   stage: build
   artifacts:
