@@ -113,7 +113,10 @@ app.get('/vendor', function (req, res, next) {
                 })
             })
         })
-    })
+    }).on("error", (err) => {
+        console.log(err);
+        res.redirect('/customer');
+    });
 });
 
 
@@ -126,9 +129,9 @@ app.post('/addItem', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/vendor');
         })
-    });
-    httpreq.on('error', function (err) {
-        res.redirect('/vendor');
+    }).on("error", (err) => {
+        console.log(err);
+        res.redirect('/customer');
     });
     console.log(JSON.stringify(data));
     httpreq.write(JSON.stringify(data));
@@ -145,9 +148,9 @@ app.post('/changeItem', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/vendor');
         })
-    });
-    httpreq.on('error', function (err) {
-        res.redirect('/vendor');
+    }).on("error", (err) => {
+        console.log(err);
+        res.redirect('/customer');
     });
     httpreq.write(JSON.stringify(data));
     httpreq.end();
@@ -172,6 +175,9 @@ app.get('/customer', function (req, res, next) {
                 })
             })
         })
+    }).on("error", (err) => {
+        console.log(err);
+        res.redirect('/customer');
     });
 });
 
@@ -184,10 +190,11 @@ app.post('/addToCart', function (req, res, next) {
             console.log(items);
             res.redirect('/customer');
         })
-    });
-    httpreq.on('error', function (err) {
+    }).on("error", (err) => {
+        console.log(err);
         res.redirect('/customer');
     });
+
     console.log("addItem DAta:", new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price));
     httpreq.write(JSON.stringify(new Item(req.body.itemId, req.body.itemName, req.body.newPiece, req.body.price, req.body.vendorId, req.body.price)));
     httpreq.end();
@@ -199,8 +206,8 @@ app.post('/markProduct', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/customer');
         })
-    });
-    httpreq.on('error', function (err) {
+    }).on("error", (err) => {
+        console.log(err);
         res.redirect('/customer');
     });
     httpreq.write(JSON.stringify({ vendorId: req.body.vendorId, costumerId: "1", price: req.body.price, email: "keine mail boys", itemName: req.body.itemName }));
@@ -215,8 +222,8 @@ app.post('/checkout', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/customer');
         })
-    });
-    httpreq.on('error', function (err) {
+    }).on("error", (err) => {
+        console.log(err);
         res.redirect('/customer');
     });
     httpreq.write();
@@ -229,8 +236,8 @@ app.post('/deleteItem', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/customer');
         })
-    });
-    httpreq.on('error', function (err) {
+    }).on("error", (err) => {
+        console.log(err);
         res.redirect('/customer');
     });
     httpreq.write();
@@ -242,8 +249,8 @@ app.post('/rateItem', function (req, res, next) {
         response.on('end', function () {
             res.redirect('/customer');
         })
-    });
-    httpreq.on('error', function (err) {
+    }).on("error", (err) => {
+        console.log(err);
         res.redirect('/customer');
     });
     console.log("rating item" + JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)))
