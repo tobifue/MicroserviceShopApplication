@@ -34,7 +34,7 @@
 
 
     cart_testing:
-      service:
+      services:
         app:
           environment:
             - GATEWAYIP=172.20.112.1
@@ -47,16 +47,17 @@
 #      environment:
 #        - GATEWAYIP=$CI_SERVER_HOST
 #        - GATEWAYIP : '$CI_SERVER_HOST'
-      variables:
-        GATEWAYIP: app
-      artifacts:
-        paths:
-        - implementation/cart/container/
-      script: 
-        - cd implementation/cart/container
-        - npm install -g mocha
-        - npm install
-        - npm run test
+      test:
+        variables:
+          GATEWAYIP: app
+        artifacts:
+          paths:
+          - implementation/cart/container/
+        script: 
+          - cd implementation/cart/container
+          - npm install -g mocha
+          - npm install
+          - npm run test
 
     integration_test:
         image: node:latest
