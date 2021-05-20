@@ -36,8 +36,8 @@
     cart_testing:
       services:
         - name: node:latest
+          entrypoint: ["implementation/cart/container"]
           alias: app
-          image: node:latest
           command: ["npm start"]
       image: node:latest      
       stage: test
