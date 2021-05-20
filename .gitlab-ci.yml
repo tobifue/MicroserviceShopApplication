@@ -17,10 +17,10 @@ integration_test_fast:
     paths:
       - implementation/cart/container/
   script:
-    - apt-get update \
-    - apt-get install -y \
-    - apt-transport-https \
-    - build-essential \
+    - apt-get update 
+    - apt-get install -y 
+    - apt-transport-https 
+    - build-essential 
     - make
 
 
