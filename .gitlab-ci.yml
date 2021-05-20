@@ -46,6 +46,7 @@ integration_test:
       artifacts: true
   script:   
     - cd implementation/cart/container 
+    - ls
     - docker-compose build -t my-docker-image .
     - docker-compose run my-docker-image /script/to/run/tests
     - cd ../../test
