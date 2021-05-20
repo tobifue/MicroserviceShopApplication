@@ -19,6 +19,7 @@
         #- implementation/cart/container/node_modules/
 
     cart_start:
+      image: node:latest
       services:
         - name: node:latest
           alias: cart_start
