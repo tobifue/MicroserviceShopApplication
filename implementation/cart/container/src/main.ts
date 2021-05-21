@@ -36,14 +36,14 @@ app.post('/removeItem/:userId', function (req, res, next) {
 
 app.get('/getCart/:userId', function (req, res, next) {
     const userId = Number(req.params.userId);
-    console.log("get card called: ", carts);
+    console.log("get cart called: ", carts);
     console.log("cart Send: "+ JSON.stringify(carts.get(userId)));
     res.send(JSON.stringify(carts.get(userId)));
 });
 
 app.get('/deleteCart/:userId', function (req, res, next) {
     const userId = Number(req.params.userId);
-    console.log("delete card called: ", carts);
+    console.log("delete cart called: ", carts);
     carts.delete(userId);
     res.send("OK");
 });
@@ -60,7 +60,7 @@ console.log(ip.address());
 let registration = {
     "endpoints": ["/addItem", "/getCart", "/deleteCart"],
     "category": "cart",
-    "ip": ip.address() + ":8085"
+    "ip": "http://"+ip.address() + ":8085"
 }
 
 let options = {
