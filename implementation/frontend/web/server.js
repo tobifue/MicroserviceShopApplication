@@ -165,6 +165,8 @@ app.post('/markProduct', function (req, res, next) {
 app.post('/checkout', function (req, res, next) {
     console.log("checkout called");
     var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
+        var items = "";
+        response.on('data', function (chunk) { items += chunk; });
         response.on('end', function () {
             res.redirect('/customer');
         });
@@ -172,8 +174,6 @@ app.post('/checkout', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    httpreq.write();
-    httpreq.end();
 });
 app.post('/deleteItem', function (req, res, next) {
     var httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
