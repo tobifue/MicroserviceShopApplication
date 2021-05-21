@@ -32,13 +32,25 @@ public class CartController {
 	}
 
 
-	@PostMapping(path = "/getCart/{customerId}", consumes = "application/json", produces = "application/json")
-	public String getCart(@RequestBody Map<String, Object> item, @PathVariable("customerId") Long customerId) {
-		System.out.println("getCart is called with" + item.toString());
+	@GetMapping(path = "/getCart/{customerId}", produces = "application/json")
+	public String getCart(@PathVariable("customerId") Long customerId) {
 		try {
 			//return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "/getCart/" + customerId);
 			return TrafficController.sendMessageToSingleRecipient(
 					Message.createInstance(null, "cart", String.format("/getCart/%s", customerId), "GET"));
+
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
+	@GetMapping(path = "/deleteCart/{customerId}", produces = "application/json")
+	public String deleteCart(@PathVariable("customerId") Long customerId) {
+		try {
+			//return NetworkUtil.httpGet(AdressUtil.loadAdress(serviceName), "/getCart/" + customerId);
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(null, "cart", String.format("/deleteCart/%s", customerId), "GET"));
 
 		} catch (RestClientException e) {
 			e.printStackTrace();
