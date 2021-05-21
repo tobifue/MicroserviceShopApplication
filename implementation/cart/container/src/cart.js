@@ -7,6 +7,12 @@ var Cart = /** @class */ (function () {
         this.list.push(item);
         return this;
     };
+    Cart.prototype.find = function (item) {
+        return this.list.includes(item);
+    };
+    Cart.prototype.remove = function (item) {
+        this.list.splice(this.list.indexOf(item), 1);
+    };
     return Cart;
 }());
 var Item = /** @class */ (function () {

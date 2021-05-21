@@ -11,7 +11,13 @@ class Cart {
         return this;
     }
 
+    find(item:Item){
+        return this.list.includes(item);
+    }
 
+    remove(item:Item){
+        this.list.splice(this.list.indexOf(item), 1);
+    }
 }
 
 
@@ -31,6 +37,8 @@ class Item {
         this.priceRecommendation = priceRecommendation;
     }
 }
+
+
 
 module.exports.Item = Item;
 module.exports.Cart = Cart;

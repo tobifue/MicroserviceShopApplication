@@ -12,7 +12,7 @@ app.use(express.json());
 
 
 app.post('/addItem/:userId', function (req, res, next) {
-    const userId = req.params.userId;
+    const userId = Number(req.params.userId);
     const bdy = req.body;
     const item = new Item(bdy.itemId, bdy.itemName, bdy.quantity, bdy.price, bdy.vendorId, bdy.priceRecommendation);
     if (carts.has(userId)) {
@@ -25,15 +25,24 @@ app.post('/addItem/:userId', function (req, res, next) {
     res.send("OK");
 });
 
-app.get('/getCart/:userId', function (req, res, next) {
+app.post('/removeItem/:userId', function (req, res, next) {
+    const userId = Number(req.params.userId);
+    const bdy = req.body;
+    const item = new Item(bdy.itemId, bdy.itemName, bdy.quantity, bdy.price, bdy.vendorId, bdy.priceRecommendation);
+    
+    carts.get(userId).remove(item);
+    console.log("removeItem called");
+    res.send("OK");});
 
-    const userId = req.params.userId;
+app.get('/getCart/:userId', function (req, res, next) {
+    const userId = Number(req.params.userId);
     console.log("get card called: ", carts);
+    console.log("cart Send: "+ JSON.stringify(carts.get(userId)));
     res.send(JSON.stringify(carts.get(userId)));
 });
 
 app.get('/deleteCart/:userId', function (req, res, next) {
-    const userId = req.params.userId;
+    const userId = Number(req.params.userId);
     console.log("delete card called: ", carts);
     carts.delete(userId);
     res.send("OK");
