@@ -41,9 +41,9 @@ class Item {
     itemName: string;
     quantity: number;
     price: number;
-    vendorId: string;
+    vendorId: number;
     priceRecommendation: number;
-    constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
+    constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: number, priceRecommendation: number) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.quantity = quantity;
@@ -107,7 +107,7 @@ app.get('/vendor', function (req, res, next) {
                 response.on('data', function (chunk) { profit += chunk });
                 response.on("end", () => {
                     if (items == null) {
-                        res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, "ich", 65)], profit: "134,32" });
+                        res.render(__dirname + '/views/overviewVendor.hbs', { items: [new Item(1, "Itemname: ToDO", 24, 70, 0, 65)], profit: "134,32" });
                     } else {
                         res.render(__dirname + '/views/overviewVendor.hbs', { items: JSON.parse(items), profit: profit || "134,32" });
                     }
@@ -146,7 +146,7 @@ app.post('/changeItem', function (req, res, next) {
 
     let data: InventorySendInterface = {
         command: "/addItem",
-        item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, req.body.vendorId, req.body.price)
+        item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price)
     }
     let httpreq = http.request(new HttpOption("/inventory/addItem"), function (response) {
         response.on('end', function () {
@@ -165,19 +165,15 @@ app.post('/changeItem', function (req, res, next) {
 app.get('/customer', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
 
-    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", response => {
+    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/", response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
-            const httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/1", response => {
+            const httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/logedInId", response => {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
-                    if (JSON.parse(items).command == "ToDo") {
-                        res.render(__dirname + '/views/overviewCustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: [new Item(99, "To Do", 24, 70, "ich", 65)] });
-                    } else {
-                        res.render(__dirname + '/views/overviewCustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, "ich", 65)], items: JSON.parse(items) });
-                    }
+                        res.render(__dirname + '/views/overviewCustomer.hbs', { buyedItems: [new Item(99, "TestItem", 24, 70, 1, 65)], items: JSON.parse(items) });
                 })
             })
         })
@@ -191,7 +187,7 @@ app.get('/customer', function (req, res, next) {
 app.post('/addToCart', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
 
-    let httpreq = http.request(new HttpOption("/cart/addItemToCart/1"), function (response) {
+    let httpreq = http.request(new HttpOption("/cart/addItemToCart/"+logedInId), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
@@ -230,7 +226,7 @@ app.post('/checkout', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
 
     console.log("checkout called");
-    let httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", response => {
+    let httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/logedInId", response => {
         let items = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
