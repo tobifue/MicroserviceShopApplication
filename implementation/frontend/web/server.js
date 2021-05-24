@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 var port = 3003;
-var customerId = '1';
+var logedInId = -1, email;
 var gatewayIp = process.env.GATEWAYIP || "localhost";
 console.log("IP used for gateway: " + gatewayIp);
 app.get('/', function (req, res, next) {
@@ -56,6 +56,10 @@ var HttpOption = /** @class */ (function () {
     return HttpOption;
 }());
 app.get('/vendor', function (req, res, next) {
+    if (logedInId % 2 == 1) {
+        res.redirect('/');
+        return;
+    }
     var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -80,6 +84,10 @@ app.get('/vendor', function (req, res, next) {
     });
 });
 app.post('/addItem', function (req, res, next) {
+    if (logedInId % 2 == 1) {
+        res.redirect('/');
+        return;
+    }
     var data = new Item(0, req.body.itemName, req.body.quantity, req.body.price, req.body.vendorId, req.body.price);
     var httpreq = http.request(new HttpOption("/inventory/"), function (response) {
         var items = "";
@@ -96,6 +104,10 @@ app.post('/addItem', function (req, res, next) {
     httpreq.end();
 });
 app.post('/changeItem', function (req, res, next) {
+    if (logedInId % 2 == 1) {
+        res.redirect('/');
+        return;
+    }
     var data = {
         command: "/addItem",
         item: new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, req.body.vendorId, req.body.price)
@@ -112,6 +124,10 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.end();
 });
 app.get('/customer', function (req, res, next) {
+    if (logedInId <= 0) {
+        res.redirect('/');
+        return;
+    }
     var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -135,6 +151,10 @@ app.get('/customer', function (req, res, next) {
     });
 });
 app.post('/addToCart', function (req, res, next) {
+    if (logedInId <= 0) {
+        res.redirect('/');
+        return;
+    }
     var httpreq = http.request(new HttpOption("/cart/addItemToCart/1"), function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -151,6 +171,10 @@ app.post('/addToCart', function (req, res, next) {
     httpreq.end();
 });
 app.post('/markProduct', function (req, res, next) {
+    if (logedInId <= 0) {
+        res.redirect('/');
+        return;
+    }
     var httpreq = http.request(new HttpOption("/markedproduct/mark"), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
@@ -163,6 +187,10 @@ app.post('/markProduct', function (req, res, next) {
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
+    if (logedInId <= 0) {
+        res.redirect('/');
+        return;
+    }
     console.log("checkout called");
     var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
         var items = "";
@@ -176,6 +204,10 @@ app.post('/checkout', function (req, res, next) {
     });
 });
 app.post('/deleteItem', function (req, res, next) {
+    if (logedInId % 2 == 1) {
+        res.redirect('/');
+        return;
+    }
     var httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
@@ -188,6 +220,10 @@ app.post('/deleteItem', function (req, res, next) {
     httpreq.end();
 });
 app.post('/rateItem', function (req, res, next) {
+    if (logedInId <= 0) {
+        res.redirect('/');
+        return;
+    }
     var httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
@@ -201,7 +237,10 @@ app.post('/rateItem', function (req, res, next) {
     httpreq.end();
 });
 app.get('/Administrator', function (req, res, next) {
-    //TODO get this from gateway
+    if (logedInId != 0) {
+        res.redirect('/');
+        return;
+    }
     res.render(__dirname + '/views/overviewAdmin.hbs', {
         services: {
             ratingService: "up",
@@ -216,16 +255,15 @@ app.get('/Administrator', function (req, res, next) {
         }
     });
 });
-var id;
 app.post('/login', function (req, res) {
-    id = req.body.ID;
-    if (id == 1) { //customer
+    logedInId = req.body.ID;
+    if (logedInId % 2 == 1) { //customer
         res.redirect('/customer');
     }
-    else if (id == 2) { //customer
+    else if (logedInId % 2 == 0) { //vendor
         res.redirect('/vendor');
     }
-    else {
+    else if (logedInId == 0) {
         res.redirect('/administrator');
     }
 });
