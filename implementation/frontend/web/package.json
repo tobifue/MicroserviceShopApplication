@@ -19,6 +19,7 @@
     "ip": "^1.1.5",
     "is-in-docker": "0.1.2",
     "pg": "^8.0.2",
+    "selenium-webdriver": "^4.0.0-beta.3",
     "url": "^0.11.0"
   },
   "engines": {
