@@ -18,10 +18,10 @@ var Cart = /** @class */ (function () {
 var Item = /** @class */ (function () {
     function Item(itemId, itemName, quantity, price, vendorId, priceRecommendation) {
         this.itemId = itemId;
-        this.itemName = itemName;
-        this.quantity = quantity;
         this.price = price;
         this.vendorId = vendorId;
+        this.quantity = quantity;
+        this.itemName = itemName;
         this.priceRecommendation = priceRecommendation;
     }
     return Item;

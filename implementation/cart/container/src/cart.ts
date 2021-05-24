@@ -30,10 +30,10 @@ class Item {
     priceRecommendation: number;
     constructor(itemId: number, itemName: string, quantity: number, price: number, vendorId: string, priceRecommendation: number) {
         this.itemId = itemId;
-        this.itemName = itemName;
-        this.quantity = quantity;
         this.price = price;
         this.vendorId = vendorId;
+        this.quantity = quantity;
+        this.itemName = itemName;
         this.priceRecommendation = priceRecommendation;
     }
 }
