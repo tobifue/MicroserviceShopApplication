@@ -37,7 +37,6 @@ public class ShipmentApplication {
 
 	private ShipmentRepository repository;
 	private ShipmentController controller;
-	private int retryCounter = 0;
 
 	@Value("${server.port}")
 	private String port;
