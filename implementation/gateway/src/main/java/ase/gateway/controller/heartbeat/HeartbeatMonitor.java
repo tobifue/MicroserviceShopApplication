@@ -37,7 +37,6 @@ public final class HeartbeatMonitor {
 			sb.append(String.format("[ip: %s / category: %s / status: %s]\n", hb.getConnection().getIp(),
 					hb.getConnection().getCategory(), hb.getStatus()));
 		}
-		System.out.print("\n");
 		return sb.toString();
 	}
 
