@@ -9,9 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.tobi.user.service.AccountService;
@@ -46,6 +44,7 @@ public class AccountServiceApplication {
 	@Value("${server.port}")
 	private String port;
 
+	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
 	private void registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
@@ -54,23 +53,16 @@ public class AccountServiceApplication {
 				{
 					// put highest level endpoints here
 					add("/vendor");
-
 				}
 			});
 			registrationDetails.put("category", "account");
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
+			System.out.println("Successfully registered with gateway!");
 		} catch (RestClientException e) {
-			System.out.println("Could not reach Gateway, retrying in 5 seconds");
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			registerWithGateway();
+			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 		}
-		System.out.println("Successfully registered with gateway!");
 	}
 
 	@Bean
