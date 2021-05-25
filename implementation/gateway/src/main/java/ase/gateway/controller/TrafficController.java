@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ase.gateway.controller.heartbeat.HeartbeatMonitor;
 import ase.gateway.traffic.Message;
 import ase.gateway.traffic.ServiceConnection;
 import ase.gateway.util.NetworkUtil;
@@ -18,6 +19,7 @@ import ase.gateway.util.NetworkUtil;
 public class TrafficController {
 
 	private static List<ServiceConnection> activeConnections = new ArrayList<>();
+	private static HeartbeatMonitor heartbeatMonitor = null;
 	// TODO buffer messages if passthrough fails
 
 	/**
@@ -34,6 +36,10 @@ public class TrafficController {
 		System.out.println(conn.getSubscribedEndpoints());
 		System.out.println(conn.getCategory());
 		System.out.println(conn.getIp());
+		if (heartbeatMonitor == null) {
+			heartbeatMonitor = new HeartbeatMonitor();
+		}
+		heartbeatMonitor.updateConnections(activeConnections);
 	}
 
 	public static String sendMessageToSingleRecipient(Message message) {
