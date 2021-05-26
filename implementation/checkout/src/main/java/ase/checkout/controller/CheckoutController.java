@@ -27,7 +27,7 @@ public class CheckoutController {
 
     @RequestMapping(value = "/checkout/{costumerId}", method = RequestMethod.GET)
     public String checkout(@PathVariable("costumerId") Long costumerId) {
-        try {
+        /*try {
             //ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             //String json = ow.writeValueAsString(cart);
             //jsonCart = json;
@@ -35,7 +35,7 @@ public class CheckoutController {
             System.out.println(costumerId);
         } catch (Exception e) {
             System.out.println("Something went wrong.");
-        }
+        }*/
         String cart = NetworkUtil.httpGet(gatewayIp, String.format("/cart/getCart/%s", costumerId));
         NetworkUtil.httpGet(gatewayIp, String.format("/cart/deleteCart/%s", costumerId));
         try {
@@ -49,8 +49,6 @@ public class CheckoutController {
                 NetworkUtil.httpPost(gatewayIp, String.format("shipment/add", costumerId), item);
             }
             System.out.println("cart: " + cart);
-            doShipment();
-            saveTransactionInDb();
         } catch (RestClientException e) {
             e.printStackTrace();
             return e.getMessage();
