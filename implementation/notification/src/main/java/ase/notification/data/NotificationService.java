@@ -2,38 +2,79 @@ package ase.notification.data;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
 public class NotificationService {
 
-	public static void checkShipping(long itemId, NotificationRepository repository) {
-		String itemName, email, shippingStatus, emailBody;
+	@Autowired
+	private JavaMailSender javaMailSender;
+
+	/*
+	 * @Autowired public NotificationService(JavaMailSender javaMailSender) {
+	 * this.javaMailSender = javaMailSender; }
+	 */
+
+	public static Notification checkShipping(long itemId, NotificationRepository repository) {
+		Notification endNotification = null;
+		String itemName, shippingStatus, emailBody, emailSubject;
+		long id;
 		List<Notification> allNt = repository.findAll();
 		for (Notification nt : allNt) {
-			email = nt.getEmail();
-			itemName = nt.getItemName();
-			emailBody = nt.getEmailBody();
-			shippingStatus = nt.getShippingStatus();
-			String finalEmail = String
-					.format(emailBody + shippingStatus + " for Item: " + itemName + " sendto: " + email);
-			System.out.println(finalEmail);
+			id = nt.getItemId();
+			if (itemId == id) {
+				shippingStatus = nt.getShippingStatus();
+				itemName = nt.getItemName();
+				emailBody = String.format("The shipment status of your purchased item %s has been updated to: %s",
+						itemName, shippingStatus);
+				emailSubject = "Shipment Notification";
+				endNotification = nt;
+				nt.setEmailBody(emailBody);
+				nt.setEmailSubject(emailSubject);
+			}
 
 		}
+		return endNotification;
 	}
 
-	public static void checkPrice(long itemId, NotificationRepository repository, double newPrice) {
-		String itemName, email, emailBody;
+	public static Notification checkPrice(long itemId, NotificationRepository repository, double newPrice) {
+		Notification endNotification = null;
+		String itemName, emailBody, emailSubject;
+		long id;
 		double price;
 		List<Notification> allNt = repository.findAll();
 		for (Notification nt : allNt) {
-			email = nt.getEmail();
+			id = nt.getItemId();
 			itemName = nt.getItemName();
-			emailBody = nt.getEmailBody();
 			price = nt.getPrice();
-			if (newPrice < price) {
-				String finalEmail = String.format(emailBody + price + " for Item: " + itemName + " sendto: " + email);
-				System.out.println(finalEmail);
-
+			if (newPrice < price && itemId == id) {
+				emailBody = String.format("The price of your marked item %s has changed from %s EUR to %s EUR",
+						itemName, Double.toString(price), Double.toString(newPrice));
+				emailSubject = "Price Change Notification";
+				endNotification = nt;
+				nt.setEmailBody(emailBody);
+				nt.setEmailSubject(emailSubject);
 			}
+		}
+		return endNotification;
+	}
 
+	// public void sendEmail(String email, String emailBody) {
+	public void sendEmail(Notification notification) throws MailException {
+		SimpleMailMessage msg = new SimpleMailMessage();
+		try {
+			msg.setTo(notification.getEmail());
+			msg.setFrom("ase.notification@gmail.com");
+			msg.setSubject(notification.getEmailSubject());
+			msg.setText(notification.getEmailBody());
+			javaMailSender.send(msg);
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

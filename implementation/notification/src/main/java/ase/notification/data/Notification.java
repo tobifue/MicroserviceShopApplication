@@ -10,24 +10,6 @@ import net.minidev.json.JSONObject;
 @Entity
 public class Notification {
 
-	public enum EmailBody {
-
-		shipmentEmail("Your current shipment status: "),
-
-		markedProductEmail("The price of your marked product has changed to: ");
-
-		private String body;
-
-		EmailBody(String body) {
-			this.body = body;
-		}
-
-		public String getBody() {
-			return body;
-		}
-
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long nid;
@@ -39,21 +21,21 @@ public class Notification {
 	private String email;
 	private String shippingStatus;
 	private String emailBody;
+	private String emailSubject;
 
 	public Notification() {
-		this.emailBody = EmailBody.shipmentEmail.getBody();
 	}
 
-	public Notification(Long customerid, Long itemId, double price, String itemName, double newPrice,
-			String shippingStatus, String email) {
+	public Notification(Long customerid, Long itemId, double price, String itemName, double newPrice, String email,
+			String shippingStatus) {
 		this.customerid = customerid;
 		this.itemId = itemId;
 		this.itemName = itemName;
 		this.price = price;
 		this.newPrice = newPrice;
-		this.shippingStatus = shippingStatus;
 		this.email = email;
-		this.emailBody = EmailBody.shipmentEmail.getBody();
+		this.shippingStatus = shippingStatus;
+
 	};
 
 	public JSONObject toJsonObject() {
@@ -80,25 +62,11 @@ public class Notification {
 		return sb.toString();
 	}
 
-	public void updateEmailBody() {
-		switch (emailBody) {
-		case "Your current shipment status: ":
-			setEmailBody(EmailBody.shipmentEmail.getBody());
-			break;
-		case "The price of your marked product has changed to: ":
-			setEmailBody(EmailBody.markedProductEmail.getBody());
-			break;
-		default:
-			setEmailBody(EmailBody.shipmentEmail.getBody());
-			break;
-		}
-	}
-
 	public Long getNid() {
 		return nid;
 	}
 
-	public Long getcustomerid() {
+	public Long getCustomerId() {
 		return customerid;
 	}
 
@@ -132,6 +100,14 @@ public class Notification {
 
 	public void setEmailBody(String emailBody) {
 		this.emailBody = emailBody;
+	}
+
+	public String getEmailSubject() {
+		return emailSubject;
+	}
+
+	public void setEmailSubject(String emailSubject) {
+		this.emailSubject = emailSubject;
 	}
 
 }
