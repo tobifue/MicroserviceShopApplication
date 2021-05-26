@@ -5,6 +5,12 @@ stages:
   - release
   - cleanup
 
+build:
+  stage: build
+  image: maven:3-openjdk-11
+  script: 
+    - mvn -f implementation/shipment/pom.xml package
+
 
 cart_testing:
   services:
