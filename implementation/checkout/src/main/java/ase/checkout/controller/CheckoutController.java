@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -70,10 +67,10 @@ public class CheckoutController {
         return "{ \"command\":\"delete\"}";
     }
 
-    public void doShipment() {
-    }
-
-    public void saveTransactionInDb() {
+    @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+    @ResponseBody
+    public String heartbeat() {
+        return "OK";
     }
 
     public CheckoutController() throws UnknownHostException {
