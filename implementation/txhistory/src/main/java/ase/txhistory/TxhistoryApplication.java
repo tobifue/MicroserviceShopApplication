@@ -86,6 +86,12 @@ public class TxhistoryApplication {
 		return "Cleared all transactions";
 	}
 
+	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+	@ResponseBody
+	public String heartbeat() {
+		return "OK";
+	}
+
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
 	private void registerWithGateway() {
 		try {

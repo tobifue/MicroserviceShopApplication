@@ -138,6 +138,7 @@ public class InventoryServiceApplication {
 	@Value("${server.port}")
 	private String port;
 
+	/*
 	private void registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
@@ -166,6 +167,32 @@ public class InventoryServiceApplication {
 			registerWithGateway();
 		}
 		System.out.println("Successfully registered with gateway!");
+	}
+	 */
+
+	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
+	private void registerWithGateway() {
+		try {
+			Map<String, Object> registrationDetails = new HashMap<>();
+			registrationDetails.put("endpoints", new ArrayList<String>() {
+				private static final long serialVersionUID = 1L;
+				{
+					// put highest level endpoints here
+					add("/");
+					add("/update");
+					add("/delete");
+					add("/vendor");
+					add("/items/");
+				}
+			});
+			registrationDetails.put("category", "inventory");
+			registrationDetails.put("ip", "http://localhost:" + port);
+			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+					registrationDetails, String.class);
+			System.out.println("Successfully registered with gateway!");
+		} catch (RestClientException e) {
+			System.err.println("Failed to connect to Gateway, please register manually or restart application");
+		}
 	}
 
 	@Bean
