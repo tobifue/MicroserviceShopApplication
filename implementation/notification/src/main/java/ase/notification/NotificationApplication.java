@@ -62,9 +62,9 @@ public class NotificationApplication {
 		return repository.save(notification);
 	}
 
-	@RequestMapping(value = "/shipping/{itemId}", method = RequestMethod.GET)
-	public void callShipping(@PathVariable long itemId) {
-		Notification nt = NotificationService.checkShipping(itemId, repository);
+	@RequestMapping(value = "/shipping/{itemId}/{shippingStatus}", method = RequestMethod.GET)
+	public void callShipping(@PathVariable long itemId, @PathVariable String shippingStatus) {
+		Notification nt = NotificationService.checkShipping(itemId, repository, shippingStatus);
 		try {
 			notificationService.sendEmail(nt);
 		} catch (MailException e) {

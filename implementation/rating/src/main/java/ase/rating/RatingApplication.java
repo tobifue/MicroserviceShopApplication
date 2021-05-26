@@ -63,6 +63,12 @@ public class RatingApplication {
 			System.out.println(r);
 	}
 
+	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+	@ResponseBody
+	public String heartbeat() {
+		return "OK";
+	}
+
 	private void registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
@@ -95,7 +101,7 @@ public class RatingApplication {
 	public CommandLineRunner loadRepository(RatingRepository repository) {
 		return (args) -> {
 			this.repository = repository;
-			//printRepositoryToConsole();
+			// printRepositoryToConsole();
 			// register with gateway in commandlineRunner
 			registerWithGateway();
 		};

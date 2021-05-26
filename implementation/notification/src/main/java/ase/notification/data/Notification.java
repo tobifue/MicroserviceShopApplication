@@ -26,15 +26,12 @@ public class Notification {
 	public Notification() {
 	}
 
-	public Notification(Long customerid, Long itemId, double price, String itemName, double newPrice, String email,
-			String shippingStatus) {
+	public Notification(Long customerid, Long itemId, double price, String itemName, String email) {
 		this.customerid = customerid;
 		this.itemId = itemId;
 		this.itemName = itemName;
 		this.price = price;
-		this.newPrice = newPrice;
 		this.email = email;
-		this.shippingStatus = shippingStatus;
 
 	};
 
@@ -44,7 +41,6 @@ public class Notification {
 		j.put("itemId", itemId);
 		j.put("price", price);
 		j.put("itemName", itemName);
-		j.put("shippingStatus", shippingStatus);
 		j.put("email", email);
 		return j;
 	}
@@ -56,7 +52,6 @@ public class Notification {
 		sb.append("; Item: " + itemId);
 		sb.append("; itemName: " + itemName);
 		sb.append("; price: " + price);
-		sb.append("; shippingStatus " + shippingStatus);
 		sb.append("; email " + email);
 		sb.append("]");
 		return sb.toString();
@@ -96,6 +91,14 @@ public class Notification {
 
 	public String getEmailBody() {
 		return emailBody;
+	}
+
+	public void setNewPrice(double newPrice) {
+		this.newPrice = newPrice;
+	}
+
+	public void setShippingStatus(String shippingStatus) {
+		this.shippingStatus = shippingStatus;
 	}
 
 	public void setEmailBody(String emailBody) {

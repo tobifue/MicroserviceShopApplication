@@ -14,20 +14,15 @@ public class NotificationService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	/*
-	 * @Autowired public NotificationService(JavaMailSender javaMailSender) {
-	 * this.javaMailSender = javaMailSender; }
-	 */
-
-	public static Notification checkShipping(long itemId, NotificationRepository repository) {
+	public static Notification checkShipping(long itemId, NotificationRepository repository, String shippingStatus) {
 		Notification endNotification = null;
-		String itemName, shippingStatus, emailBody, emailSubject;
+		String itemName, emailBody, emailSubject;
 		long id;
 		List<Notification> allNt = repository.findAll();
 		for (Notification nt : allNt) {
 			id = nt.getItemId();
 			if (itemId == id) {
-				shippingStatus = nt.getShippingStatus();
+				nt.setShippingStatus(shippingStatus);
 				itemName = nt.getItemName();
 				emailBody = String.format("The shipment status of your purchased item %s has been updated to: %s",
 						itemName, shippingStatus);
@@ -58,12 +53,12 @@ public class NotificationService {
 				endNotification = nt;
 				nt.setEmailBody(emailBody);
 				nt.setEmailSubject(emailSubject);
+				nt.setNewPrice(newPrice);
 			}
 		}
 		return endNotification;
 	}
 
-	// public void sendEmail(String email, String emailBody) {
 	public void sendEmail(Notification notification) throws MailException {
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
