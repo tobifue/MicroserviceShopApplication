@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ASEInterceptor extends HandlerInterceptorAdapter
+public class LogInterceptor extends HandlerInterceptorAdapter
 {
     @Autowired
     private LogRepository logRepository;

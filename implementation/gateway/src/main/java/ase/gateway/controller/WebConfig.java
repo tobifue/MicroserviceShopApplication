@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
-    ASEInterceptor demoInterceptor() {
-        return new ASEInterceptor();
+    LogInterceptor demoInterceptor() {
+        return new LogInterceptor();
     }
 
     @Override
