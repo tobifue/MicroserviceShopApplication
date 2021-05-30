@@ -16,8 +16,6 @@ build:
 AccessCheck:
   stage: test
   image: docker:latest
-  services:
-    - docker:dind
   script:
     - ls  
 
