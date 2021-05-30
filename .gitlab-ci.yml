@@ -1,3 +1,4 @@
+
 stages:
   - build
   - test
@@ -11,6 +12,12 @@ build:
   script: 
     - mvn -f implementation/shipment/pom.xml package
     - mvn -f implementation/checkout/pom.xml package
+
+AccessCheck:
+  stage: test
+  image: alpine:latest
+  script:
+    - ls  
 
 
 cart_testing:
