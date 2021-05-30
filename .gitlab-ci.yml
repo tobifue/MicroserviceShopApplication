@@ -54,7 +54,7 @@ integration_test:
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
     - cd ../../checkout/target
-    - java -jar checkout-0.0.1-SNAPSHOT.jar
+    - java -jar checkout-0.0.1-SNAPSHOT.jar &
 
 
 
