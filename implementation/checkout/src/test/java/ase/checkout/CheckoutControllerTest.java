@@ -40,9 +40,9 @@ public class CheckoutControllerTest {
 
 
     @Test
-    @DisplayName("checkout")
-    public void updateShipment() {
+    @DisplayName("heartbeat")
+    public void heartbeat() {
         long costumerId = 0;
-        assertEquals(controller.checkout(costumerId), "{ \"command\":\"delete\"}");
+        assertEquals(controller.heartbeat(), "OK");
     }
 }
