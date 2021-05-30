@@ -48,6 +48,11 @@ app.get('/deleteCart/:userId', function (req, res, next) {
     res.send("OK");
 });
 
+app.get('/heartbeat', function (req, res, next) {
+    const userId = Number(req.params.userId);
+    res.send("OK");
+});
+
 app.listen(port, function () {
    ;// console.log('Server started on port: ' + port);
 });

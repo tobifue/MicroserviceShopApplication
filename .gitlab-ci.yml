@@ -1,3 +1,4 @@
+
 stages:
   - build
   - test
@@ -9,13 +10,22 @@ build:
   stage: build
   image: maven:3-openjdk-11
   script: 
-    - mvn -f implementation/shipment/pom.xml package
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
+
+
+AccessCheck:
+  stage: test
+  image: docker:latest
+  script:
+    - cd deployment
+    - ls  
 
 
 cart_testing:
-  services:
-    - name: node:latest
-      alias: app
+  #services:
+    #- name: node:latest
+      #alias: app
   image: node:latest
   stage: test
   artifacts:
@@ -38,16 +48,22 @@ integration_test:
     paths:
       - implementation/cart/container/
   script:
-    - apt-get update 
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
     - echo $TZ > /etc/timezone
+#install and run Java things here
     - apt -y install nodejs npm 
     - cd implementation/cart/container
-    #install and run Java things here
     - npm start --host=app &
     - npm install -g mocha
     - npm install
     - npm run test
+    - apt-get -y install default-jre-headless
+    - apt-get clean
+    - rm -rf /var/lib/apt/lists/*
+    - cd ../../checkout/target
+    - java -jar checkout-0.0.1-SNAPSHOT.jar &
 
 
 

@@ -33,7 +33,7 @@ public class PriceadjustmentApplication {
 	@Value("${server.port}")
 	private String port;
 
-	@PostMapping(path = "/recommend", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/recommend", consumes = "text/plain", produces = "text/plain")
 	public String addTransaction(@RequestBody String item) {
 		return scraper.scrape(item);
 	}

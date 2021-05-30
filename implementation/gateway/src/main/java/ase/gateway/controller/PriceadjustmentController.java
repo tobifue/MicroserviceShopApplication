@@ -21,7 +21,7 @@ public class PriceadjustmentController {
 	 * @param requires { "item" : [insert item title] }
 	 * @return
 	 */
-	@PostMapping(path = "/recommend", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/recommend", consumes = "text/plain", produces = "text/plain")
 	public String getPriceRecommendation(@RequestBody Map<String, Object> markedProduct) {
 		try {
 			return TrafficController
