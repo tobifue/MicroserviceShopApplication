@@ -28,7 +28,15 @@ public class AccountService {
                         });
         List<Item> listOfItems = responseEntity.getBody();
 
-        for (Item it : listOfItems){
+        profit = calculateProfit(listOfItems);
+
+        return profit;
+    }
+
+    public Double calculateProfit(List<Item> transactionList){
+        Double profit = 0.0;
+
+        for (Item it : transactionList){
             profit += it.getPrice();
         }
 

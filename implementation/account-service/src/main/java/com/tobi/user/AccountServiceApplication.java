@@ -65,6 +65,12 @@ public class AccountServiceApplication {
 		}
 	}
 
+	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+	@ResponseBody
+	public String heartbeat() {
+		return "OK";
+	}
+
 	@Bean
 	public CommandLineRunner registerWithGateWay() {
 		return (args) -> {
