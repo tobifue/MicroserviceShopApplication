@@ -17,6 +17,7 @@ AccessCheck:
   stage: test
   image: docker:latest
   script:
+    - cd implementation/shipment
     - ls  
 
 
