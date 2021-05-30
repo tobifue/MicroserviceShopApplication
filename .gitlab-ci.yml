@@ -1,3 +1,4 @@
+
 stages:
   - build
   - test
@@ -9,8 +10,16 @@ build:
   stage: build
   image: maven:3-openjdk-11
   script: 
-    - mvn -f implementation/shipment/pom.xml package
-    - mvn -f implementation/checkout/pom.xml package
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/checkout
+
+
+AccessCheck:
+  stage: test
+  image: docker:latest
+  script:
+    - cd deployment/checkout
+    - ls  
 
 
 cart_testing:
@@ -53,6 +62,8 @@ integration_test:
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
+    - cd ../../checkout/target
+    - java -jar checkout-0.0.1-SNAPSHOT.jar &
 
 
 
