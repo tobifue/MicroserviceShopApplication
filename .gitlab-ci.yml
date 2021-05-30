@@ -14,9 +14,9 @@ build:
 
 
 cart_testing:
-  services:
-    - name: node:latest
-      alias: app
+  #services:
+    #- name: node:latest
+      #alias: app
   image: node:latest
   stage: test
   artifacts:
@@ -39,16 +39,20 @@ integration_test:
     paths:
       - implementation/cart/container/
   script:
-    - apt-get update 
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
     - echo $TZ > /etc/timezone
+#install and run Java things here
     - apt -y install nodejs npm 
     - cd implementation/cart/container
-    #install and run Java things here
     - npm start --host=app &
     - npm install -g mocha
     - npm install
     - npm run test
+    - apt-get -y install default-jre-headless
+    - apt-get clean
+    - rm -rf /var/lib/apt/lists/*
 
 
 
