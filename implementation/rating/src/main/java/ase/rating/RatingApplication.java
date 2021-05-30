@@ -69,6 +69,7 @@ public class RatingApplication {
 		return "OK";
 	}
 
+	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
 	private void registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
@@ -85,16 +86,10 @@ public class RatingApplication {
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
+			System.out.println("Successfully registered with gateway!");
 		} catch (RestClientException e) {
-			System.out.println("Could not reach Gateway, retrying in 5 seconds");
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			registerWithGateway();
+			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 		}
-		System.out.println("Successfully registered with gateway!");
 	}
 
 	@Bean
