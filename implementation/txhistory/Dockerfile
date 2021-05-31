@@ -1,6 +1,5 @@
 FROM maven:3-openjdk-11 AS build
-COPY src implementation/txhistory/src
-COPY pom.xml implementation/txhistory/pom.xml
+COPY src src/
 RUN mvn clean package
 
 FROM openjdk:11
