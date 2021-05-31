@@ -12,6 +12,10 @@ build:
   script: 
     - mvn -f implementation/shipment/pom.xml package 
     - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
+  artifacts:
+    paths:
+    - ../../deployment/checkout*.jar
+
 
 
 AccessCheck:
