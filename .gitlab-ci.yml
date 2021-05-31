@@ -95,8 +95,9 @@ release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: build_jars, build_images
+    - job: build_jars
       artifacts: true
+    - job: build_images
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
