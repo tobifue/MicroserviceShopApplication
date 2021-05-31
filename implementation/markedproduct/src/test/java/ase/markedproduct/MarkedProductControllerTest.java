@@ -1,4 +1,4 @@
-package ase.rating;
+package ase.markedproduct;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,21 +18,23 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ase.rating.data.Rating;
-import ase.rating.data.RatingRepository;
+import ase.markedproduct.controller.UpdateController;
+import ase.markedproduct.data.MarkedProduct;
+import ase.markedproduct.data.MarkedProductRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class RatingApplicationTests {
+public class MarkedProductControllerTest {
 
 	private MockMvc mvc;
 
 	@MockBean
-	private RatingRepository repository;
+	private MarkedProductRepository repository;
 
 	@Autowired
 	private WebApplicationContext context;
 
-	private Rating rating;
+	private UpdateController controller;
+	private MarkedProduct markedproduct;
 
 	@BeforeAll
 	public static void setup() {
@@ -41,21 +43,22 @@ public class RatingApplicationTests {
 
 	@BeforeEach
 	public void initialize() {
+		controller = new UpdateController();
 		this.mvc = MockMvcBuilders.webAppContextSetup(context).build();
-		rating = new Rating(1L, 1L, "Test", 4);
+		markedproduct = new MarkedProduct(111L, 555L, 842.7, "iPhone XS", "max.muller@gmail.com");
 	}
 
 	@Test
-	@DisplayName("Store Rating")
-	public void storeShipment() throws Exception {
-		mvc.perform(post("/add").content(asJsonString(rating)).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
-				.andExpect(status().isOk());
+	@DisplayName("Mark Product")
+	public void markProduct() throws Exception {
+		mvc.perform(post("/mark").content(asJsonString(markedproduct)).contentType(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
 	@Test
-	@DisplayName("Store Incorrect Rating")
+	@DisplayName("Mark Product Incorrectly")
 	public void storeWrongShipment() throws Exception {
-		mvc.perform(post("/add").content("WRONG XXXXX").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+		mvc.perform(post("/mark").content("Random String").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError());
 	}
 

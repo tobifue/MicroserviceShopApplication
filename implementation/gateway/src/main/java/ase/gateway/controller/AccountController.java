@@ -1,20 +1,26 @@
 package ase.gateway.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import ase.gateway.controller.log.Log;
+import ase.gateway.controller.log.LogRepository;
 import ase.gateway.traffic.Message;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
-import ase.gateway.util.AdressUtil;
-import ase.gateway.util.NetworkUtil;
+import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("account")
 public class AccountController {
+
+	@Autowired
+	private LogRepository logRepository;
 
 	private static final String serviceName = "account-service";
 

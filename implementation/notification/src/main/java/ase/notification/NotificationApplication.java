@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +41,9 @@ public class NotificationApplication {
 	@Value("${server.port}")
 	private String port;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(NotificationApplication.class, args);
 	}
@@ -57,20 +62,38 @@ public class NotificationApplication {
 		return repository.save(notification);
 	}
 
-	@RequestMapping(value = "/shipping/{itemId}", method = RequestMethod.GET)
-	public void callShipping(@PathVariable long itemId) {
-		NotificationService.checkShipping(itemId, repository);
+	@RequestMapping(value = "/shipping/{itemId}/{shippingStatus}", method = RequestMethod.GET)
+	public void callShipping(@PathVariable long itemId, @PathVariable String shippingStatus) {
+		Notification nt = NotificationService.checkShipping(itemId, repository, shippingStatus);
+		try {
+			notificationService.sendEmail(nt);
+		} catch (MailException e) {
+			// catch
+		}
+
 	}
 
 	@RequestMapping(value = "/price/{itemId}/{newPrice}", method = RequestMethod.GET)
 	public void callPrice(@PathVariable long itemId, @PathVariable double newPrice) {
-		NotificationService.checkPrice(itemId, repository, newPrice);
+		Notification nt = NotificationService.checkPrice(itemId, repository, newPrice);
+		try {
+			notificationService.sendEmail(nt);
+		} catch (MailException e) {
+			// catch
+		}
+
 	}
 
 	@RequestMapping(value = "/clearAll", method = RequestMethod.GET)
 	public String clearAllTransactions() {
 		repository.deleteAll();
 		return "Cleared all transactions";
+	}
+
+	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+	@ResponseBody
+	public String heartbeat() {
+		return "OK";
 	}
 
 	private void registerWithGateway() {
@@ -81,7 +104,6 @@ public class NotificationApplication {
 				{
 					// put highest level endpoints here
 					add("/checkItems");
-					add("/checkPrice");
 					add("/add");
 					add("/shipping");
 					add("/price");

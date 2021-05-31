@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tobi.department.entity.Item;
+import com.tobi.department.entity.ItemFactory;
 import com.tobi.department.repository.InventoryRepository;
 import com.tobi.department.service.InventoryService;
 import lombok.SneakyThrows;
@@ -63,8 +64,6 @@ public class InventoryServiceApplication {
 
 		List<Item> inventories = new ArrayList<Item>();
 		List<Item> v_inventories = new ArrayList<Item>();
-
-		inventories = inventoryService.findAllItems();
 
 		for(Item dep : inventories) {
 			if(dep.getVendorId()==id){
@@ -185,6 +184,7 @@ public class InventoryServiceApplication {
 					add("/items/");
 				}
 			});
+
 			registrationDetails.put("category", "inventory");
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
@@ -193,6 +193,12 @@ public class InventoryServiceApplication {
 		} catch (RestClientException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 		}
+	}
+
+	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+	@ResponseBody
+	public String heartbeat() {
+		return "OK";
 	}
 
 	@Bean

@@ -1,3 +1,4 @@
+
 stages:
   - build
   - test
@@ -6,55 +7,35 @@ stages:
   - cleanup
 
 
-cart_testing:
-  services:
-    - name: node:latest
-      alias: app
-  image: node:latest
-  stage: test
+
+
+
+build:
+  stage: build
+  image: maven:3-openjdk-11
+  script: 
+#    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
+    - cd deployment
+    - ls
   artifacts:
     paths:
-      - implementation/cart/container/
-  script:
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
-
-## add services to test
-
-
-integration_test:
-  image: ubuntu:latest
-  stage: integrationTest
-  artifacts:
-    paths:
-      - implementation/cart/container/
-  script:
-    - apt-get update 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-    - apt -y install nodejs npm 
-    - cd implementation/cart/container
-    #install and run Java things here
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
-
-
+    - deployment/*.jar
+    reports:
+       dotenv: job.env  
 
 release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: integration_test
+    - job: build
       artifacts: true
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
-
   script:
-    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
+#    - cd deployment
+    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
+      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
 

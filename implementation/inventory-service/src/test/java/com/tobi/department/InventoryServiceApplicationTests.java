@@ -48,16 +48,16 @@ class InventoryServiceApplicationTests {
 	}
 
 	@Test
-	@DisplayName("Store Transaction")
-	public void storeShipment() throws Exception {
+	@DisplayName("Add Item")
+	public void addItem() throws Exception {
 		mvc.perform(
 				post("/").content(asJsonString(item)).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	@DisplayName("Store Incorrect Transaction")
-	public void storeWrongShipment() throws Exception {
+	@DisplayName("Add Wrong Item")
+	public void addWrongItem() throws Exception {
 		mvc.perform(post("/").content("WRONG XXXXX").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
 				.andExpect(status().is4xxClientError());
 	}

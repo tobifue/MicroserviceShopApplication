@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,15 +27,6 @@ public class CheckoutController {
 
     @RequestMapping(value = "/checkout/{costumerId}", method = RequestMethod.GET)
     public String checkout(@PathVariable("costumerId") Long costumerId) {
-        try {
-            //ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            //String json = ow.writeValueAsString(cart);
-            //jsonCart = json;
-
-            System.out.println(costumerId);
-        } catch (Exception e) {
-            System.out.println("Something went wrong.");
-        }
         String cart = NetworkUtil.httpGet(gatewayIp, String.format("/cart/getCart/%s", costumerId));
         NetworkUtil.httpGet(gatewayIp, String.format("/cart/deleteCart/%s", costumerId));
         try {
@@ -52,8 +40,6 @@ public class CheckoutController {
                 NetworkUtil.httpPost(gatewayIp, String.format("shipment/add", costumerId), item);
             }
             System.out.println("cart: " + cart);
-            doShipment();
-            saveTransactionInDb();
         } catch (RestClientException e) {
             e.printStackTrace();
             return e.getMessage();
@@ -70,17 +56,17 @@ public class CheckoutController {
         return "{ \"command\":\"delete\"}";
     }
 
-    public void doShipment() {
-    }
-
-    public void saveTransactionInDb() {
+    @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+    @ResponseBody
+    public String heartbeat() {
+        return "OK";
     }
 
     public CheckoutController() throws UnknownHostException {
         registerWithGateway();
     }
 
-
+    @RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
     private void registerWithGateway() {
         try {
             Map<String, Object> registrationDetails = new HashMap<>();
@@ -96,16 +82,10 @@ public class CheckoutController {
             registrationDetails.put("ip", checkoutAdress);
             new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
                     registrationDetails, String.class);
+            System.out.println("Successfully registered with gateway!");
         } catch (RestClientException e) {
-            System.out.println("Could not reach Gateway, retrying in 5 seconds");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            registerWithGateway();
+            System.err.println("Failed to connect to Gateway, please register manually or restart application");
         }
-        System.out.println("Successfully registered with gateway!");
     }
 
 
