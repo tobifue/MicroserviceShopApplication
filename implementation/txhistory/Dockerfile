@@ -4,7 +4,6 @@ COPY implementation/txhistory/src /build/src/
 WORKDIR /build/
 RUN mvn clean package
 
-maven-jar-plugin:3.2.0:jar
 FROM openjdk:11
 EXPOSE 8081
 ARG JAR_FILE=implementation/txhistory/maven-jar-plugin:3.2.0:jar
