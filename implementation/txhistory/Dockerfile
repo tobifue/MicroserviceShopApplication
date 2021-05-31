@@ -1,6 +1,7 @@
 FROM maven:3-openjdk-11 AS build
-COPY src/ src
-COPY pom.xml pom.xml
+COPY pom.xml /build/
+COPY src /build/src/
+WORKDIR /build/
 RUN mvn clean package
 
 FROM openjdk:11
