@@ -12,7 +12,7 @@ stages:
 create:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
-    - echo "${CI_JOB_ID}" > deployment/CI_JOB_ID.txt
+    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
     - echo "TAG=v$(cat VERSION)" >> variables.env 
     - ls
   artifacts:
@@ -32,9 +32,6 @@ release_upload:
     - if: '$CI_COMMIT_BRANCH == "master"'
   script:
 #    - cd deployment
-    - ls
-    - cd deployment
-    - ls
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
       --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat CI_JOB_ID.txt`/artifacts/download\"}"
 
