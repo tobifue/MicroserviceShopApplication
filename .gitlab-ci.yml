@@ -34,4 +34,4 @@ release_upload:
   #  - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
     - |
       release-cli create --name "Release" --tag-name job-$CI_JOB_ID \
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat CI_JOB_ID.txt`/artifacts/CI_JOB_ID.txt\"}"
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat CI_JOB_ID.txt`/artifacts/deployment/CI_JOB_ID.txt\"}"
