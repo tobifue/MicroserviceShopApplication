@@ -9,15 +9,15 @@ build:
   stage: build
   tags:
     - swa
-  # image: maven:3-openjdk-11
-  image: docker:19.03.12
-  services:
-    - docker:19.03.12-dind
+  image: maven:3-openjdk-11
+  #image: docker:19.03.12
+  #services:
+  #  - docker:19.03.12-dind
   
   script: 
-     - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
+    # - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
    #  - docker build -f implementation/shipment/Dockerfile -t shipment-docker .
-#    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/txhistory/pom.xml clean package 
 #    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
 #    - echo "JOB_ID=$CI_JOB_ID" >> job.env
 #    - cd deployment
