@@ -15,7 +15,7 @@ build:
     - docker:19.03.12-dind
   
   script: 
-     - docker build . -f implementation/txhistory/Dockerfile -t txhistory-docker .
+     - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
    #  - docker build -f implementation/shipment/Dockerfile -t shipment-docker .
 #    - mvn -f implementation/shipment/pom.xml package 
 #    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
