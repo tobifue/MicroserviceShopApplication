@@ -25,13 +25,11 @@ create:
 
 
 release_upload:
-  dependencies:
-    - build
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   #needs:
-    #- job: build
-      #artifacts: true
+    - job: build
+      artifacts: true
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
