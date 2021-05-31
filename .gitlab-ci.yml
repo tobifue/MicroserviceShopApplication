@@ -28,49 +28,6 @@ AccessCheck:
     - ls  
 
 
-cart_testing:
-  #services:
-    #- name: node:latest
-      #alias: app
-  image: node:latest
-  stage: test
-  artifacts:
-    paths:
-      - implementation/cart/container/
-  script:
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
-
-## add services to test
-
-
-integration_test:
-  image: ubuntu:latest
-  stage: integrationTest
-  artifacts:
-    paths:
-      - implementation/cart/container/
-  script:
-    - apt-get update
-    - DEBIAN_FRONTEND=noninteractive 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-#install and run Java things here
-    - apt -y install nodejs npm 
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
-    - apt-get -y install default-jre-headless
-    - apt-get clean
-    - rm -rf /var/lib/apt/lists/*
-    - cd ../../../deployment/
-    - java -jar checkout-0.0.1.jar &
-
 
 
 release_upload:
@@ -82,7 +39,10 @@ release_upload:
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
-
+  artifacts:
+    paths:
+      - deployment
   script:
+    - cd deployment
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
 
