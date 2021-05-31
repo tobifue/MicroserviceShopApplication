@@ -12,6 +12,8 @@ build:
   script: 
     - mvn -f implementation/shipment/pom.xml package 
     - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
+    - cd ../../deployment/checkout
+    - ls
   artifacts:
     paths:
     - ../../deployment/checkout/*.jar
