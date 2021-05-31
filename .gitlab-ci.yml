@@ -34,7 +34,7 @@ release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: integration_test
+    - job: AccessCheck
       artifacts: true
   rules:
     - if: '$RELEASE == "True"'
