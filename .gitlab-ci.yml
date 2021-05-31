@@ -34,4 +34,4 @@ release_upload:
   #  - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
     - |
       release-cli create --name "Release $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://gitlab.com/some/repo/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/CI_JOB_ID.txt\"}"
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://gitlab.com/some/repo/-/jobs/`cat CI_JOB_ID.txt`CI_JOB_ID.txt\"}"
