@@ -1,108 +1,22 @@
+image: gitlab/dind
+services:
+  - docker:dind
+
 stages:
-  - build_jars
-  - build_images
+  - build
   - test
-  - integrationTest
-  - release
-  - cleanup
+  - docker
 
-build_jars:
-  stage: build_jars
-  tags:
-    - swa
-  image: maven:3-openjdk-11
-  #image: docker:19.03.12
-  #services:
-  #  - docker:19.03.12-dind
-  
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
   script: 
-    # - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
-   #  - docker build -f implementation/shipment/Dockerfile -t shipment-docker .
-    - mvn -f implementation/txhistory/pom.xml clean package 
-#    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
-#    - echo "JOB_ID=$CI_JOB_ID" >> job.env
-#    - cd deployment
-#    - ls
- # artifacts:
- #   name: "Microservices"
- #   paths:
- #   - deployment/*.jar
- #   reports:
- #      dotenv: job.env  
+    - mvn -f implementation/txhistory/pom.xml clean package
+  artifacts:
+    paths:
+      - target/*.jar
 
-build_images:
-  stage: build_images
-  tags:
-    - swa
-  image: docker:19.03.12
-  services:
-    - docker:19.03.12-dind
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_DRIVER: overlay
-    SPRING_PROFILES_ACTIVE: gitlab-ci
-
-  before_script:
-    # - echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin || true
+docker-build:
+  stage: docker
   script:
-    #- docker pull $CI_REGISTRY_IMAGE:latest || true
-    #- docker build -f implementation/inventory_service/Dockerfile --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
     - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
-
-
-#cart_testing:
-  #services:
-    #- name: node:latest
-      #alias: app
-#  image: node:latest
-#  stage: test
-#  artifacts:
-#    paths:
-#      - implementation/cart/container/
-#  script:
-#    - cd implementation/cart/container
-#    - npm start --host=app &
-#    - npm install -g mocha
-#    - npm install
-#    - npm run test
-
-#integration_test:
-#  image: ubuntu:latest
-#  stage: integrationTest
-#  artifacts:
-#    paths:
-#      - implementation/cart/container/
-#  script:
-#    - apt-get update
-#    - DEBIAN_FRONTEND=noninteractive 
-#    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
- #   - echo $TZ > /etc/timezone
-##install and run Java things here
- #   - apt -y install nodejs npm 
- #   - cd implementation/cart/container
- #   - npm start --host=app &
- ##   - npm install -g mocha
- #   - npm install
- #   - npm run test
- #   - apt-get -y install default-jre-headless
-  #  - apt-get clean
- #   - rm -rf /var/lib/apt/lists/*
- #   - cd ../../../deployment/
-  #  - java -jar checkout-0.0.1.jar
-
-
-release_upload:
-  stage: release
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
-  needs:
-    - job: build_jars
-      artifacts: true
-    - job: build_images
-  rules:
-    - if: '$RELEASE == "True"'
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  script:
-#    - cd deployment
-    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
-      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
-
