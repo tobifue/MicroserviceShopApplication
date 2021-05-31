@@ -30,16 +30,23 @@ public class TrafficController {
 	@SuppressWarnings("unchecked")
 	@PostMapping(path = "/new", consumes = "application/json", produces = "application/json")
 	public void registerNewService(@RequestBody Map<String, Object> details) {
-		ServiceConnection conn = new ServiceConnection((List<String>) details.get("endpoints"),
-				(String) details.get("category"), (String) details.get("ip"));
-		activeConnections.add(conn);
-		System.out.println(conn.getSubscribedEndpoints());
-		System.out.println(conn.getCategory());
-		System.out.println(conn.getIp());
-		if (heartbeatMonitor == null) {
-			heartbeatMonitor = new HeartbeatMonitor();
+		boolean newConnection = true;
+		for (ServiceConnection c : activeConnections) {
+			if (c.getIp().equals(details.get("ip")))
+				newConnection = false;
 		}
-		heartbeatMonitor.updateConnections(activeConnections);
+		if (newConnection) {
+			ServiceConnection conn = new ServiceConnection((List<String>) details.get("endpoints"),
+					(String) details.get("category"), (String) details.get("ip"));
+			activeConnections.add(conn);
+			System.out.println(conn.getSubscribedEndpoints());
+			System.out.println(conn.getCategory());
+			System.out.println(conn.getIp());
+			if (heartbeatMonitor == null) {
+				heartbeatMonitor = new HeartbeatMonitor();
+			}
+			heartbeatMonitor.updateConnections(activeConnections);
+		}
 	}
 
 	public static String sendMessageToSingleRecipient(Message message) {

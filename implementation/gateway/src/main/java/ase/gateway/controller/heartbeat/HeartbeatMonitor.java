@@ -41,18 +41,20 @@ public final class HeartbeatMonitor {
 	}
 
 	private synchronized void queryHeartbeats() {
-		heartbeats = new ArrayList<>();
-		for (ServiceConnection conn : getConnections()) {
+		List<HeartbeatStatus> heartbeatsTemp = new ArrayList<>();
+		List<ServiceConnection> connectionsTemp = getConnections();
+		for (ServiceConnection conn : connectionsTemp) {
 			try {
 				if (TrafficController.dispatch(conn, Message.createInstance(null, "heartbeat", "/heartbeat", "GET"))
 						.equals("OK")) {
-					heartbeats.add(new HeartbeatStatus(conn, "ALIVE"));
+					heartbeatsTemp.add(new HeartbeatStatus(conn, "ALIVE"));
 				} else
-					heartbeats.add(new HeartbeatStatus(conn, "DEAD"));
+					heartbeatsTemp.add(new HeartbeatStatus(conn, "DEAD"));
 			} catch (RestClientException e) {
-				heartbeats.add(new HeartbeatStatus(conn, "DEAD"));
+				heartbeatsTemp.add(new HeartbeatStatus(conn, "DEAD"));
 			}
 		}
+		heartbeats = heartbeatsTemp;
 	}
 
 	public synchronized void updateConnections(List<ServiceConnection> connections) {
