@@ -34,7 +34,8 @@ release_upload:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
   script:
+    - echo $JOB_ID
 #    - cd deployment
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
-      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
+      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat $JOB_ID `/artifacts/download\"}"
 
