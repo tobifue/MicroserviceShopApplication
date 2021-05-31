@@ -14,7 +14,7 @@ build:
     - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
   artifacts:
     paths:
-    - ../../deployment/checkout*.jar
+    - ../../deployment/checkout/*.jar
 
 
 
