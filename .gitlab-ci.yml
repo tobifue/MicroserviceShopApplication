@@ -38,4 +38,5 @@ release_upload:
     name: 'RELEASE'
     tag_name: '$CI_JOB_ID'
     description: 'Release description'
+    ref: '$CI_COMMIT_SHA'
 
