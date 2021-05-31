@@ -20,13 +20,6 @@ build:
 
 
 
-AccessCheck:
-  stage: test
-  image: docker:latest
-  script:
-    - cd deployment
-    - ls  
-
 
 
 
@@ -42,6 +35,8 @@ release_upload:
   artifacts:
     paths:
       - deployment
+    reports:
+      junit: deployment
   script:
     - cd deployment
     - ls
