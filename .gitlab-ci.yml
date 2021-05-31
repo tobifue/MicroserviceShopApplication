@@ -32,9 +32,10 @@ release_upload:
     - ls
     - cd deployment
     - ls
-  #  - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
-  release:
-    name: "RELEASE"
-    tag_name: $CI_JOB_ID
-    description: 'Release description'
+    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
+    #--ref $CI_COMMIT_SHA
+  #release:
+    #name: "RELEASE"
+    #tag_name: $CI_JOB_ID
+    #description: 'Release description'
 
