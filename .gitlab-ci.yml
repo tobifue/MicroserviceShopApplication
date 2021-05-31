@@ -20,7 +20,7 @@ build:
     - ls
   artifacts:
     paths:
-    - deployment/*.jar
+    - deployment
 
 
 release_upload:
