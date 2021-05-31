@@ -9,18 +9,16 @@ stages:
 
 
 
-build:
-  stage: build
-  image: maven:3-openjdk-11
-  script: 
-#    - mvn -f implementation/shipment/pom.xml package 
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
-    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - cd deployment
+create:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "${CI_JOB_ID}" > deployment/CI_JOB_ID.txt
+    - echo "TAG=v$(cat VERSION)" >> variables.env 
     - ls
   artifacts:
     paths:
-    - deployment
+      - deployment
+
 
 
 release_upload:
