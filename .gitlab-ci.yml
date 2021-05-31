@@ -6,7 +6,7 @@ stages:
   - release
   - cleanup
 
-build-maven:
+build-jars:
   stage: build_jars
   tags:
     - swa
@@ -30,7 +30,7 @@ build-maven:
  #   reports:
  #      dotenv: job.env  
 
-build-docker:
+build-images:
   stage: build_images
   tags:
     - swa
