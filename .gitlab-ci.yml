@@ -36,6 +36,6 @@ release_upload:
     #--ref $CI_COMMIT_SHA
   release:
     name: 'RELEASE'
-    tag_name: $CI_JOB_ID
+    tag_name: '$CI_JOB_ID'
     description: 'Release description'
 
