@@ -18,6 +18,8 @@ create:
   artifacts:
     paths:
       - deployment
+    reports:
+       dotenv: job.env  
 
 
 
