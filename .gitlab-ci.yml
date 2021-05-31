@@ -13,7 +13,7 @@ create:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - echo "TAG=v$(cat VERSION)" >> variables.env 
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
     - ls
   artifacts:
     paths:
@@ -33,5 +33,5 @@ release_upload:
   script:
 #    - cd deployment
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
-      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat CI_JOB_ID.txt`/artifacts/download\"}"
+      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/`cat <job_id> `/artifacts/download\"}"
 
