@@ -1,5 +1,5 @@
 FROM maven:3-openjdk-11 AS build  
-RUN mvn -f pom.xml clean package
+RUN mvn -f implementation/txhistory/pom.xml clean package
 
 FROM openjdk:11
 EXPOSE 8081
