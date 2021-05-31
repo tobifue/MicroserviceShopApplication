@@ -6,7 +6,7 @@ stages:
   - release
   - cleanup
 
-build-jars:
+build_jars:
   stage: build_jars
   tags:
     - swa
@@ -30,7 +30,7 @@ build-jars:
  #   reports:
  #      dotenv: job.env  
 
-build-images:
+build_images:
   stage: build_images
   tags:
     - swa
