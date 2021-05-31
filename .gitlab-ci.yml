@@ -29,6 +29,8 @@ release_upload:
   script:
 #    - cd deployment
     - ls
+    - cd deployment
+    - ls
   #  - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
     - |
       release-cli create --name "Release" --tag-name job-$CI_JOB_ID \
