@@ -8,7 +8,7 @@ stages:
   - docker
 
 maven-build:
-  image: maven:3-jdk-8
+  image: maven:3-openjdk-11
   stage: build
   script: 
     - mvn -f implementation/txhistory/pom.xml clean package
