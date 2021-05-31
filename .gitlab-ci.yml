@@ -20,6 +20,7 @@ build:
     - cd deployment
     - ls
   artifacts:
+    name: "Microservices"
     paths:
     - deployment/*.jar
     reports:
