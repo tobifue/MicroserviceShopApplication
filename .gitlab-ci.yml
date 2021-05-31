@@ -6,18 +6,9 @@ stages:
   - release
   - cleanup
 
-build:
-  stage: build
-  image: maven:3-openjdk-11
-  script: 
-#    - mvn -f implementation/shipment/pom.xml package 
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment
-    - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
-    - cd deployment
-    - ls
-  artifacts:
-    paths:
-    - deployment/*.jar
+  - echo "${CI_JOB_ID}" > CI_JOB_ID.txt
+
+
 
 
 
@@ -39,4 +30,4 @@ release_upload:
   #  - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID --ref $CI_COMMIT_SHA
     - |
       release-cli create --name "Release $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
-        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://gitlab.com/some/repo/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/deployment\"}"
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://gitlab.com/some/repo/-/jobs/`cat CI_JOB_ID.txt`/artifacts/file/CI_JOB_ID.txt\"}"
