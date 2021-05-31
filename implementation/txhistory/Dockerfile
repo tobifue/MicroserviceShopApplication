@@ -1,7 +1,7 @@
 FROM maven:3-openjdk-11 AS build
-COPY src /implementation/txhistory/src
-COPY pom.xml /implementation/txhistory/pom.xml
-RUN mvn -f implementation/txhistory/pom.xml clean package
+#COPY src ASE_Team_0105/implementation/txhistory/src
+#COPY pom.xml ASE_Team_0105/implementation/txhistory/pom.xml
+RUN mvn clean package
 
 FROM openjdk:11
 EXPOSE 8081
