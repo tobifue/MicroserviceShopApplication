@@ -7,10 +7,10 @@ maven-build:
   image: maven:3-openjdk-11
   stage: build
   script: 
-    - mvn -f implementation/txhistory/pom.xml clean package
-  artifacts:
-    paths:
-      - deployment/txhistory-0.0.1-SNAPSHOT.jar
+    - mvn -f implementation/txhistory/pom.xml spring-boot:build-image
+#  artifacts:
+#    paths:
+#      - deployment/txhistory-0.0.1-SNAPSHOT.jar
 
 #deploy:
 #  image: maven:3-openjdk-11
