@@ -2,7 +2,7 @@ variables:
   DOCKER_DRIVER: overlay
   SPRING_PROFILES_ACTIVE: gitlab-ci
   USER_GITLAB: millerk97
-  APP_NAME: springbootgitlab
+  APP_NAME: ase
   REPO: vu-advanced-software-engineering/students/2021s/ASE_Team_0105
 
 stages:
