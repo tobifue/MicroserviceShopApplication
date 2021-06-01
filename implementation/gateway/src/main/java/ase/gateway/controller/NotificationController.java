@@ -31,12 +31,12 @@ public class NotificationController {
 		}
 	}
 
-	@RequestMapping(value = "/shipping/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/shipping/{itemId}/{shippingStatus}", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkShipping(@PathVariable Long itemId) {
+	public String checkShipping(@PathVariable Long itemId, @PathVariable String shippingStatus) {
 		try {
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "notification", String.format("/shipping/%s", itemId), "GET"));
+					Message.createInstance(null, "notification", String.format("/shipping/%s/%s", itemId, shippingStatus), "GET"));
 		} catch (RestClientException e) {
 			return e.getMessage();
 		}
