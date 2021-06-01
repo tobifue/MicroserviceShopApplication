@@ -1,7 +1,7 @@
 stages:
  # - build
-  #- deploy
-  - docker
+  - deploy
+ # - docker
 
 #maven-build:
 #  image: maven:3-openjdk-11
@@ -22,13 +22,22 @@ stages:
 #  only:
 #    - master
 
-
-docker-build:
-  image: docker:19.03.12
-  stage: docker
-  tags:
-    - swa
-  services:
-    - docker:19.03.12-dind
+deploy:
+  image: maven:3-openjdk-11
+  stage: deploy
   script:
-    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
+    #- mvn deploy -s ci_settings.xml
+    - echo ${env.CI_SERVER_URL}
+    - echo ${env.CI_PROJECT_ID}
+  only:
+    - master
+
+#docker-build:
+#  image: docker:19.03.12
+#  stage: docker
+#  tags:
+#    - swa
+#  services:
+ #   - docker:19.03.12-dind
+#  script:
+#    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
