@@ -1,8 +1,3 @@
-image: gitlab/dind
-services:
-  - docker:dind
-
-
 variables:
   DOCKER_DRIVER: overlay
   SPRING_PROFILES_ACTIVE: gitlab-ci
@@ -12,7 +7,6 @@ variables:
 
 stages:
   - build
-  - test
   - docker
 
 maven-build:
@@ -25,7 +19,12 @@ maven-build:
       - target/*.jar
 
 docker-build:
+  image: docker:19.03.12
   stage: docker
+  tags:
+    - swa
+  services:
+    - docker:19.03.12-dind
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
