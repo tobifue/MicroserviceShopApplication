@@ -23,7 +23,7 @@ stages:
 #    - master
 
 deploy:
-  image: maven:3-openjdk-11
+ # image: maven:3-openjdk-11
   stage: deploy
   script:
     #- mvn deploy -s ci_settings.xml
