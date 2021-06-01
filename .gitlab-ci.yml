@@ -27,8 +27,8 @@ deploy:
   stage: deploy
   script:
     #- mvn deploy -s ci_settings.xml
-    - echo ${env.CI_SERVER_URL}
-    - echo ${env.CI_PROJECT_ID}
+    - echo "$CI_SERVER_URL"
+    - echo "$CI_PROJECT_ID"
   only:
     - master
 
