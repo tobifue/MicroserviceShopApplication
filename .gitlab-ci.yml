@@ -6,6 +6,8 @@ stages:
 maven-build:
   image: maven:3-openjdk-11
   stage: build
+  tags:
+    - swa
   script: 
     - mvn -f implementation/txhistory/pom.xml compile com.google.cloud.tools:jib-maven-plugin:2.3.0:dockerBuild
 #  artifacts:
