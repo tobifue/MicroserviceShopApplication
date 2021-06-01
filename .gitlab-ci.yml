@@ -7,7 +7,8 @@ variables:
 
 stages:
   - build
-  - docker
+  - deploy
+ # - docker
 
 maven-build:
   image: maven:3-openjdk-11
