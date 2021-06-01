@@ -18,12 +18,20 @@ maven-build:
     paths:
       - target/*.jar
 
-docker-build:
-  image: docker:19.03.12
-  stage: docker
-  tags:
-    - swa
-  services:
-    - docker:19.03.12-dind
+deploy:
+  image: maven:3-openjdk-11
   script:
-    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
+    - mvn deploy -s ci_settings.xml
+  only:
+    - master
+
+
+#docker-build:
+#  image: docker:19.03.12
+#  stage: docker
+#  tags:
+#    - swa
+#  services:
+#    - docker:19.03.12-dind
+#  script:
+#    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
