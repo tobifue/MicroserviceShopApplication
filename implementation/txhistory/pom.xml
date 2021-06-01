@@ -16,6 +16,23 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+	<repositories>
+	  <repository>
+	    <id>gitlab-maven</id>
+	    <url>https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/packages/maven</url>
+	  </repository>
+	</repositories>
+	<distributionManagement>
+	  <repository>
+	    <id>gitlab-maven</id>
+	    <url>https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/packages/maven</url>
+	  </repository>
+	  <snapshotRepository>
+	    <id>gitlab-maven</id>
+	    <url>https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/packages/maven</url>
+	  </snapshotRepository>
+	</distributionManagement>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
