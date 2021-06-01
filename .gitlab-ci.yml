@@ -1,13 +1,6 @@
-variables:
-  DOCKER_DRIVER: overlay
-  SPRING_PROFILES_ACTIVE: gitlab-ci
-  USER_GITLAB: millerk97
-  APP_NAME: ase
-  REPO: vu-advanced-software-engineering/students/2021s/ASE_Team_0105
-
 stages:
   - build
-  - deploy
+  #- deploy
  # - docker
 
 maven-build:
@@ -17,15 +10,15 @@ maven-build:
     - mvn -f implementation/txhistory/pom.xml clean package
   artifacts:
     paths:
-      - target/*.jar
+      - implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar
 
-deploy:
-  image: maven:3-openjdk-11
-  stage: deploy
-  script:
-    - mvn deploy -s ci_settings.xml
-  only:
-    - master
+#deploy:
+#  image: maven:3-openjdk-11
+#  stage: deploy
+#  script:
+#    - mvn deploy -s ci_settings.xml
+#  only:
+#    - master
 
 
 #docker-build:
