@@ -10,7 +10,7 @@ maven-build:
     - mvn -f implementation/txhistory/pom.xml clean package
   artifacts:
     paths:
-      - implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar
+      - deployment/txhistory-0.0.1-SNAPSHOT.jar
 
 #deploy:
 #  image: maven:3-openjdk-11
