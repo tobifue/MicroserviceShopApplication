@@ -59,16 +59,18 @@ public class ShipmentController {
 	 *                 "price", "itemTitle", "count" }
 	 * @return the shipment
 	 */
-	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
+	@PostMapping("/add")
+	@ResponseBody
 	public String addTransaction(@RequestBody Map<String, Object> shipment) {
 		try {
 			return TrafficController
-					.sendMessageToSingleRecipient(Message.createInstance(shipment, category, "/add", "POST"));
+					.sendMessageToSingleRecipient(Message.createInstance(shipment, "shipment", String.format("/add"), "POST"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
+
 
 	@RequestMapping(value = "/start", method = RequestMethod.GET)
 	@ResponseBody

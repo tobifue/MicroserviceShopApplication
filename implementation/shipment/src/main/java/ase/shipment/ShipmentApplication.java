@@ -126,6 +126,7 @@ public class ShipmentApplication {
 					add("/stop");
 					add("/clearAll");
 					add("/print");
+					add("/add");
 				}
 			});
 			registrationDetails.put("category", "shipment");

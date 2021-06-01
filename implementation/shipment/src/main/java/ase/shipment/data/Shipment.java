@@ -36,8 +36,8 @@ public class Shipment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long shipmentid;
-	private Long itemid;
+	private Long shipmentId;
+	private Long itemId;
 	private Long customerId;
 	private Long vendorId;
 	private String email;
@@ -52,11 +52,11 @@ public class Shipment {
 		this.shippingStatus = ShippingStatus.ORDER_RECEIVED.getTitle();
 	}
 
-	public Shipment(Long customerId, Long vendorId, Long itemid, String email, double price, String itemName,
+	public Shipment(Long customerId, Long vendorId, Long itemId, String email, double price, String itemName,
 			int quantity) {
 		this.customerId = customerId;
 		this.vendorId = vendorId;
-		this.itemid = itemid;
+		this.itemId = itemId;
 		this.email = email;
 		this.price = price;
 		this.itemName = itemName;
@@ -68,7 +68,7 @@ public class Shipment {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[Shipment: " + shipmentid);
+		sb.append("[Shipment: " + shipmentId);
 		sb.append("; Customer: " + customerId);
 		sb.append("; Vendor: " + vendorId);
 		sb.append(" |" + itemName + ", price: " + price + "€, quantity: " + quantity + "|");
@@ -79,8 +79,8 @@ public class Shipment {
 
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
-		j.put("shipmentid", shipmentid);
-		j.put("itemid", itemid);
+		j.put("shipmentid", shipmentId);
+		j.put("itemid", itemId);
 		j.put("customerid", customerId);
 		j.put("vendorid", vendorId);
 		j.put("email", email);
@@ -108,7 +108,7 @@ public class Shipment {
 	}
 
 	public Long getShipmentId() {
-		return shipmentid;
+		return shipmentId;
 	}
 
 	public Long getCustomerId() {
@@ -120,7 +120,7 @@ public class Shipment {
 	}
 
 	public Long getItemId() {
-		return itemid;
+		return itemId;
 	}
 
 	public String getEmail() {
@@ -148,11 +148,11 @@ public class Shipment {
 	}
 
 	public void setShipmentid(Long shipmentid) {
-		this.shipmentid = shipmentid;
+		this.shipmentId = shipmentid;
 	}
 
 	public void setItemid(Long itemid) {
-		this.itemid = itemid;
+		this.itemId = itemid;
 	}
 
 	public void setCustomerId(Long customerId) {

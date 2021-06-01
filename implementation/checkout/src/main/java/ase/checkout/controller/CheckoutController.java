@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +18,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,14 +33,30 @@ public class CheckoutController {
     public String checkout(@PathVariable("costumerId") Long costumerId) {
         String cart = NetworkUtil.httpGet(gatewayIp, String.format("/cart/getCart/%s", costumerId));
         NetworkUtil.httpGet(gatewayIp, String.format("/cart/deleteCart/%s", costumerId));
+        String user = NetworkUtil.httpGet(gatewayIp, String.format("/users/%s", costumerId));
+
+        System.out.println(cart);
+
         try {
             JSONObject jsonObject = new JSONObject(cart);
+            JSONObject jsonUserObject = new JSONObject(user);
             JSONArray jsonArray = jsonObject.getJSONArray("list");
+            System.out.println(jsonArray); // display usernames
+            System.out.println(jsonUserObject.getString("email")); // display usernames
+
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 Map<String, Object> item = new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), HashMap.class);
-                item.put("vendorId", costumerId.toString());
-                System.out.println(item); // display usernames
+
+                item.put("customerId", costumerId.toString());
+                item.put("vendorId", "2");
+
+                //get User mail
+                System.out.println(user); // display usernames
+
                 NetworkUtil.httpPost(gatewayIp, String.format("history/add", costumerId), item);
+                item.put("email", jsonUserObject.getString("email"));
+                System.out.println(item); // display usernames
                 NetworkUtil.httpPost(gatewayIp, String.format("shipment/add", costumerId), item);
             }
             System.out.println("cart: " + cart);
