@@ -2,6 +2,14 @@ image: gitlab/dind
 services:
   - docker:dind
 
+
+variables:
+  DOCKER_DRIVER: overlay
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+  USER_GITLAB: millerk97
+  APP_NAME: springbootgitlab
+  REPO: vu-advanced-software-engineering/students/2021s/ASE_Team_0105
+
 stages:
   - build
   - test
@@ -19,4 +27,5 @@ maven-build:
 docker-build:
   stage: docker
   script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
