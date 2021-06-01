@@ -7,6 +7,6 @@ public class Admin extends User {
 
 	@Override
 	public String toString() {
-		return "Admin; ID: " + id + "; Email: " + email;
+		return "Admin; ID: " + userId + "; Email: " + email;
 	}
 }

@@ -7,6 +7,6 @@ public class Vendor extends User {
 
 	@Override
 	public String toString() {
-		return "Vendor; ID: " + id + "; Email: " + email;
+		return "Vendor; ID: " + userId + "; Email: " + email;
 	}
 }

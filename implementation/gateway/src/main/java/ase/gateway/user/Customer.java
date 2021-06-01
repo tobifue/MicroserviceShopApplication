@@ -7,7 +7,7 @@ public class Customer extends User {
 
 	@Override
 	public String toString() {
-		return "Customer; ID: " + id + "; Email: " + email;
+		return "Customer; ID: " + userId + "; Email: " + email;
 	}
 
 }

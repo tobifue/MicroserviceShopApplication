@@ -1,20 +1,27 @@
 package ase.gateway.user;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Data
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	protected Long id;
+	protected Long userId;
 	protected String email;
 
+	public User(String email){
+		this.email = email;
+	}
+
 	protected User() {
-		this.email = id + "@email.com"; // TODO add private email for testing
+		this.email = userId + "@email.com"; // TODO add private email for testing
 	};
 
 	@Override
@@ -23,7 +30,7 @@ public class User {
 	}
 
 	public Long getId() {
-		return id;
+		return userId;
 	}
 
 	public String getEmail() {

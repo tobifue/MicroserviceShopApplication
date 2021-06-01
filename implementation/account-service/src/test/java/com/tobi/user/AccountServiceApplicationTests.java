@@ -64,11 +64,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootApplication
-@ExtendWith(MockitoExtension.class)
+//@SpringBootApplication
+//@ExtendWith(MockitoExtension.class)
 @RunWith(SpringRunner.class)
 class AccountServiceApplicationTest
 {
+	/*
 	@InjectMocks
 	AccountController accountController;
 
@@ -98,5 +99,5 @@ class AccountServiceApplicationTest
 
 		assertThat(testProfit, comparesEqualTo(profit));
 
-	}
+	}*/
 }
