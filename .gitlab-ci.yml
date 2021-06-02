@@ -72,7 +72,7 @@ integration_test:
        - implementation
   script:
     - ls
-    - cd implementation/checkout/target
+    - cd deployment
     - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
@@ -85,9 +85,9 @@ integration_test:
     - npm install -g mocha
     - npm install
     - npm run test
-    - apt install -y maven
-    - ENV MAVEN_HOME /usr/share/maven
-    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+#    - apt install -y maven
+#    - ENV MAVEN_HOME /usr/share/maven
+#    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
