@@ -47,10 +47,12 @@ stages:
 
 integration_test:
   stage: integrationTest
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   artifacts:
     paths:
       - implementation/cart/container/
   script:
+    - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
