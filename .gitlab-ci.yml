@@ -51,6 +51,8 @@ integration_test:
     - job: maven_build
       artifacts: true
   script:
+    - ls
+    - cd implementation/checkout/target
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
