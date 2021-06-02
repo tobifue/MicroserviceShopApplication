@@ -25,6 +25,8 @@ stages:
 deploy:
   image: maven:3-openjdk-11
   stage: deploy
+  tags:
+    - swa
   script:
     - mvn deploy -s ci_settings.xml
   only:
@@ -39,3 +41,8 @@ deploy:
  #   - docker:19.03.12-dind
 #  script:
 #    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
+
+
+#release_upload:
+ # stage: deploy
+  #image: registry.gitlab.com/gitlab-org/release-cli:latest
