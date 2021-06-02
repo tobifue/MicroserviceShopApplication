@@ -37,11 +37,11 @@ maven_build:
     - cd deployment
     - ls
   artifacts:
-    #untracked: true
-    paths:
-      - deployment/*/*.jar
-    reports:
-       dotenv: job.env  
+    untracked: true
+    #paths:
+    #  - deployment/*/*.jar
+    #reports:
+    #   dotenv: job.env  
 
 
 #cart_testing:
