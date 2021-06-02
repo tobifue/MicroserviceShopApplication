@@ -53,6 +53,7 @@ integration_test:
   script:
     - ls
     - cd implementation/checkout/target
+    - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
