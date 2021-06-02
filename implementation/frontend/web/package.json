@@ -11,16 +11,9 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.3",
-    "e": "0.0.4",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
-    "express-session": "^1.17.0",
-    "get-docker-host": "1.0.3",
-    "ip": "^1.1.5",
-    "is-in-docker": "0.1.2",
-    "pg": "^8.0.2",
-    "selenium-webdriver": "^4.0.0-beta.3",
-    "url": "^0.11.0"
+    "ip": "^1.1.5"
   },
   "engines": {
     "node": "8.x"

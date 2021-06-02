@@ -21,7 +21,6 @@
   },
   "license": "MIT",
   "keywords": [
-    "node",
-    "express"
+    "node"
   ]
 }

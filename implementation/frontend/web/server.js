@@ -2,13 +2,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var app = express();
-var cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-parser');
 var expressHbs = require('express-handlebars');
-var url = require('url');
+//const url = require('url');
 var http = require('http');
-app.use(cookieParser());
+//app.use(cookieParser());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 var port = 3003;
@@ -132,7 +132,7 @@ app.get('/customer', function (req, res, next) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
-            var httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/1", function (response) {
+            var httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/logedInId", function (response) {
                 var history = "";
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
@@ -187,7 +187,7 @@ app.post('/checkout', function (req, res, next) {
         return;
     }
     console.log("checkout called");
-    var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/1", function (response) {
+    var httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/logedInId", function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on('end', function () {

@@ -3,14 +3,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-const cookieParser = require('cookie-parser');
+//const cookieParser = require('cookie-parser');
 const expressHbs = require('express-handlebars');
-const url = require('url');
+//const url = require('url');
 const http = require('http');
 
-app.use(cookieParser());
+//app.use(cookieParser());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 
