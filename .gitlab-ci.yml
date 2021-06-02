@@ -42,11 +42,11 @@ maven_build:
 #    - npm install
 #    - npm run test
 
-integration_test:
-  image: ubuntu:latest
-  stage: integrationTest
+integration_test:  
   tags:
     - swa
+  image: ubuntu:latest
+  stage: integrationTest
   needs:
     - job: maven_build
       artifacts: true
