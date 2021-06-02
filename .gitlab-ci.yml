@@ -2,49 +2,8 @@
 
 
 stages:
-  - build
-  - unitTest
   - integrationTest
   - release
-
-
-maven_build:
-  image: maven:3-openjdk-11
-  stage: build
-  tags:
-    - swa
-  artifacts:
-     paths: 
-       - deployment
-  script: 
-    - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/gateway
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/inventory-service
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/markedproduct
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/notification
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/priceadjustment
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/rating
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/txhistory
-
-
-    #- mvn -f implementation/shipment/pom.xml package 
-    #- mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
-    - echo "JOB_ID=$CI_JOB_ID" >> job.env
-    - cd deployment
-    - ls
-  #artifacts:
-    #untracked: true
-    #paths:
-    #  - deployment/*/*.jar
-    #reports:
-    #   dotenv: job.env  
 
 
 #cart_testing:
@@ -122,8 +81,6 @@ release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: maven_build
-      artifacts: true
     - job: integration_test
   rules:
     - if: '$RELEASE == "True"'
