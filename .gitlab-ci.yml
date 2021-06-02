@@ -1,58 +1,69 @@
 
+
+
 stages:
+  - build
+  - unitTest
   - integrationTest
- # - build
- # - deploy
- # - docker
-
-#maven-build:
-#  image: maven:3-openjdk-11
-#  stage: build
-#  tags:
-#    - swa
-#  script: 
-#    - mvn -f implementation/txhistory/pom.xml compile com.google.cloud.tools:jib-maven-plugin:2.3.0:dockerBuild
-#  artifacts:
-#    paths:
-#      - deployment/txhistory-0.0.1-SNAPSHOT.jar
-
-#deploy:
-#  image: maven:3-openjdk-11
-#  stage: deploy
-#  script:
-#    - mvn deploy -s ci_settings.xml
-#  only:
-#    - master
-
-#deploy:
-#  image: maven:3-openjdk-11
-#  stage: deploy
-#  tags:
-#    - swa
-#  script:
-#    - mvn deploy -s ci_settings.xml
-#  only:
-#    - master
-
-#docker-build:
-#  image: docker:19.03.12
-#  stage: docker
-#  tags:
-#    - swa
-#  services:
- #   - docker:19.03.12-dind
-#  script:
-#    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
+  - release
 
 
-
-integration_test:
-  stage: integrationTest
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
+maven_build:
+  image: maven:3-openjdk-11
+  stage: build
+  tags:
+    - swa
+  script: 
+    - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
+    - mvn -f implementation/checkout/pom.xml package 
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
+    - cd deployment
+    - ls
   artifacts:
     paths:
-      - implementation/cart/container/
+      - implementation/*
+    reports:
+       dotenv: job.env  
+
+
+#cart_testing:
+  #services:
+    #- name: node:latest
+      #alias: app
+#  image: node:latest
+#  stage: unitTest
+#  artifacts:
+#    paths:
+#      - implementation/cart/container/
+#  script:
+#    - cd implementation/cart/container
+#    - npm start --host=app &
+#    - npm install -g mocha
+#    - npm install
+#    - npm run test
+
+integration_test:  
+  tags:
+    - swa
+  image: ubuntu:latest
+  stage: integrationTest
+  needs:
+    - job: maven_build
+      artifacts: true
+  artifacts:
+     paths: 
+       - implementation
   script:
+    - ls
+    - cd implementation/checkout/target
     - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
@@ -60,14 +71,42 @@ integration_test:
     - echo $TZ > /etc/timezone
 #install and run Java things here
     - apt -y install nodejs npm 
-    - cd implementation/cart/container
+    - cd ../../cart/container
     - npm start --host=app &
     - npm install -g mocha
     - npm install
     - npm run test
+
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
-    - cd ../../../deployment/
-    - java -jar checkout-0.0.1.jar &
+    - cd ../../
+    - ls
+    - java -jar checkout/target/checkout-2.4.4.jar &
+    - java -jar account-service/target/user-service-0.0.1-SNAPSHOT.jar &
+    - java -jar gateway/target/gateway-0.0.1-SNAPSHOT.jar &
+    - java -jar shipment/target/shipment-0.0.1-SNAPSHOT.jar &
+    - java -jar inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
+    - java -jar markedproduct/target/markedproduct-0.0.1-SNAPSHOT.jar &
+    - java -jar notification/target/notification-0.0.1-SNAPSHOT.jar &
+    - java -jar priceadjustment/target/priceadjustment-0.0.1-SNAPSHOT.jar &
+    - java -jar rating/target/rating-0.0.1-SNAPSHOT.jar &
+    - java -jar txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
+
+
+
+release_upload:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: maven_build
+      artifacts: true
+    - job: integration_test
+  rules:
+    - if: '$RELEASE == "True"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  script:
+#    - cd deployment
+    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
+      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
 
