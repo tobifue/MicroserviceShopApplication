@@ -13,6 +13,7 @@
   "dependencies": {
     "chai": "^4.3.4",
     "express": "^4.16.2",
+    "ip": "^1.1.5",
     "mocha": "^8.4.0",
     "request": "^2.88.2",
     "semantic-release": "^17.4.3",
