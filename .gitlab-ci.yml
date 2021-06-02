@@ -29,8 +29,8 @@ maven_build:
     - ls
   artifacts:
     untracked: true
-    #paths:
-      #- implementation/*/target/*.jar
+    paths:
+      - implementation/*/target/*.jar
     #reports:
        #dotenv: job.env  
 
