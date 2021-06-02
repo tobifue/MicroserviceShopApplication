@@ -50,9 +50,6 @@ integration_test:
   needs:
     - job: maven_build
       artifacts: true
-  artifacts:
-    paths:
-      - implementation/cart/container/
   script:
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
