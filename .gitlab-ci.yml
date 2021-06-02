@@ -63,7 +63,7 @@ maven_build:
 integration_test:  
   tags:
     - swa
-  image: ubuntu:latest
+  image: maven:3-openjdk-11
   stage: integrationTest
   artifacts:
      paths: 
@@ -83,9 +83,9 @@ integration_test:
     - npm install -g mocha
     - npm install
     - npm run test
-    - apt install -y maven
-    - ENV MAVEN_HOME /usr/share/maven
-    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+ #   - apt install -y maven
+ #   - ENV MAVEN_HOME /usr/share/maven
+  #  - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
