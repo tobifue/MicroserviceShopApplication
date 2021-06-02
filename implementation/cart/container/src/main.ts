@@ -98,3 +98,6 @@ let connect = () => {
     httpreq2.end();
 }
 connect();
+
+
+module.exports = app;

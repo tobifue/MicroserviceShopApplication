@@ -1,7 +1,10 @@
 var expect = require('chai').expect;
 var request = require('request');
 const supertest = require("supertest");
-let api = supertest((process.env.GATEWAYIP || "localhost") + ':8085');
+//let api = supertest(require('../src/main'));
+//let api = supertest((process.env.GATEWAYIP || "localhost") + ':8085');
+let api = supertest("localhost" + ':8085');
+
 console.log("IP used: " + (process.env.GATEWAYIP || "localhost"));
 
 

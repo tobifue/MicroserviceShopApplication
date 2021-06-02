@@ -39,6 +39,10 @@ app.get('/deleteCart/:userId', function (req, res, next) {
     carts["delete"](userId);
     res.send("OK");
 });
+app.get('/heartbeat', function (req, res, next) {
+    var userId = Number(req.params.userId);
+    res.send("OK");
+});
 app.listen(port, function () {
     ; // console.log('Server started on port: ' + port);
 });
@@ -76,3 +80,4 @@ var connect = function () {
     httpreq2.end();
 };
 connect();
+module.exports = app;

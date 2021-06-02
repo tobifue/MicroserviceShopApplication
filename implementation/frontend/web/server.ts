@@ -97,12 +97,12 @@ class HttpOption {
 
 app.get('/vendor', function (req, res, next) {
     if (logedInId % 2 == 1) { res.redirect('/'); return; }
-    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", response => {
+    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/"+logedInId, response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
             console.log("loaded items:", items);
-            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/2", response => {
+            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/"++logedInId, response => {
                 let profit: string = "";
                 response.on('data', function (chunk) { profit += chunk });
                 response.on("end", () => {
