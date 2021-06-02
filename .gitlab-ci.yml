@@ -29,7 +29,7 @@ maven_build:
     - ls
   artifacts:
     paths:
-      - implementation/*
+      - implementation/*/target/*
     reports:
        dotenv: job.env  
 
