@@ -1,0 +1,407 @@
+{
+	"info": {
+		"_postman_id": "529bee3e-1c62-4695-a9dd-0adf81fe56ea",
+		"name": "Buy from Shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add item to cart",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId is set\", () => {",
+							"    pm.expect(\"customerId\").to.not.be.null;",
+							"    pm.collectionVariables.set(\"customerId\",457);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Used customerId is stored\", () => {",
+							"    pm.collectionVariables.set(\"used_id\", pm.collectionVariables.get(\"customerId\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"itemId\":5,\"price\":4.0,\"vendorId\":2,\"quantity\":23,\"itemName\":\"P40 lite 4G\",\"priceRecommendation\":23.9}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cart/addItemToCart/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cart",
+						"addItemToCart",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Do checkout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"used_id\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/checkout/checkout/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout",
+						"checkout",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check previous shipments",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"used_id\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get size of already exeuted shipments\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.collectionVariables.set(\"prev_shipments\",0);",
+							"    for (var i = 0; i < responseJson.length; i++){",
+							"      pm.collectionVariables.set(\"prev_shipments\", i)  ;",
+							"}",
+							"    console.log(pm.collectionVariables.get(\"prev_shipments\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/shipment/show/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shipment",
+						"show",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check shipment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"used_id\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"function getKeyByValue(object, value) {",
+							"  return Object.keys(object).find(key => object[key] === value);",
+							"}",
+							"",
+							"pm.test(\"Check new shipment was added\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    console.log(responseJson);",
+							"    var obj = responseJson;",
+							"    var helper = 0;",
+							"",
+							"     pm.expect(obj).to.not.be.null;",
+							"     for (var key of Object.keys(obj)) {",
+							"    helper++;",
+							"    if (helper == pm.collectionVariables.get(\"prev_shipments\")){",
+							"    console.log(key + \" -> \" + Object.entries(obj[key]));",
+							"        var elems = Object.entries(obj[key]).toString().split(',');",
+							"        pm.expect(elems[3]).to.equal(pm.collectionVariables.get(\"item_id\"));",
+							"        pm.expect(elems[7]).to.equal(pm.collectionVariables.get(\"item_name\"));",
+							"    }",
+							"    }",
+							"",
+							"});",
+							"",
+							"pm.test(\"Check format of added shipment\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    var obj = responseJson[pm.collectionVariables.get(\"prev_shipments\")+1];",
+							"     for (var key in obj){",
+							"    var value = obj[key];",
+							"    console.log(\"hrere\");",
+							"  }",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/shipment/show/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shipment",
+						"show",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check previous txhistory",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"used_id\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get size of already exeuted shipments\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.collectionVariables.set(\"prev_shipments\",0);",
+							"    for (var i = 0; i < responseJson.length; i++){",
+							"      pm.collectionVariables.set(\"prev_tx\", i)  ;",
+							"}",
+							"    console.log(pm.collectionVariables.get(\"prev_tx\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/history/generate/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"history",
+						"generate",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check txhistory",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"used_id\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check new shipment was added\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    var obj = responseJson;",
+							"    var helper = 0;",
+							"",
+							"     pm.expect(obj).to.not.be.null;",
+							"     for (var key of Object.keys(obj)) {",
+							"    helper++;",
+							"    if (helper == pm.collectionVariables.get(\"prev_tx\")){",
+							"    console.log(key + \" -> \" + Object.entries(obj[key]));",
+							"        var elems = Object.entries(obj[key]).toString().split(',');",
+							"        pm.expect(elems[9]).to.equal(pm.collectionVariables.get(\"customerId\").toString());",
+							"        pm.expect(elems[5]).to.equal(pm.collectionVariables.get(\"item_name\"));",
+							"    }",
+							"    }",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/history/generate/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"history",
+						"generate",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "ab61a819-f77a-4687-84fd-b9ff00e71c2d",
+			"key": "customerId",
+			"value": "457"
+		},
+		{
+			"id": "77b5baed-03c0-4fbf-8ce2-42059b5f7fd9",
+			"key": "id",
+			"value": ""
+		},
+		{
+			"id": "302d4bc1-e697-429a-8a87-05b45a3971db",
+			"key": "used_id",
+			"value": ""
+		},
+		{
+			"id": "1b86051d-8168-49d9-a84e-9a296cd5892a",
+			"key": "prev_shipments",
+			"value": ""
+		},
+		{
+			"id": "cc12b75c-88f0-4569-8e0e-3b00aed38447",
+			"key": "item_id",
+			"value": "5"
+		},
+		{
+			"id": "8af57ea3-1beb-4e6c-bbb8-7efa6708acdd",
+			"key": "item_name",
+			"value": "P40 lite 4G"
+		},
+		{
+			"id": "94b6f4c4-54e4-43f0-9e46-d7ed2f179930",
+			"key": "prev_tx",
+			"value": ""
+		}
+	]
+}
