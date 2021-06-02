@@ -1,9 +1,12 @@
 
+
+
 stages:
- # - integrationTest
   - build
- # - deploy
- # - docker
+  - unitTest
+  - integrationTest
+  - release
+
 
 maven-build:
   image: maven:3-openjdk-11
@@ -11,51 +14,43 @@ maven-build:
   tags:
     - swa
   script: 
-    - mvn -f implementation/txhistory/pom.xml compile com.google.cloud.tools:jib-maven-plugin:2.3.0:dockerBuild
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/checkout/pom.xml package 
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
+    - cd deployment
+    - ls
   artifacts:
     paths:
-      - deployment/txhistory-0.0.1-SNAPSHOT.jar
+      - implementation
+    reports:
+       dotenv: job.env  
 
-#deploy:
-#  image: maven:3-openjdk-11
-#  stage: deploy
+
+#cart_testing:
+  #services:
+    #- name: node:latest
+      #alias: app
+#  image: node:latest
+#  stage: unitTest
+#  artifacts:
+#    paths:
+#      - implementation/cart/container/
 #  script:
-#    - mvn deploy -s ci_settings.xml
-#  only:
-#    - master
-
-#deploy:
-#  image: maven:3-openjdk-11
-#  stage: deploy
-#  tags:
-#    - swa
-#  script:
-#    - mvn deploy -s ci_settings.xml
-#  only:
-#    - master
-
-#docker-build:
-#  image: docker:19.03.12
-#  stage: docker
-#  tags:
-#    - swa
-#  services:
- #   - docker:19.03.12-dind
-#  script:
-#    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
-
-
+#    - cd implementation/cart/container
+#    - npm start --host=app &
+#    - npm install -g mocha
+#    - npm install
+#    - npm run test
 
 integration_test:
   image: ubuntu:latest
-  stage: build
+  stage: integrationTest
   tags:
     - swa
   artifacts:
     paths:
       - implementation/cart/container/
   script:
-    - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
@@ -67,9 +62,26 @@ integration_test:
     - npm install -g mocha
     - npm install
     - npm run test
+
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
-    - cd ../../../deployment/
-    - java -jar checkout-0.0.1.jar &
+    - cd ../../
+    - java -jar implementation/checkout/target/checkout-0.0.1.jar
+
+
+release_upload:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build_jars
+      artifacts: true
+    - job: build_images
+  rules:
+    - if: '$RELEASE == "True"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  script:
+#    - cd deployment
+    - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
+      --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
 
