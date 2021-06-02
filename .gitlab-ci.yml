@@ -51,8 +51,7 @@ integration_test:
     - job: maven_build
       artifacts: true
   artifacts:
-     paths: 
-       - implementation
+    path: implementation
   script:
     - ls
     - cd implementation/checkout/target
@@ -63,7 +62,7 @@ integration_test:
     - echo $TZ > /etc/timezone
 #install and run Java things here
     - apt -y install nodejs npm 
-    - cd implementation/cart/container
+    - cd ../../cart/container
     - npm start --host=app &
     - npm install -g mocha
     - npm install
