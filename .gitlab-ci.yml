@@ -46,7 +46,6 @@ stages:
 
 
 integration_test:
-  image: ubuntu:latest
   tags:
     - swa 
   stage: integrationTest
