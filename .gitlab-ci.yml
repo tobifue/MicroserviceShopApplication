@@ -52,7 +52,7 @@ integration_test:
     - rm -rf /var/lib/apt/lists/*
     - cd ../../../
 
-    - mvn -f implementation/checkout/pom.xml package 
+
     - mvn -f implementation/account-service/pom.xml package 
     - mvn -f implementation/shipment/pom.xml package 
     - mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
@@ -62,6 +62,7 @@ integration_test:
     - mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
     - mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
     - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
+      - mvn -f implementation/checkout/pom.xml package 
 
     - java -jar implementation/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
     - sleep 15
@@ -69,9 +70,9 @@ integration_test:
     - java -jar implementation/checkout/target/checkout-2.2.4.jar &
     - java -jar implementation/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/markedproduct/target/markedproduct-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/markedproduct/target/markedproduct-docker.jar &
     - java -jar implementation/notification/target/notification-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/priceadjustment/target/priceadjustment-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/priceadjustment/target/pricecrawler-docker.jar &
     - java -jar implementation/rating/target/rating-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
 
