@@ -48,6 +48,8 @@ maven-build:
 
 integration_test:
   stage: build
+  tags:
+    - swa
   image: ubuntu:latest
   artifacts:
     paths:
