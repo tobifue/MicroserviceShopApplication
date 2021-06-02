@@ -51,7 +51,8 @@ integration_test:
     - job: maven_build
       artifacts: true
   artifacts:
-    path: implementation
+     paths: 
+       - implementation
   script:
     - ls
     - cd implementation/checkout/target
