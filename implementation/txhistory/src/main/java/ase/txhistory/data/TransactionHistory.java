@@ -38,11 +38,24 @@ public class TransactionHistory {
 		List<Transaction> allTx = repository.findAll();
 		List<Transaction> result = new ArrayList<>();
 		for (Transaction tx : allTx) {
-			// if type == null then select all tx's where id was involved, otherwise select
-			// after specific type
-			if (type == null ? tx.getCustomerId().equals(userId) || tx.getVendorId().equals(userId)
-					: type == IdType.BUYER ? tx.getCustomerId().equals(userId) : tx.getVendorId().equals(userId))
-				result.add(tx);
+
+			Long customerId = tx.getCustomerId();
+			Long vendorId = tx.getVendorId();
+
+			if (type == null) {
+				// general tx
+				if ((customerId != null && customerId.equals(userId))
+						|| (vendorId != null && vendorId.equals(userId))) {
+					result.add(tx);
+				}
+			} else {
+				// specific type
+				if (type == IdType.BUYER && customerId != null && customerId.equals(userId)) {
+					result.add(tx);
+				} else if (type == IdType.SELLER && vendorId != null && vendorId.equals(userId)) {
+					result.add(tx);
+				}
+			}
 		}
 		return result;
 	}
