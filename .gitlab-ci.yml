@@ -46,28 +46,3 @@ maven-build:
 
 
 
-integration_test:
-  stage: integrationTest
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
-  artifacts:
-    paths:
-      - implementation/cart/container/
-  script:
-    - ls
-    - apt-get update
-    - DEBIAN_FRONTEND=noninteractive 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-#install and run Java things here
-    - apt -y install nodejs npm 
-    - cd implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install
-    - npm run test
-    - apt-get -y install default-jre-headless
-    - apt-get clean
-    - rm -rf /var/lib/apt/lists/*
-    - cd ../../../deployment/
-    - java -jar checkout-0.0.1.jar &
-
