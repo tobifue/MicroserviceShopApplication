@@ -36,8 +36,8 @@ maven_build:
     - echo "JOB_ID=$CI_JOB_ID" >> job.env
     - cd deployment
     - ls
-  artifacts:
-    untracked: true
+  #artifacts:
+    #untracked: true
     #paths:
     #  - deployment/*/*.jar
     #reports:
@@ -83,13 +83,22 @@ integration_test:
     - npm install -g mocha
     - npm install
     - npm run test
-#    - apt install -y maven
-#    - ENV MAVEN_HOME /usr/share/maven
-#    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+    - apt install -y maven
+    - ENV MAVEN_HOME /usr/share/maven
+    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
     - cd ../../../
+    - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/checkout
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/gateway
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/inventory-service
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/markedproduct
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/notification
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/priceadjustment
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/rating
+    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=deployment/txhistory
     - ls
     - java -jar deployment/checkout/target/checkout-2.4.4.jar &
     - java -jar deployment/account-service/target/checkout-2.4.4.jar &
