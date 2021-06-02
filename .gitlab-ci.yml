@@ -74,7 +74,7 @@ integration_test:
     - rm -rf /var/lib/apt/lists/*
     - cd ../../
     - ls
-    - java -jar implementation/checkout/target/checkout-2.4.4.jar
+    - java -jar checkout/target/checkout-2.4.4.jar
 
 
 release_upload:
