@@ -1,6 +1,7 @@
 stages:
  # - build
-  - deploy
+ - integrationTest
+ # - deploy
  # - docker
 
 #maven-build:
@@ -22,15 +23,15 @@ stages:
 #  only:
 #    - master
 
-deploy:
-  image: maven:3-openjdk-11
-  stage: deploy
-  tags:
-    - swa
-  script:
-    - mvn deploy -s ci_settings.xml
-  only:
-    - master
+#deploy:
+#  image: maven:3-openjdk-11
+#  stage: deploy
+#  tags:
+#    - swa
+#  script:
+#    - mvn deploy -s ci_settings.xml
+#  only:
+#    - master
 
 #docker-build:
 #  image: docker:19.03.12
@@ -43,6 +44,27 @@ deploy:
 #    - docker build -f implementation/txhistory/Dockerfile -t txhistory-docker .
 
 
-#release_upload:
- # stage: deploy
-  #image: registry.gitlab.com/gitlab-org/release-cli:latest
+
+integration_test:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: integrationTest
+  artifacts:
+    paths:
+      - implementation/cart/container/
+  script:
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive 
+    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
+    - echo $TZ > /etc/timezone
+#install and run Java things here
+    - apt -y install nodejs npm 
+    - cd implementation/cart/container
+    - npm start --host=app &
+    - npm install -g mocha
+    - npm install
+    - npm run test
+    - apt-get -y install default-jre-headless
+    - apt-get clean
+    - rm -rf /var/lib/apt/lists/*
+    - cd ../../../deployment/
+    - java -jar checkout-0.0.1.jar &
