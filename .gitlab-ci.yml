@@ -66,7 +66,7 @@ integration_test:
     - java -jar implementation/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
     - sleep 15
     - java -jar implementation/account-service/target/user-service-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/checkout/target/checkout-2.2.4-SNAPSHOT.jar &
+    - java -jar implementation/checkout/target/checkout-2.2.4.jar &
     - java -jar implementation/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/markedproduct/target/markedproduct-0.0.1-SNAPSHOT.jar &
