@@ -36,12 +36,12 @@ maven_build:
     - echo "JOB_ID=$CI_JOB_ID" >> job.env
     - cd deployment
     - ls
-  #artifacts:
+  artifacts:
     #untracked: true
-    #paths:
-      #- implementation/*/target/*.jar
-    #reports:
-       #dotenv: job.env  
+    paths:
+      - deployment/*/*.jar
+    reports:
+       dotenv: job.env  
 
 
 #cart_testing:
@@ -65,11 +65,9 @@ integration_test:
     - swa
   image: ubuntu:latest
   stage: integrationTest
-  dependencies: 
-    - maven_build
   artifacts:
      paths: 
-       - implementation
+       - deployment
   script:
     - ls
     - cd deployment
