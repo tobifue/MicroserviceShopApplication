@@ -1,0 +1,25 @@
+# Created at 2021-06-02T22:16:22.365
+TestSet has not finished before stream error has appeared >> initializing exit by non-null configuration: null
+java.io.EOFException
+	at java.base/java.io.DataInputStream.readInt(DataInputStream.java:397)
+	at org.apache.maven.surefire.booter.MasterProcessCommand.decode(MasterProcessCommand.java:115)
+	at org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:391)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+
+# Created at 2021-06-02T22:16:28.385
+Unexpected IOException with stream: Could not reach Gateway, retrying in 5 seconds
+
+
+# Created at 2021-06-02T22:16:35.397
+Unexpected IOException with stream: Could not reach Gateway, retrying in 5 seconds
+
+
+# Created at 2021-06-02T22:16:42.407
+Unexpected IOException with stream: Could not reach Gateway, retrying in 5 seconds
+
+
+# Created at 2021-06-02T22:16:49.417
+Unexpected IOException with stream: Could not reach Gateway, retrying in 5 seconds
+
+
