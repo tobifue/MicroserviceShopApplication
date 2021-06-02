@@ -14,8 +14,16 @@ maven_build:
   tags:
     - swa
   script: 
-    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
     - mvn -f implementation/checkout/pom.xml package 
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
     - echo "JOB_ID=$CI_JOB_ID" >> job.env
     - cd deployment
     - ls
@@ -74,7 +82,17 @@ integration_test:
     - rm -rf /var/lib/apt/lists/*
     - cd ../../
     - ls
-    - java -jar checkout/target/checkout-2.4.4.jar
+    - java -jar checkout/target/checkout-2.4.4.jar &
+    - java -jar account-service/target/user-service-0.0.1-SNAPSHOT.jar &
+    - java -jar gateway/target/gateway-0.0.1-SNAPSHOT.jar &
+    - java -jar shipment/target/shipment-0.0.1-SNAPSHOT.jar &
+    - java -jar inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
+    - java -jar markedproduct/target/markedproduct-0.0.1-SNAPSHOT.jar &
+    - java -jar notification/target/notification-0.0.1-SNAPSHOT.jar &
+    - java -jar priceadjustment/target/priceadjustment-0.0.1-SNAPSHOT.jar &
+    - java -jar rating/target/rating-0.0.1-SNAPSHOT.jar &
+    - java -jar txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
+
 
 
 release_upload:
