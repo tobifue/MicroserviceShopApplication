@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: ase.txhistory.TxhistoryApplicationTests
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.536 s - in ase.txhistory.TxhistoryApplicationTests
