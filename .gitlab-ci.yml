@@ -47,10 +47,10 @@ maven-build:
 
 
 integration_test:
+  image: ubuntu:latest
   stage: build
   tags:
     - swa
-  image: ubuntu:latest
   artifacts:
     paths:
       - implementation/cart/container/
