@@ -47,6 +47,9 @@ integration_test:
   stage: integrationTest
   tags:
     - swa
+  needs:
+    - job: maven_build
+      artifacts: true
   artifacts:
     paths:
       - implementation/cart/container/
