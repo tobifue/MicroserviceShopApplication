@@ -15,14 +15,14 @@ maven_build:
     - swa
   script: 
     - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/gateway
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/inventory-service
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/markedproduct
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/notification
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/priceadjustment
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/rating
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/txhistory
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/gateway
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/inventory-service
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/markedproduct
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/notification
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/priceadjustment
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/rating
+    #- mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/txhistory
 
 
     #- mvn -f implementation/shipment/pom.xml package 
