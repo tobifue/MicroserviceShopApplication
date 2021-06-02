@@ -46,8 +46,6 @@ stages:
 
 
 integration_test:
-  tags:
-    - swa 
   stage: integrationTest
   artifacts:
     paths:
