@@ -28,10 +28,11 @@ maven_build:
     - cd deployment
     - ls
   artifacts:
-    paths:
-      - implementation/*/target/*.jar
-    reports:
-       dotenv: job.env  
+    untracked: true
+    #paths:
+      #- implementation/*/target/*.jar
+    #reports:
+       #dotenv: job.env  
 
 
 #cart_testing:
@@ -55,9 +56,8 @@ integration_test:
     - swa
   image: ubuntu:latest
   stage: integrationTest
-  needs:
-    - job: maven_build
-      artifacts: true
+  dependencies: 
+    - maven_build
   artifacts:
      paths: 
        - implementation
