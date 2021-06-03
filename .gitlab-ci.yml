@@ -21,6 +21,7 @@ docker:
   script:
     - apk add --no-cache docker-compose
     - docker-compose --version
+    - lsb_release -a
     - COMPOSE_PROFILES=test docker-compose up
     
 
