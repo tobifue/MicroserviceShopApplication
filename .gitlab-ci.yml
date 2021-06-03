@@ -15,7 +15,8 @@ docker:
   services:
   - docker:dind 
   script:
-    - docker-compose build
+    - apk add --no-cache docker-compose
+    - docker-compose up -d
 
 
 #cart_testing:
