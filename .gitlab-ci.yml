@@ -21,7 +21,7 @@ docker:
   script:
     #- apk add --no-cache docker-compose
     - apk --no-cache add curl
-    - apt  install jq
+    - apt install jq
     - DOCKER_COMPOSE_VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | jq .name -r)
     - curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/
     - chmod +x /usr/local/bin/docker-compose
