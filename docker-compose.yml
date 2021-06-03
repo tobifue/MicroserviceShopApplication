@@ -18,4 +18,10 @@ services:
         depends_on:
             - gateway
         ports:
-            - "8085:8085"        
+            - "8085:8085"   
+    e2et:
+        build: ./implementation/end2end_jsons
+        depends_on:
+            - cart
+            - checkout
+      
