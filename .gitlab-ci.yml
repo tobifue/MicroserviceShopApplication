@@ -8,8 +8,12 @@ stages:
 
 
 docker:
-   - docker-compose build
-   
+  tags:
+    - swa
+  stage: dockerBuild
+  script:
+    - docker-compose build
+
 
 #cart_testing:
   #services:
