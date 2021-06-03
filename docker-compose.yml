@@ -73,12 +73,11 @@ services:
 
     e2et:
         build: ./implementation/end2end_jsons
-        environment:
-            - GATEWAYIP=gateway
         profiles:
             - test
         depends_on:
             - cart
             - checkout
+        network_mode: "host"  
     
       
