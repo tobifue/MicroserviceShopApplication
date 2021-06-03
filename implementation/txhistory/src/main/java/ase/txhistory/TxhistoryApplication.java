@@ -93,7 +93,7 @@ public class TxhistoryApplication {
 	}
 
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
-	private void registerWithGateway() {
+	private boolean registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
 			registrationDetails.put("endpoints", new ArrayList<String>() {
@@ -110,9 +110,10 @@ public class TxhistoryApplication {
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
-			System.out.println("Successfully registered with gateway!");
+			return true;
 		} catch (RestClientException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
+			return false;
 		}
 	}
 
@@ -121,8 +122,15 @@ public class TxhistoryApplication {
 		return (args) -> {
 			this.repository = repository;
 			printRepositoryToConsole();
-			// register with gateway in commandlineRunner
-			registerWithGateway();
+			new Thread(() -> {
+				while (!registerWithGateway()) {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		};
 	}
 
