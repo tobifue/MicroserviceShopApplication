@@ -94,13 +94,13 @@ public class Shipment {
 
 	public void updateShippingStatus() {
 		switch (shippingStatus) {
-		case "order received":
+		case "order_received":
 			setShippingStatus(ShippingStatus.IN_DISTR_CENTER.getTitle());
 			break;
-		case "in distribution center":
+		case "in_distribution_center":
 			setShippingStatus(ShippingStatus.IN_DELIVERY.getTitle());
 			break;
-		case "in delivery":
+		case "in_delivery":
 		default:
 			setShippingStatus(ShippingStatus.DELIVERED.getTitle());
 			break;
