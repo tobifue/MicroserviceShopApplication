@@ -1,7 +1,81 @@
 # docker-compose.yml
 version: "3"
 services:
-    web:
-        build: ./implementation
-        #ports:
-        #    - "8085:8085"
+    gateway:
+        build: ./implementation/gateway
+        ports:
+            - "8080:8080"
+    checkout:
+        build: ./implementation/checkout
+        depends_on:
+            - gateway
+        ports:
+            - "8086:8086"
+    cart:
+        build: ./implementation/cart/container
+        depends_on:
+            - gateway
+        ports:
+            - "8085:8085"        
+    inventory:
+        build: ./implementation/inventory-service
+        depends_on:
+            - gateway
+        ports:
+             - "8084:8084"  
+
+    account-service:
+        build: ./implementation/account-service
+        depends_on:
+            - gateway
+        ports:
+             - "8083:8083"
+
+    markedproduct:
+        build: ./implementation/markedproduct
+        depends_on:
+            - gateway
+        ports:
+             - "8090:8090"  
+
+    notification:
+        build: ./implementation/notification
+        depends_on:
+            - gateway
+        ports:
+             - "8088:8088" 
+    
+    priceadjustment:
+        build: ./implementation/priceadjustment
+        depends_on:
+            - gateway
+        ports:
+             - "8091:8091" 
+
+    rating:
+        build: ./implementation/rating
+        depends_on:
+            - gateway
+        ports:
+             - "8087:8087" 
+            
+    shipment:
+        build: ./implementation/shipment
+        depends_on:
+            - gateway
+        ports:
+             - "8082:8082" 
+
+    txhistory:
+        build: ./implementation/txhistory
+        depends_on:
+            - gateway
+        ports:
+             - "8081:8081"
+
+    frontend:
+        build: ./implementation/frontend/web
+        depends_on:
+            - gateway
+        ports:
+             - "3003:3003" 

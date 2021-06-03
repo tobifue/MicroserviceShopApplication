@@ -1,4 +1,4 @@
-FROM openjdk:11
-ARG JAR_FILE=target/checkout-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+FROM maven:3-openjdk-11
+COPY ./ ./
+RUN mvn -f pom.xml package
+CMD java -jar target/checkout-2.4.4.jar
