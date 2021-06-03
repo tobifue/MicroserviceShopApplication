@@ -66,6 +66,7 @@ public class MarkedproductApplication {
 	 *                "itemTitle", "price"
 	 * 
 	 */
+
 	@PostMapping(path = "/update", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public void processUpdate(@RequestBody Map<String, Object> message) {
@@ -95,7 +96,7 @@ public class MarkedproductApplication {
 	}
 
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
-	private void registerWithGateway() {
+	private boolean registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
 			registrationDetails.put("endpoints", new ArrayList<String>() {
@@ -111,22 +112,31 @@ public class MarkedproductApplication {
 			});
 			registrationDetails.put("category", "markedproduct");
 			registrationDetails.put("ip", "http://localhost:" + port);
-			System.out.println(port);
+
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
-			System.out.println("Successfully registered with gateway!");
+			return true;
 		} catch (RestClientException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
+			return false;
 		}
 	}
 
 	@Bean
 	public CommandLineRunner loadRepository(MarkedProductRepository repository) {
 		return (args) -> {
-			registerWithGateway();
 			this.repository = repository;
 			this.updateController = new UpdateController();
 			printRepositoryToConsole();
+			new Thread(() -> {
+				while (!registerWithGateway()) {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		};
 	}
 
