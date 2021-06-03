@@ -23,10 +23,8 @@ docker:
     - apk --no-cache add curl
     - apk add jq
     - ls
-    - DOCKER_COMPOSE_VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | jq .name -r)
-    - DESTINATION=/usr/local/bin/docker-compose
-    - curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o $DESTINATION
-    - chmod 755 $DESTINATION
+    - curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
     #- ln -s /usr/local/bin/docker-compose /compose/docker-compose
     - docker-compose --version
     - COMPOSE_PROFILES=test docker-compose up
