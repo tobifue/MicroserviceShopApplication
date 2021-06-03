@@ -20,7 +20,7 @@ docker:
   - docker:dind 
   script:
     #- apk add --no-cache docker-compose
-    -aptitude -y install docker-compose
+    - aptitude -y install docker-compose
     - ln -s /usr/local/bin/docker-compose /compose/docker-compose
     - docker-compose --version
     - COMPOSE_PROFILES=test docker-compose up
