@@ -93,6 +93,14 @@ public class Notification {
 		return emailBody;
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
 	public void setNewPrice(double newPrice) {
 		this.newPrice = newPrice;
 	}

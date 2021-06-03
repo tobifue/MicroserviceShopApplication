@@ -14,11 +14,11 @@ import net.minidev.json.JSONObject;
 public class Shipment {
 
 	public enum ShippingStatus {
-		ORDER_RECEIVED("order received"),
+		ORDER_RECEIVED("order_received"),
 
-		IN_DISTR_CENTER("in distribution center"),
+		IN_DISTR_CENTER("in_distribution_center"),
 
-		IN_DELIVERY("in delivery"),
+		IN_DELIVERY("in_delivery"),
 
 		DELIVERED("delivered");
 

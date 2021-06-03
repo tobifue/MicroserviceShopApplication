@@ -14,25 +14,20 @@ public class NotificationService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	public static Notification checkShipping(long itemId, NotificationRepository repository, String shippingStatus) {
+	public static Notification checkShipping(String itemName, NotificationRepository repository, String shippingStatus,
+			String email) {
 		Notification endNotification = null;
-		String itemName, emailBody, emailSubject;
-		long id;
-		List<Notification> allNt = repository.findAll();
-		for (Notification nt : allNt) {
-			id = nt.getItemId();
-			if (itemId == id) {
-				nt.setShippingStatus(shippingStatus);
-				itemName = nt.getItemName();
-				emailBody = String.format("The shipment status of your purchased item %s has been updated to: %s",
-						itemName, shippingStatus);
-				emailSubject = "Shipment Notification";
-				endNotification = nt;
-				nt.setEmailBody(emailBody);
-				nt.setEmailSubject(emailSubject);
-			}
-
-		}
+		String emailBody, emailSubject;
+		Notification nt = new Notification();
+		nt.setShippingStatus(shippingStatus);
+		nt.setItemName(itemName);
+		emailBody = String.format("The shipment status of your purchased item %s has been updated to: %s", itemName,
+				shippingStatus);
+		emailSubject = "Shipment Notification";
+		endNotification = nt;
+		nt.setEmail(email);
+		nt.setEmailBody(emailBody);
+		nt.setEmailSubject(emailSubject);
 		return endNotification;
 	}
 
@@ -62,7 +57,8 @@ public class NotificationService {
 	public void sendEmail(Notification notification) throws MailException {
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
-			msg.setTo(notification.getEmail());
+			String email = notification.getEmail();
+			msg.setTo(email);
 			msg.setFrom("ase.notification@gmail.com");
 			msg.setSubject(notification.getEmailSubject());
 			msg.setText(notification.getEmailBody());
