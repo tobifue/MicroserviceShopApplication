@@ -58,11 +58,12 @@ services:
         depends_on:
             - gateway
         network_mode: "host"
-    #txhistory:
-    #   build: ./implementation/txhistory
-    #   depends_on:
-    #       - gateway
-    #network_mode: "host"
+
+    txhistory:
+        build: ./implementation/txhistory
+        depends_on:
+           - gateway
+        network_mode: "host"
 
     frontend:
         build: ./implementation/frontend/web
