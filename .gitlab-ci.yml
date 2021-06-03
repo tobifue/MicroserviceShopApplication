@@ -80,7 +80,7 @@ integration_test:
     - java -jar implementation/priceadjustment/target/pricecrawler-docker.jar &
     - java -jar implementation/rating/target/rating-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
-    - newman run implementation/end2end_json
+    - newman run implementation/end2end_json/buy_from_shop.json
 
 
 release_upload:
