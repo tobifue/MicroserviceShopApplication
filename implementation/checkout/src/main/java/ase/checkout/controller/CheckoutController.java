@@ -7,9 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +15,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -26,7 +22,7 @@ import java.util.Map;
 public class CheckoutController {
     private String userId;
     private String jsonCart;
-    private String gatewayIp = "http://localhost:8080";
+    private String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
     private String checkoutAdress = "http://" + InetAddress.getLocalHost().getHostAddress() + ":8086";
 
     @RequestMapping(value = "/checkout/{costumerId}", method = RequestMethod.GET)
@@ -83,6 +79,7 @@ public class CheckoutController {
     }
 
     public CheckoutController() throws UnknownHostException {
+
         registerWithGateway();
     }
 

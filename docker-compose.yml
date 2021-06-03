@@ -3,79 +3,82 @@ version: "3"
 services:
     gateway:
         build: ./implementation/gateway
-        ports:
-            - "8080:8080"
+        network_mode: "host"
+ 
     checkout:
         build: ./implementation/checkout
+        network_mode: "host"
         depends_on:
             - gateway
-        ports:
-            - "8086:8086"
+
     cart:
         build: ./implementation/cart/container
         depends_on:
             - gateway
-        ports:
-            - "8085:8085"        
+        network_mode: "host"
+
+
     inventory:
         build: ./implementation/inventory-service
         depends_on:
             - gateway
-        ports:
-             - "8084:8084"  
 
     account-service:
         build: ./implementation/account-service
         depends_on:
             - gateway
-        ports:
-             - "8083:8083"
+        network_mode: "host"
 
     markedproduct:
         build: ./implementation/markedproduct
         depends_on:
             - gateway
-        ports:
-             - "8090:8090"  
+        network_mode: "host"
 
     notification:
         build: ./implementation/notification
         depends_on:
             - gateway
-        ports:
-             - "8088:8088" 
-    
+        network_mode: "host"
+
     priceadjustment:
         build: ./implementation/priceadjustment
         depends_on:
             - gateway
-        ports:
-             - "8091:8091" 
+        network_mode: "host"
 
     rating:
         build: ./implementation/rating
         depends_on:
             - gateway
-        ports:
-             - "8087:8087" 
-            
+        network_mode: "host"
+
     shipment:
         build: ./implementation/shipment
         depends_on:
             - gateway
-        ports:
-             - "8082:8082" 
-
-    txhistory:
-        build: ./implementation/txhistory
-        depends_on:
-            - gateway
-        ports:
-             - "8081:8081"
+        network_mode: "host"
+    #txhistory:
+    #   build: ./implementation/txhistory
+    #   depends_on:
+    #       - gateway
+    #network_mode: "host"
 
     frontend:
         build: ./implementation/frontend/web
         depends_on:
             - gateway
-        ports:
-             - "3003:3003" 
+        network_mode: "host"               
+
+
+    e2et:
+        build: ./implementation/end2end_jsons
+        environment:
+            - GATEWAYIP=gateway
+        profiles:
+            - test
+        depends_on:
+            - cart
+            - checkout
+    
+      
