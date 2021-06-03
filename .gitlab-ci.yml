@@ -2,9 +2,14 @@
 
 
 stages:
+  - dockerBuild
   - integrationTest
   - release
 
+
+docker:
+   - docker-compose build
+   
 
 #cart_testing:
   #services:
