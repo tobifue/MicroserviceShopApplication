@@ -2,46 +2,8 @@
 
 
 stages:
-  - build
-  - unitTest
   - integrationTest
   - release
-
-
-maven_build:
-  image: maven:3-openjdk-11
-  stage: build
-  tags:
-    - swa
-  script: 
-    - mvn -f implementation/account-service/pom.xml package  #0.0.1-SNAPSHOT
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/checkout
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/gateway
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/inventory-service
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/markedproduct
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/notification
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/priceadjustment
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/rating
-    - mvn -f implementation/checkout/pom.xml package -Pconf -Ddir=../../deployment/txhistory
-
-
-    #- mvn -f implementation/shipment/pom.xml package 
-    #- mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
-    #- mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
-    - echo "JOB_ID=$CI_JOB_ID" >> job.env
-    - cd deployment
-    - ls
-  #artifacts:
-    #untracked: true
-    #paths:
-      #- implementation/*/target/*.jar
-    #reports:
-       #dotenv: job.env  
 
 
 #cart_testing:
@@ -63,16 +25,14 @@ maven_build:
 integration_test:  
   tags:
     - swa
-  image: ubuntu:latest
+  image: maven:3-openjdk-11
   stage: integrationTest
-  dependencies: 
-    - maven_build
   artifacts:
      paths: 
-       - implementation
+       - deployment
   script:
     - ls
-    - cd implementation/checkout/target
+    - cd deployment
     - ls
     - apt-get update
     - DEBIAN_FRONTEND=noninteractive 
@@ -80,48 +40,53 @@ integration_test:
     - echo $TZ > /etc/timezone
 #install and run Java things here
     - apt -y install nodejs npm 
-    - cd ../../cart/container
+    - cd ../implementation/cart/container
     - npm start --host=app &
     - npm install -g mocha
+    - npm install newman -g
     - npm install
     - npm run test
-    - apt install -y maven
-    - ENV MAVEN_HOME /usr/share/maven
-    - ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+
     - apt-get -y install default-jre-headless
     - apt-get clean
     - rm -rf /var/lib/apt/lists/*
     - cd ../../../
-    - ls
-    - java -jar deployment/checkout/target/checkout-2.4.4.jar &
-    - java -jar deployment/account-service/target/checkout-2.4.4.jar &
-    - java -jar deployment/shipment/target/checkout-2.4.4.jar &
-    - java -jar deployment/inventory/target/checkout-2.4.4.jar &
-    - java -jar deployment/markedproduct/target/checkout-2.4.4.jar &
-    - java -jar deployment/notification/target/checkout-2.4.4.jar &
-    - java -jar deployment/priceadjustment/target/checkout-2.4.4.jar &
-    - java -jar deployment/priceadjustment/target/checkout-2.4.4.jar &
-    - java -jar deployment/txhistory/target/checkout-2.4.4.jar &
 
 
-    #- java -jar deployment/account-service/target/user-service-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/markedproduct/target/markedproduct-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/notification/target/notification-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/priceadjustment/target/priceadjustment-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/rating/target/rating-0.0.1-SNAPSHOT.jar &
-    #- java -jar deployment/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
+    - mvn -f implementation/account-service/pom.xml package 
+    - mvn -f implementation/shipment/pom.xml package 
+    - mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
+    - mvn -f implementation/checkout/pom.xml package 
 
+
+
+
+
+    - java -jar implementation/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
+    - sleep 15
+    - java -jar implementation/account-service/target/user-service-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/checkout/target/checkout-2.4.4.jar &
+    - java -jar implementation/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/markedproduct/target/markedproduct-docker.jar &
+    - java -jar implementation/notification/target/notification-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/priceadjustment/target/pricecrawler-docker.jar &
+    - java -jar implementation/rating/target/rating-0.0.1-SNAPSHOT.jar &
+    - java -jar implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
+    - newman run implementation/end2end_jsons/buy_from_shop.json
 
 
 release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: maven_build
-      artifacts: true
     - job: integration_test
   rules:
     - if: '$RELEASE == "True"'
