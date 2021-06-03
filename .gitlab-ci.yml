@@ -43,6 +43,7 @@ integration_test:
     - cd ../implementation/cart/container
     - npm start --host=app &
     - npm install -g mocha
+    - npm install newman -g
     - npm install
     - npm run test
 
@@ -64,10 +65,14 @@ integration_test:
     - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
     - mvn -f implementation/checkout/pom.xml package 
 
+
+
+
+
     - java -jar implementation/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
     - sleep 15
     - java -jar implementation/account-service/target/user-service-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/checkout/target/checkout-2.2.4.jar &
+    - java -jar implementation/checkout/target/checkout-2.4.4.jar &
     - java -jar implementation/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
     - java -jar implementation/markedproduct/target/markedproduct-docker.jar &
