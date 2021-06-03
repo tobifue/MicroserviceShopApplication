@@ -66,12 +66,12 @@ services:
         ports:
              - "8082:8082" 
 
-    txhistory:
-        build: ./implementation/txhistory
-        depends_on:
-            - gateway
-        ports:
-             - "8081:8081"
+    #txhistory:
+     #   build: ./implementation/txhistory
+     #   depends_on:
+     #       - gateway
+      #  ports:
+      #       - "8081:8081"
 
     frontend:
         build: ./implementation/frontend/web
