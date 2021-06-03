@@ -8,9 +8,12 @@ stages:
 
 
 docker:
+  image: docker:latest
   tags:
     - swa
   stage: dockerBuild
+  services:
+  - docker:dind 
   script:
     - docker-compose build
 
