@@ -58,11 +58,12 @@ services:
         depends_on:
             - gateway
         network_mode: "host"
-    #txhistory:
-    #   build: ./implementation/txhistory
-    #   depends_on:
-    #       - gateway
-    #network_mode: "host"
+
+    txhistory:
+        build: ./implementation/txhistory
+        depends_on:
+           - gateway
+        network_mode: "host"
 
     frontend:
         build: ./implementation/frontend/web
@@ -73,12 +74,11 @@ services:
 
     e2et:
         build: ./implementation/end2end_jsons
-        environment:
-            - GATEWAYIP=gateway
         profiles:
             - test
         depends_on:
             - cart
             - checkout
+        network_mode: "host"  
     
       

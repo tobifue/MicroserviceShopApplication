@@ -68,17 +68,20 @@ public class NotificationApplication {
 		Notification nt = NotificationService.checkShipping(itemName, repository, shippingStatus, email);
 		try {
 			notificationService.sendEmail(nt);
+			System.out.println("Email sent successfully");
 		} catch (MailException e) {
 			// catch
 		}
 
 	}
 
-	@RequestMapping(value = "/price/{itemId}/{newPrice}", method = RequestMethod.GET)
-	public void callPrice(@PathVariable long itemId, @PathVariable double newPrice) {
-		Notification nt = NotificationService.checkPrice(itemId, repository, newPrice);
+	@RequestMapping(value = "/price/{itemName}/{price}/{newPrice}/{email}", method = RequestMethod.GET)
+	public void callPrice(@PathVariable String itemName, @PathVariable double price, @PathVariable double newPrice,
+			@PathVariable String email) {
+		Notification nt = NotificationService.checkPrice(itemName, repository, price, newPrice, email);
 		try {
 			notificationService.sendEmail(nt);
+			System.out.println("Email sent successfully");
 		} catch (MailException e) {
 			// catch
 		}

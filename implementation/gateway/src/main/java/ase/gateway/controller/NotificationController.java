@@ -43,12 +43,13 @@ public class NotificationController {
 		}
 	}
 
-	@RequestMapping(value = "/price/{itemId}/{newPrice}", method = RequestMethod.GET)
+	@RequestMapping(value = "/price/{itemName}/{price}/{newPrice}/{email}", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkPrice(@PathVariable Long itemId, @PathVariable double newPrice) {
+	public String checkPrice(@PathVariable String itemName, @PathVariable double price, @PathVariable double newPrice,
+			@PathVariable String email) {
 		try {
 			return TrafficController.sendMessageToSingleRecipient(Message.createInstance(null, "notification",
-					String.format("/price/%s/%s", itemId, newPrice), "GET"));
+					String.format("/price/%s/%s/%s/%s", itemName, price, newPrice, email), "GET"));
 		} catch (RestClientException e) {
 			return e.getMessage();
 		}

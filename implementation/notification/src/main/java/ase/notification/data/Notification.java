@@ -97,10 +97,6 @@ public class Notification {
 		this.email = email;
 	}
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
 	public void setNewPrice(double newPrice) {
 		this.newPrice = newPrice;
 	}
@@ -119,6 +115,10 @@ public class Notification {
 
 	public void setEmailSubject(String emailSubject) {
 		this.emailSubject = emailSubject;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 
 }
