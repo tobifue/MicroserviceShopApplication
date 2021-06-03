@@ -20,7 +20,16 @@ docker:
   - docker:dind 
   script:
     - apk add --no-cache docker-compose
-    - docker-compose --profile test up
+    #- apk --no-cache add curl
+    - apk add py3-pip
+    - pip install --upgrade docker-compose
+    #- apk add jq
+    #- ls
+    #- curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    #- chmod +x /usr/local/bin/docker-compose
+    #- ln -s /usr/local/bin/docker-compose /compose/docker-compose
+    - docker-compose --version
+    - COMPOSE_PROFILES=test docker-compose up
     
 
 
