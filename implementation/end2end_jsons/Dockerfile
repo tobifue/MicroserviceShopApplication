@@ -5,4 +5,4 @@ WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install
 RUN npm install newman -g
-CMD sleep 30s && newman run buy_from_shop.json
+CMD sleep 50s && newman run buy_from_shop.json
