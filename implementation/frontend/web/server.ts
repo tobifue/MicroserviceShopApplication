@@ -27,9 +27,9 @@ app.get('/', function (req, res, next) {
 });
 
 
-
+var ip = require("ip");
 app.listen(port, function () {
-    console.log('Server started on port: ' + port);
+    console.log('Server started on : '+ip.address() +":"+ port);
 });
 
 
@@ -102,7 +102,7 @@ app.get('/vendor', function (req, res, next) {
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
             console.log("loaded items:", items);
-            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/"++logedInId, response => {
+            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/"+logedInId, response => {
                 let profit: string = "";
                 response.on('data', function (chunk) { profit += chunk });
                 response.on("end", () => {

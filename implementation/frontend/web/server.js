@@ -18,8 +18,9 @@ console.log("IP used for gateway: " + gatewayIp);
 app.get('/', function (req, res, next) {
     res.render(__dirname + '/views/index.hbs');
 });
+var ip = require("ip");
 app.listen(port, function () {
-    console.log('Server started on port: ' + port);
+    console.log('Server started on : ' + ip.address() + ":" + port);
 });
 var Item = /** @class */ (function () {
     function Item(itemId, itemName, quantity, price, vendorId, priceRecommendation) {
@@ -60,12 +61,12 @@ app.get('/vendor', function (req, res, next) {
         res.redirect('/');
         return;
     }
-    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/2", function (response) {
+    var httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/" + logedInId, function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
             console.log("loaded items:", items);
-            var httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/2", function (response) {
+            var httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/" + logedInId, function (response) {
                 var profit = "";
                 response.on('data', function (chunk) { profit += chunk; });
                 response.on("end", function () {

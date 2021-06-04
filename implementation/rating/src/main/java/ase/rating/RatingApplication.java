@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import ase.rating.data.Rating;
 import ase.rating.data.RatingRepository;
 import ase.rating.data.RatingService;
@@ -82,12 +84,16 @@ public class RatingApplication {
 					add("/add");
 				}
 			});
+
+			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() +":"+ port;
+			String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+
 			registrationDetails.put("category", "rating");
-			registrationDetails.put("ip", "http://localhost:" + port);
-			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+			registrationDetails.put("ip", thisAdr);
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
 					registrationDetails, String.class);
 			System.out.println("Successfully registered with gateway!");
-		} catch (RestClientException e) {
+		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 		}
 	}

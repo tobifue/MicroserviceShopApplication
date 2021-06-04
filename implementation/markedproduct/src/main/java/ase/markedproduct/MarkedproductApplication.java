@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import ase.markedproduct.controller.UpdateController;
 import ase.markedproduct.data.MarkedProduct;
 import ase.markedproduct.data.MarkedProductRepository;
@@ -110,13 +112,15 @@ public class MarkedproductApplication {
 					add("/print");
 				}
 			});
+			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() +":"+ port;
 			registrationDetails.put("category", "markedproduct");
-			registrationDetails.put("ip", "http://localhost:" + port);
+			registrationDetails.put("ip", thisAdr);
+    		String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
-			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
 					registrationDetails, String.class);
 			return true;
-		} catch (RestClientException e) {
+		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 			return false;
 		}

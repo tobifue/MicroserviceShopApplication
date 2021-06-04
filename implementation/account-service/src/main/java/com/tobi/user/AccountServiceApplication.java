@@ -14,6 +14,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.tobi.user.service.AccountService;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,13 +72,15 @@ public class AccountServiceApplication {
 					add("/vendor");
 				}
 			});
+			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress()+":" + port;
+    		String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 			registrationDetails.put("category", "account");
-			registrationDetails.put("ip", "http://localhost:" + port);
-			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
+			registrationDetails.put("ip", thisAdr);
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
 					registrationDetails, String.class);
 			System.out.println("Successfully registered with gateway!");
 			return true;
-		} catch (RestClientException e) {
+		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
 			return false;
 		}
