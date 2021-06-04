@@ -26,10 +26,10 @@ docker:
     - docker-compose --version
 #    - COMPOSE_PROFILES=test docker-compose up
     - docker-compose build -q --parallel
-    - COMPOSE_PROFILES=test docker compose up -d
-    - apk add --update nodejs npm
-    - npm install newman -g
-    - newman run buy_from_shop.json
+    - COMPOSE_PROFILES=test docker compose up --abort-on-container-exit
+#    - apk add --update nodejs npm
+#    - npm install newman -g
+#    - newman run buy_from_shop.json
 
 
 cart_testing:
