@@ -30,8 +30,10 @@ public class AccountService {
     public Double getItemsByVendorId(Long id) {
         log.info("Inside getUserWithDepartment of UserService");
         Double profit;
+        String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+
         ResponseEntity<List<Item>> responseEntity =
-                restTemplate.exchange("http://localhost:8080/history/generate/seller/" +id,
+                restTemplate.exchange(gatewayIp+"/history/generate/seller/" +id,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Item>>() {
                         });
         List<Item> listOfItems = responseEntity.getBody();
