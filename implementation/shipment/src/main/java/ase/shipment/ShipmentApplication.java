@@ -129,7 +129,7 @@ public class ShipmentApplication {
 					add("/add");
 				}
 			});
-			registrationDetails.put("category", "history");
+			registrationDetails.put("category", "shipment");
 			registrationDetails.put("ip", "http://localhost:" + port);
 			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
 					registrationDetails, String.class);
