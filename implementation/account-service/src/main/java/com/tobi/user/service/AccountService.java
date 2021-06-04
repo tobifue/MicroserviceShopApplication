@@ -11,6 +11,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * Item class to manage retrieved list of items
+ * when calling txhistory endpoint in AccountService.
+ */
 @Service
 @Slf4j
 public class AccountService {
@@ -18,10 +22,14 @@ public class AccountService {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * Calls txhistory endpoint by vendorId, retrieves
+     * the respective list of Items and calculates
+     * the profit. Returns profit as Double.
+     */
     public Double getItemsByVendorId(Long id) {
         log.info("Inside getUserWithDepartment of UserService");
-        Double profit = 0.0;
-        Long vendorId = 0L;
+        Double profit;
         ResponseEntity<List<Item>> responseEntity =
                 restTemplate.exchange("http://localhost:8080/history/generate/seller/" +id,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Item>>() {
@@ -33,6 +41,9 @@ public class AccountService {
         return profit;
     }
 
+    /**
+     * Calculates the profit by a list of items.
+     */
     public Double calculateProfit(List<Item> transactionList){
         Double profit = 0.0;
 

@@ -18,10 +18,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Account service application class with main, endpoints and gateway registration.
+ */
 @RestController
 @SpringBootApplication
 public class AccountServiceApplication {
 
+	/**
+	 * Bootstraps spring application as stand-alone application
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(AccountServiceApplication.class, args);
 	}
@@ -29,6 +35,10 @@ public class AccountServiceApplication {
 	@Autowired
 	private AccountService accountService;
 
+	/**
+	 * GET method endpoint to get profit by vendorID. Returns
+	 * json with plain double value.
+	 */
 	@SneakyThrows
 	@GetMapping(path = "/vendor/{id}", produces="application/json")
 	public String getProfitByVendorId(@PathVariable("id") Long vendorId){
@@ -41,9 +51,14 @@ public class AccountServiceApplication {
 		}
 		return json;
 	}
+
 	@Value("${server.port}")
 	private String port;
 
+	/**
+	 * Endpoint to register service with gateway service.
+	 * Registration details (port, category) are set.
+	 */
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
 	private boolean registerWithGateway() {
 		try {
@@ -67,6 +82,10 @@ public class AccountServiceApplication {
 		}
 	}
 
+	/**
+	 * Endpoint to register service with gateway service.
+	 * Registration details (port, category) are set.
+	 */
 	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
 	@ResponseBody
 	public String heartbeat() {

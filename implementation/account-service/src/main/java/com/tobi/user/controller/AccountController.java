@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for account service implementing a
+ * REST controller.
+ */
 @RestController
 @RequestMapping("/account")
 @Slf4j
@@ -13,6 +17,10 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    /**
+     * GET method endpoint to calcuate the profit
+     * with vendorID as path variable.
+     */
     @GetMapping("/{id}")
     public Double getProfitByVendorId(@PathVariable("id") Long userId){
 
