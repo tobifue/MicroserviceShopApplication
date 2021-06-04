@@ -3,7 +3,7 @@
 
 stages:
   - dockerBuild
-  - integrationTest
+  - cartTest
   - release
 
 
@@ -30,32 +30,6 @@ docker:
     - apk add --update nodejs npm
     - npm install newman -g
     - newman run buy_from_shop.json
-
-integration_test:  
-  tags:
-    - swa
-  image: maven:3-openjdk-11
-  stage: integrationTest
-  artifacts:
-     paths: 
-       - deployment
-  script:
-    - ls
-    - cd deployment
-    - ls
-    - apt-get update
-    - DEBIAN_FRONTEND=noninteractive 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-#install and run Java things here
-    - apt -y install nodejs npm 
-    - cd ../implementation/cart/container
-    - npm start --host=app &
-    - npm install -g mocha
-    - npm install newman -g
-    - npm install
-    - npm run test
-
 
 
 cart_testing:
