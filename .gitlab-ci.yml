@@ -24,7 +24,7 @@ docker:
     - pip install --upgrade docker-compose
     - docker-compose --version
 #    - COMPOSE_PROFILES=test docker-compose up
-    - COMPOSE_DOCKER_CLI_BUILD=0 docker-compose build --parallel -q   
+    - docker-compose build  -q   
     - COMPOSE_PROFILES=test docker-compose up
 
 
