@@ -3,8 +3,9 @@
 
 stages:
   - dockerBuild
-  - cartTest
+  - integrationTest
   - release
+
 
 
 docker:
@@ -25,7 +26,36 @@ docker:
     - docker-compose --version
 #    - COMPOSE_PROFILES=test docker-compose up
     - docker-compose build -q --parallel
-    - COMPOSE_PROFILES=test docker-compose up
+    - COMPOSE_PROFILES=test docker-compose up &
+    - apk add --update nodejs npm
+    - npm install newman -g
+    - newman run buy_from_shop.json
+
+integration_test:  
+  tags:
+    - swa
+  image: maven:3-openjdk-11
+  stage: integrationTest
+  artifacts:
+     paths: 
+       - deployment
+  script:
+    - ls
+    - cd deployment
+    - ls
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive 
+    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
+    - echo $TZ > /etc/timezone
+#install and run Java things here
+    - apt -y install nodejs npm 
+    - cd ../implementation/cart/container
+    - npm start --host=app &
+    - npm install -g mocha
+    - npm install newman -g
+    - npm install
+    - npm run test
+
 
 
 cart_testing:
@@ -58,4 +88,3 @@ release_upload:
 #    - cd deployment
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
       --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
-
