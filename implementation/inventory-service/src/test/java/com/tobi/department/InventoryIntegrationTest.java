@@ -34,44 +34,7 @@ import java.util.List;
 //@ContextConfiguration(classes = AccessControlApplication.class)
 @SpringBootTest
 public class InventoryIntegrationTest {
-/*
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private Item item;// = new Item(2.0,2,4,"test",2.0);
-    private Item itemuno;
-    private Item item2;
-
-    @Autowired
-    private InventoryRepository repository;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @BeforeEach
-    public void initialize() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        item2 = ItemFactory.createInstance(38L, 48.9, 30, 17, "Testitem", 3.5);
-        itemuno = ItemFactory.createInstance(39L, 48.9, 30, 17, "Testitem", 3.5);
-    }
-
-    @MockBean
-    private InventoryService inventoryService;
-
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    @Test
-    void testApplication() {
-        int resourceId = 35;
-        ResponseEntity<Item> response = testRestTemplate.getForEntity("/inventory/35", Item.class, 35L);
-        //assertThat(response).isNotNull();
-        //assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Item body = response.getBody();
-        System.out.println(body);
-    }
-*/
     @Autowired
     private InventoryRepository repository;
 

@@ -8,20 +8,23 @@ import com.tobi.department.entity.ItemFactory;
 import com.tobi.department.repository.InventoryRepository;
 import com.tobi.department.service.InventoryService;
 import lombok.SneakyThrows;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @SpringBootApplication
@@ -109,16 +112,48 @@ public class InventoryServiceApplication {
             return json;
         }
 
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
+	@Autowired
+	private RestTemplate restTemplate;
+
 	//update Item
 	@SneakyThrows
 	@RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
 	@PostMapping
-	public String update(@PathVariable("id") Long departmentId, @RequestBody Item dep) throws JsonProcessingException {
+	public String update(@PathVariable("id") Long departmentId, @RequestBody Item update_item) throws JsonProcessingException {
 		Item inventory = inventoryService.findByItemId(departmentId);
-		inventory.setPrice(dep.getPrice());
-		inventory.setVendorId(dep.getVendorId());
-		inventory.setQuantity(dep.getQuantity());
+
+		if(update_item.getVendorId()!=null) {
+			inventory.setVendorId(update_item.getVendorId());
+		}
+		if(update_item.getQuantity()!=null) {
+			inventory.setQuantity(update_item.getQuantity());
+		}
+		if(update_item.getItemName()!=null) {
+			inventory.setItemName(update_item.getItemName());
+		}
+		if(update_item.getPrice()!=null) {
+			inventory.setPrice(update_item.getPrice());
+		}
 		//code
+		HttpHeaders headers = new HttpHeaders();
+// set `content-type` header
+		headers.setContentType(MediaType.APPLICATION_JSON);
+// set `accept` header
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("itemName", inventory.getItemName());
+		map.put("vendorId", inventory.getVendorId().toString());
+		map.put("price", inventory.getPrice().toString());
+
+		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
+
+		ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8090/update", entity, String.class);
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
@@ -134,40 +169,9 @@ public class InventoryServiceApplication {
 		inventoryService.deleteByItemId(departmentId);
 		return "Delete successfull";
 	}
+
 	@Value("${server.port}")
 	private String port;
-
-	/*
-	private void registerWithGateway() {
-		try {
-			Map<String, Object> registrationDetails = new HashMap<>();
-			registrationDetails.put("endpoints", new ArrayList<String>() {
-				private static final long serialVersionUID = 1L;
-				{
-					// put highest level endpoints here
-					add("/");
-					add("/update");
-					add("/delete");
-					add("/vendor");
-					add("/items/");
-				}
-			});
-			registrationDetails.put("category", "inventory");
-			registrationDetails.put("ip", "http://localhost:" + port);
-			new RestTemplate().postForObject(String.format("%s/%s", "http://localhost:8080", "/register/new"),
-					registrationDetails, String.class);
-		} catch (RestClientException e) {
-			System.out.println("Could not reach Gateway, retrying in 5 seconds");
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			registerWithGateway();
-		}
-		System.out.println("Successfully registered with gateway!");
-	}
-	 */
 
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
 	private boolean registerWithGateway() {

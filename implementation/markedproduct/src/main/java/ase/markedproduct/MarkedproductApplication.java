@@ -69,8 +69,8 @@ public class MarkedproductApplication {
 
 	@PostMapping(path = "/update", consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public void processUpdate(@RequestBody Map<String, Object> message) {
-		updateController.updateProduct(message, repository);
+	public String processUpdate(@RequestBody Map<String, Object> message) {
+		return updateController.updateProduct(message, repository);
 	}
 
 	@PostMapping(path = "/mark", consumes = "application/json", produces = "application/json")

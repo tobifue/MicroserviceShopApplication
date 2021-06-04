@@ -8,6 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * Item class to manage retrieved list of items
+ * when calling txhistory endpoint in AccountService.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,8 +26,6 @@ public class Item {
     private double price;
     private String itemTitle;
     private int count;
-
-
 }
 
 
