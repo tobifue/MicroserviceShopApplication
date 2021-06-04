@@ -2,26 +2,9 @@
 
 
 stages:
-  - dockerBuild
   - cartTest
+  - dockerBuild
   - release
-
-
-
-docker:
-  image: docker:latest
-  tags:
-    - swa
-  stage: dockerBuild
-  services:
-  - docker:dind 
-  script:
-    - apk add --no-cache docker-compose
-    - apk add py3-pip
-    - pip install --upgrade docker-compose
-    - docker-compose --version
-    - docker-compose build -q --parallel
-    - COMPOSE_PROFILES=test docker-compose up --abort-on-container-exit
 
 
 cart_testing:
@@ -36,6 +19,23 @@ cart_testing:
     - npm install
     - npm run test
 
+
+docker:
+  image: docker:latest
+  tags:
+    - swa
+  stage: dockerBuild
+  needs:
+    - job: cart_testing
+  services:
+  - docker:dind 
+  script:
+    - apk add --no-cache docker-compose
+    - apk add py3-pip
+    - pip install --upgrade docker-compose
+    - docker-compose --version
+    - DOCKER_SCAN_SUGGEST=false COMPOSE_PROFILES=test docker-compose build -q --parallel
+    - COMPOSE_PROFILES=test docker-compose up --abort-on-container-exit
 
 
 release_upload:
