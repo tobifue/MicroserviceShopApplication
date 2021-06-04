@@ -3,7 +3,7 @@
 
 stages:
   - dockerBuild
-  - integrationTest
+  - cartTest
   - release
 
 
@@ -33,7 +33,7 @@ cart_testing:
     - name: node:latest
       alias: app
   image: node:latest
-  stage: unitTest
+  stage: cartTest
   artifacts:
     paths:
       - implementation/cart/container/
@@ -50,7 +50,7 @@ release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: integration_test
+    - job: docker
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
