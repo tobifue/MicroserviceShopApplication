@@ -22,6 +22,7 @@ services:
         build: ./implementation/inventory-service
         depends_on:
             - gateway
+        network_mode: "host"
 
     account-service:
         build: ./implementation/account-service

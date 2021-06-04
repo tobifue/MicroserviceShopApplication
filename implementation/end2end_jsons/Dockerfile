@@ -4,4 +4,4 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install newman -g
-CMD sleep 50s && newman run buy_from_shop.json && newman run calculate_profit.json
+CMD sleep 200s && (newman run buy_from_shop.json && newman run calculate_profit.json)
