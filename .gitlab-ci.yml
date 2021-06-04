@@ -7,6 +7,7 @@ stages:
   - release
 
 
+
 docker:
   image: docker:latest
   tags:
@@ -24,8 +25,11 @@ docker:
     - pip install --upgrade docker-compose
     - docker-compose --version
 #    - COMPOSE_PROFILES=test docker-compose up
-    - docker-compose build  -q   
-    - COMPOSE_PROFILES=test docker-compose up
+    - docker-compose build -q --parallel
+    - COMPOSE_PROFILES=test docker-compose up --abort-on-container-exit
+#    - apk add --update nodejs npm
+#    - npm install newman -g
+#    - newman run buy_from_shop.json
 
 
 cart_testing:
@@ -58,4 +62,3 @@ release_upload:
 #    - cd deployment
     - release-cli create --name="My Release" --description="My Release description" --tag-name job-$CI_JOB_ID 
       --assets-link "{\"name\":\"Microservices\",\"url\":\"https://git01lab.cs.univie.ac.at/vu-advanced-software-engineering/students/2021s/ASE_Team_0105/-/jobs/$JOB_ID/artifacts/download\"}"
-
