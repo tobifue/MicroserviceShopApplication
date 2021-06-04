@@ -3,7 +3,7 @@
 
 stages:
   - dockerBuild
-  - integrationTest
+  - cartTest
   - release
 
 
@@ -20,101 +20,37 @@ docker:
   - docker:dind 
   script:
     - apk add --no-cache docker-compose
-    #- apk --no-cache add curl
     - apk add py3-pip
     - pip install --upgrade docker-compose
-    #- apk add jq
-    #- ls
-    #- curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    #- chmod +x /usr/local/bin/docker-compose
-    #- ln -s /usr/local/bin/docker-compose /compose/docker-compose
     - docker-compose --version
+#    - COMPOSE_PROFILES=test docker-compose up
+    - docker-compose build  -q   
     - COMPOSE_PROFILES=test docker-compose up
-    
 
 
-#cart_testing:
-  #services:
-    #- name: node:latest
-      #alias: app
-#  image: node:latest
-#  stage: unitTest
-#  artifacts:
-#    paths:
-#      - implementation/cart/container/
-#  script:
-#    - cd implementation/cart/container
-#    - npm start --host=app &
-#    - npm install -g mocha
-#    - npm install
-#    - npm run test
-
-integration_test:  
-  tags:
-    - swa
-  image: maven:3-openjdk-11
-  stage: integrationTest
+cart_testing:
+  services:
+    - name: node:latest
+      alias: app
+  image: node:latest
+  stage: cartTest
   artifacts:
-     paths: 
-       - deployment
+    paths:
+      - implementation/cart/container/
   script:
-    - ls
-    - cd deployment
-    - ls
-    - apt-get update
-    - DEBIAN_FRONTEND=noninteractive 
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime 
-    - echo $TZ > /etc/timezone
-#install and run Java things here
-    - apt -y install nodejs npm 
-    - cd ../implementation/cart/container
+    - cd implementation/cart/container
     - npm start --host=app &
     - npm install -g mocha
-    - npm install newman -g
     - npm install
     - npm run test
 
-
-    - apt-get -y install default-jre-headless
-    - apt-get clean
-    - rm -rf /var/lib/apt/lists/*
-    - cd ../../../
-
-
-    - mvn -f implementation/account-service/pom.xml package 
-    - mvn -f implementation/shipment/pom.xml package 
-    - mvn -f implementation/gateway/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/inventory-service/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/markedproduct/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/notification/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/priceadjustment/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/rating/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/txhistory/pom.xml package #0.0.1-SNAPSHOT
-    - mvn -f implementation/checkout/pom.xml package 
-
-
-
-
-
-    - java -jar implementation/gateway/target/gateway-0.0.1-SNAPSHOT.jar &
-    - sleep 15
-    - java -jar implementation/account-service/target/user-service-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/checkout/target/checkout-2.4.4.jar &
-    - java -jar implementation/shipment/target/shipment-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/markedproduct/target/markedproduct-docker.jar &
-    - java -jar implementation/notification/target/notification-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/priceadjustment/target/pricecrawler-docker.jar &
-    - java -jar implementation/rating/target/rating-0.0.1-SNAPSHOT.jar &
-    - java -jar implementation/txhistory/target/txhistory-0.0.1-SNAPSHOT.jar &
-    - newman run implementation/end2end_jsons/buy_from_shop.json
 
 
 release_upload:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: integration_test
+    - job: docker
   rules:
     - if: '$RELEASE == "True"'
     - if: '$CI_COMMIT_BRANCH == "master"'
