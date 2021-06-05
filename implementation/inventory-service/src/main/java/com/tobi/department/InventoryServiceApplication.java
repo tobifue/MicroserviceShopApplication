@@ -70,6 +70,9 @@ public class InventoryServiceApplication {
 		List<Item> inventories = new ArrayList<Item>();
 		List<Item> v_inventories = new ArrayList<Item>();
 
+		inventories = inventoryService.findAllItems();
+
+
 		for(Item dep : inventories) {
 			if(dep.getVendorId()==id){
 				v_inventories.add(dep);
