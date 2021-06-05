@@ -1,3 +1,4 @@
+import {json} from "express";
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -301,20 +302,17 @@ app.post('/rateItem', function (req, res, next) {
 
 app.get('/Administrator', function (req, res, next) {
     if (logedInId != 0) { res.redirect('/'); return; }
-    res.render(__dirname + '/views/overviewAdmin.hbs', {
-        loggedIn: logedInId,
-        services: {
-            ratingService: "up",
-            inventoryService: "up",
-            cartService: "up",
-            priceadjustmentService: "down",
-            notificationService: "up",
-            markedProductService: "up",
-            checkoutService: "up",
-            historyService: "up",
-            shipmentService: "up"
-        }
-    });
+    const generateServiceStatus = http.get("http://" + gatewayIp + ":8080/heartbeat/get", response => {
+        let heartbeat: string = "";
+        response.on('data', function (chunk) { heartbeat += chunk });
+        response.on('end', function () {
+            let heartInfo = json.parse(heartbeat);
+            res.render(__dirname + '/views/overviewAdmin.hbs', {
+                loggedIn: logedInId,
+                services: heartInfo
+            });
+        })
+    })
 });
 
 app.post('/login', (req, res) => {

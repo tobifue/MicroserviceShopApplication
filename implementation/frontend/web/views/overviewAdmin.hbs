@@ -22,46 +22,17 @@
 <table style="width:100%">
   <tr>
     <th>Service</th>
-    <th>Status</th> 
+    <th>IP</th>
+    <th>Status</th>
+
   </tr>
+  {{#each services}}
   <tr>
-    <td>Rating Service</td>
-    <td>{{ services.ratingService}}</td>
+    <td>{{ this.category}}</td>
+    <td>{{ this.ip}}</td>
+     <td>{{ this.status}}</td>
   </tr>
-  <tr>
-    <td>Inventory Service</td>
-    <td>{{ services.inventoryService}}</td>
-  </tr>
-  <tr>
-    <td>Cart Service</td>
-    <td>{{ services.cartService}}</td>
-  </tr>
-    <tr>
-    <td>Priceadjustment Service</td>
-    <td>{{ services.priceadjustmentService}}</td>
-  </tr>
-    <tr>
-    <td>Notification Service</td>
-    <td>{{ services.notificationService}}</td>
-  </tr>
-    <tr>
-    <td>Marked Product Service</td>
-    <td>{{ services.markedProductService}}</td>
-  </tr>
-    <tr>
-    <td>Checkout Service</td>
-    <td>{{ services.checkoutService}}</td>
-  </tr>
-    </tr>
-    <tr>
-    <td>History Service</td>
-    <td>{{ services.historyService}}</td>
-  </tr>
-    </tr>
-    <tr>
-    <td>Shipment Service</td>
-    <td>{{ services.shipmentService}}</td>
-  </tr>
+  {{/each}}
 
 </table>
 
