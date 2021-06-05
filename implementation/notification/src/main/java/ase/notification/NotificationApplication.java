@@ -123,7 +123,7 @@ public class NotificationApplication {
 			String gatewayIp = "http://"
 					+ (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
-			registrationDetails.put("category", "rating");
+			registrationDetails.put("category", "notification");
 			registrationDetails.put("ip", notificationAddress);
 			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"), registrationDetails,
 					String.class);
