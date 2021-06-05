@@ -1,5 +1,7 @@
 package ase.notification;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import ase.notification.data.Notification;
 import ase.notification.data.NotificationRepository;
 import ase.notification.data.NotificationService;
@@ -103,7 +102,8 @@ public class NotificationApplication {
 		return "OK";
 	}
 
-	private void registerWithGateway() {
+	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
+	private boolean registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
 			registrationDetails.put("endpoints", new ArrayList<String>() {
@@ -118,17 +118,20 @@ public class NotificationApplication {
 
 				}
 			});
-			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() +":"+ port;
-			String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+
+			String notificationAddress = "http://" + InetAddress.getLocalHost().getHostAddress() + ":8088";
+			String gatewayIp = "http://"
+					+ (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
 			registrationDetails.put("category", "notification");
-			registrationDetails.put("ip", thisAdr);
-			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
-					registrationDetails, String.class);
+			registrationDetails.put("ip", notificationAddress);
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"), registrationDetails,
+					String.class);
+			return true;
 		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
+			return false;
 		}
-		System.out.println("Successfully registered with gateway!");
 	}
 
 	@Bean
@@ -136,8 +139,15 @@ public class NotificationApplication {
 		return (args) -> {
 			this.repository = repository;
 			printRepositoryToConsole();
-			// register with gateway in commandlineRunner
-			registerWithGateway();
+			new Thread(() -> {
+				while (!registerWithGateway()) {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		};
 	}
 
