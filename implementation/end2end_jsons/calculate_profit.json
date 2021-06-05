@@ -43,14 +43,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/account/{{vendorId}}",
+					"raw": "http://localhost:8083/vendor/{{vendorId}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8083",
 					"path": [
-						"account",
+						"vendor",
 						"{{vendorId}}"
 					]
 				}
@@ -80,8 +80,7 @@
 							"});",
 							"",
 							"pm.test(\"vendorId is set\", () => {",
-							"    const responseJson = pm.response.json();",
-							"    pm.variables.set((\"vendorId\"),responseJson.vendorId);",
+							"    pm.expect(\"vendorId\").to.not.be.null;",
 							"});"
 						],
 						"type": "text/javascript"
@@ -153,15 +152,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/account/{{id}}",
+					"raw": "http://localhost:8083/vendor/{{vendorId}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8083",
 					"path": [
-						"account",
-						"{{id}}"
+						"vendor",
+						"{{vendorId}}"
 					]
 				}
 			},
@@ -190,22 +189,22 @@
 	],
 	"variable": [
 		{
-			"id": "5f90d42f-243a-4518-b438-dd5e03726413",
+			"id": "da32be78-e6aa-43d1-942b-f2ee34b2a674",
 			"key": "vendorId",
 			"value": "0"
 		},
 		{
-			"id": "e8650df5-6563-4010-8620-efe01c81edb8",
+			"id": "79af18af-fe88-46e5-9c36-90996734dd67",
 			"key": "id",
 			"value": ""
 		},
 		{
-			"id": "744b383a-4c4b-46eb-b66a-a35d50c9a25f",
+			"id": "92b00334-8da6-4a65-8653-139f0846d7f5",
 			"key": "prev_profit",
 			"value": ""
 		},
 		{
-			"id": "cb916a4d-b300-4188-83f7-91598ef12abc",
+			"id": "636ab03c-ea29-48d2-89d5-0ec134ecd05d",
 			"key": "price",
 			"value": ""
 		}
