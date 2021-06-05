@@ -53,4 +53,15 @@ class AccountServiceApplicationTests
 
 	}
 
+	/*
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Test
+    public void exampleTest() {
+        String body = this.restTemplate.getForObject("/account/10", String.class);
+        assertThat(body).isEqualTo("38.0");
+    }
+*/
+
 }
