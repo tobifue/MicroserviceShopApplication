@@ -1,12 +1,9 @@
 package com.tobi.user;
 
 
-import com.tobi.user.controller.AccountController;
 import com.tobi.user.entity.Item;
 import com.tobi.user.service.AccountService;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.hamcrest.Matchers.*;
 import org.junit.jupiter.api.Test;
@@ -20,11 +17,8 @@ import java.util.List;
  * Test class for account service
  */
 @RunWith(SpringRunner.class)
-class AccountServiceApplicationTest
+class AccountServiceApplicationTests
 {
-
-	@InjectMocks
-	AccountController accountController;
 
 	/**
 	 * converts LocalDateTime to Date
@@ -58,4 +52,5 @@ class AccountServiceApplicationTest
 		assertThat(testProfit, comparesEqualTo(profit));
 
 	}
+
 }
