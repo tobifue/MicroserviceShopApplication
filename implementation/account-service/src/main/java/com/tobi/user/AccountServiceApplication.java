@@ -74,10 +74,10 @@ public class AccountServiceApplication {
 					add("/vendor");
 				}
 			});
-			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress()+":" + port;
-    		String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+			String checkoutAdress = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
+			String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 			registrationDetails.put("category", "account");
-			registrationDetails.put("ip", thisAdr);
+			registrationDetails.put("ip", checkoutAdress);
 			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
 					registrationDetails, String.class);
 			System.out.println("Successfully registered with gateway!");
