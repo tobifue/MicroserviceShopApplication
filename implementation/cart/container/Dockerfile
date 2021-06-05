@@ -4,4 +4,5 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install
-CMD npm start
+RUN npm install -g mocha
+CMD npm run test && npm start
