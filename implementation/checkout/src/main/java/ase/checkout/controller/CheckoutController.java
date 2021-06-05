@@ -31,7 +31,8 @@ public class CheckoutController {
         NetworkUtil.httpGet(gatewayIp, String.format("/cart/deleteCart/%s", costumerId));
         String user = NetworkUtil.httpGet(gatewayIp, String.format("/users/%s", costumerId));
 
-        System.out.println(cart);
+        System.out.println("cart " + cart);
+        System.out.println("user " + user);
 
         try {
             JSONObject jsonObject = new JSONObject(cart);
@@ -49,7 +50,8 @@ public class CheckoutController {
 
                 //get User mail
                 System.out.println(user); // display usernames
-
+                System.out.println(item.get("itemId"));
+                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update", item.get("itemId")), item);
                 NetworkUtil.httpPost(gatewayIp, String.format("history/add", costumerId), item);
                 item.put("email", jsonUserObject.getString("email"));
                 System.out.println(item); // display usernames
