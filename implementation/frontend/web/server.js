@@ -109,10 +109,13 @@ app.post('/changeItem', function (req, res, next) {
         res.redirect('/');
         return;
     }
-    console.log("new quanitity: " + req.body.newQuantity);
     var item = new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price);
-    var httpreq = http.request(new HttpOption("/inventory/update/" + req.body.itemId), function (response) {
+    console.log("item id in change: " + req.body.itemId);
+    var httpreq = http.request(new HttpOption("/inventory/update/" + parseInt(req.body.itemId)), function (response) {
+        var items = "";
+        response.on('data', function (chunk) { items += chunk; });
         response.on('end', function () {
+            console.log("return from change: " + items);
             res.redirect('/vendor');
         });
     }).on("error", function (err) {

@@ -144,11 +144,14 @@ app.post('/addItem', function (req, res, next) {
 app.post('/changeItem', function (req, res, next) {
     if (logedInId % 2 != 0) { res.redirect('/'); return; }
 
-console.log("new quanitity: " +req.body.newQuantity);
-        let item = new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price)
 
-    let httpreq = http.request(new HttpOption("/inventory/update/"+req.body.itemId), function (response) {
+        let item = new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price)
+        console.log("item id in change: " +req.body.itemId);
+    let httpreq = http.request(new HttpOption("/inventory/update/"+parseInt(req.body.itemId)), function (response) {
+        let items: string = "";
+        response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
+            console.log("return from change: "+items);
             res.redirect('/vendor');
         })
     }).on("error", (err) => {
