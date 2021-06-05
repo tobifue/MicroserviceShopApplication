@@ -44,8 +44,8 @@
           <th>Quantity</th>
           <th>new Quantity</th>
           <th>Price</th>
-          <th>Price recommendation</th>
           <th>new price</th>
+          <th>Price recommendation</th>
         </tr>
       </thead>
       <tbody>
@@ -58,7 +58,6 @@
             <td><input style="width: 5em" type="number" id="newQuantity" name="newQuantity" value={{ this.quantity}}>
             </td>
             <td>{{ this.price }} €</td>
-            <td>{{ this.priceRecommendation }} €</td>
             <td>
               <input style="width: 5em" type="number" id="newPrice" name="newPrice" value={{ this.price }}>
               <input type="hidden" id="itemId" name="itemId" value={{ this.itemId }}>
@@ -66,18 +65,17 @@
               <input type="hidden" id="vendorId" name="vendor" value={{ this.vendorId}}>
               <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
               <input type="hidden" id="priceId" name="price" value={{ this.price }}>
-              <input type="hidden" id="priceRecommendationId" name="priceRecommendation" value={{
-                this.priceRecommendation }}>
               <input type="submit" value="Submit">
-
           </form>
+          <td>
+            <button id="button_1" value={{ this.itemName }} name="but1">button 1</button>
+            <a id={{ this.itemName }}></a>
           </td>
           <td>
             <form action="/deleteItem" method="post">
-            <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
-            <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
-            <input type="submit" value="delete">
-
+              <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
+              <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
+              <input type="submit" value="delete">
             </form>
           </td>
         </tr>

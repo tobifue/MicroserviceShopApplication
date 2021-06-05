@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
+app.use(express.static(path.join(__dirname, 'public')));
 var port = 3003;
 var logedInId = -1, email;
 var gatewayIp = process.env.GATEWAYIP || "localhost";
@@ -125,6 +126,25 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.write(JSON.stringify(item));
     httpreq.end();
 });
+app.post('/recom', function (req, res, next) {
+    console.log("body" + req.body);
+    var httpo = new HttpOption("/pricecrawler/recommend");
+    httpo.headers = { "Content-Type": 'text/plain' };
+    var httpreq = http.request(httpo, function (response) {
+        var newPrice = "";
+        response.on('data', function (chunk) { newPrice += chunk; });
+        response.on('end', function () {
+            console.log("newPrice: " + newPrice);
+            res.redirect('/vendor');
+        });
+    }).on("error", function (err) {
+        console.log(err);
+        res.redirect('/vendor');
+    });
+    console;
+    httpreq.write(req.body.id);
+    httpreq.end();
+});
 app.get('/customer', function (req, res, next) {
     if (logedInId <= 0) {
         res.redirect('/');
@@ -134,7 +154,7 @@ app.get('/customer', function (req, res, next) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
         response.on("end", function () {
-            var httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/" + logedInId, function (response) {
+            var httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/generate/" + logedInId, function (response) {
                 var history = "";
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
@@ -241,7 +261,8 @@ app.get('/Administrator', function (req, res, next) {
         res.redirect('/');
         return;
     }
-    res.render(__dirname + '/views/overviewAdmin.hbs', { loggedIn: logedInId,
+    res.render(__dirname + '/views/overviewAdmin.hbs', {
+        loggedIn: logedInId,
         services: {
             ratingService: "up",
             inventoryService: "up",
@@ -259,16 +280,25 @@ app.post('/login', function (req, res) {
     console.log(req.body);
     logedInId = parseInt(req.body.IDname);
     email = req.body.Emailname;
-    if (logedInId % 2 == 1) { //customer
-        res.redirect('/customer');
-    }
-    else if (logedInId % 2 == 0) { //vendor
-        res.redirect('/vendor');
-    }
-    else if (logedInId == 0) {
-        res.redirect('/administrator');
-    }
-    else {
+    var httpreq = http.request(new HttpOption("/users/add"), function (response) {
+        var items = "";
+        response.on('data', function (chunk) { items += chunk; });
+        response.on('end', function () {
+            if (logedInId % 2 == 1) { //customer
+                res.redirect('/customer');
+            }
+            else if (logedInId % 2 == 0) { //vendor
+                res.redirect('/vendor');
+            }
+            else if (logedInId == 0) {
+                res.redirect('/administrator');
+            }
+            else {
+                res.redirect('/');
+            }
+        });
+    }).on("error", function (err) {
         res.redirect('/');
-    }
+    });
+    httpreq.write(JSON.stringify({ userId: logedInId, email: email }));
 });

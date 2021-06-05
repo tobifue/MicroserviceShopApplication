@@ -11,8 +11,9 @@ const http = require('http');
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
+app.engine('.hbs', expressHbs({ defaultLayout: 'layout',  extname: '.hbs' }));
 app.set('view engine', '.hbs');
+app.use(express.static(path.join(__dirname, 'public')));
 
 const port = 3003;
 let logedInId = -1, email;
@@ -23,13 +24,13 @@ console.log("IP used for gateway: " + gatewayIp);
 
 
 app.get('/', function (req, res, next) {
-    res.render(__dirname + '/views/index.hbs', {loggedIn:logedInId});
+    res.render(__dirname + '/views/index.hbs', { loggedIn: logedInId });
 });
 
 
 var ip = require("ip");
 app.listen(port, function () {
-    console.log('Server started on : '+ip.address() +":"+ port);
+    console.log('Server started on : ' + ip.address() + ":" + port);
 });
 
 
@@ -97,19 +98,19 @@ class HttpOption {
 
 app.get('/vendor', function (req, res, next) {
     if (logedInId % 2 == 1) { res.redirect('/'); return; }
-    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/"+logedInId, response => {
+    const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/" + logedInId, response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
             console.log("loaded items:", items);
-            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/"+logedInId, response => {
+            const httpreqGetProfit = http.get("http://" + gatewayIp + ":8080/account/vendor/" + logedInId, response => {
                 let profit: string = "";
                 response.on('data', function (chunk) { profit += chunk });
                 response.on("end", () => {
                     if (items == null) {
-                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn:logedInId,items: [new Item(1, "Itemname: ToDO", 24, 70, 0, 65)], profit: "134,32" });
+                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn: logedInId, items: [new Item(1, "Itemname: ToDO", 24, 70, 0, 65)], profit: "134,32" });
                     } else {
-                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn:logedInId,items: JSON.parse(items), profit: profit || "134,32" });
+                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn: logedInId, items: JSON.parse(items), profit: profit || "134,32" });
                     }
                 })
             })
@@ -145,14 +146,15 @@ app.post('/changeItem', function (req, res, next) {
     if (logedInId % 2 != 0) { res.redirect('/'); return; }
 
 
-        let item = new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price)
-        console.log("item id in change: " +req.body.itemId);
-    let httpreq = http.request(new HttpOption("/inventory/update/"+parseInt(req.body.itemId)), function (response) {
+    let item = new Item(req.body.itemId, req.body.itemName, req.body.newQuantity, req.body.newPrice, logedInId, req.body.price)
+    console.log("item id in change: " + req.body.itemId);
+    let httpreq = http.request(new HttpOption("/inventory/update/" + parseInt(req.body.itemId)), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
-            console.log("return from change: "+items);
+            console.log("return from change: " + items);
             res.redirect('/vendor');
+
         })
     }).on("error", (err) => {
         console.log(err);
@@ -163,6 +165,27 @@ app.post('/changeItem', function (req, res, next) {
 });
 
 
+app.post('/recom', function (req, res, next) {
+    console.log("body"+ req.body);
+    let httpo = new HttpOption("/pricecrawler/recommend");
+    httpo.headers = { "Content-Type": 'text/plain' };
+            let httpreq = http.request(httpo, function (response) {
+                let newPrice: string = "";
+                response.on('data', function (chunk) { newPrice += chunk });
+                response.on('end', function () {
+                    console.log("newPrice: " + newPrice);
+                    res.redirect('/vendor');
+                })
+            }).on("error", (err) => {
+                console.log(err);
+                res.redirect('/vendor');
+            });
+
+            httpreq.write(req.body.id);
+            httpreq.end();
+})
+
+
 
 app.get('/customer', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
@@ -171,11 +194,11 @@ app.get('/customer', function (req, res, next) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on("end", () => {
-            const httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/getItems/buyer/"+logedInId, response => {
+            const httpreqGenerateHistory = http.get("http://" + gatewayIp + ":8080/history/generate/" + logedInId, response => {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
-                        res.render(__dirname + '/views/overviewCustomer.hbs', {loggedIn:logedInId, buyedItems: [new Item(99, "TestItem", 24, 70, 1, 65)], items: JSON.parse(items) });
+                    res.render(__dirname + '/views/overviewCustomer.hbs', { loggedIn: logedInId, buyedItems: [new Item(99, "TestItem", 24, 70, 1, 65)], items: JSON.parse(items) });
                 })
             })
         })
@@ -189,7 +212,7 @@ app.get('/customer', function (req, res, next) {
 app.post('/addToCart', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
 
-    let httpreq = http.request(new HttpOption("/cart/addItemToCart/"+logedInId), function (response) {
+    let httpreq = http.request(new HttpOption("/cart/addItemToCart/" + logedInId), function (response) {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
@@ -228,7 +251,7 @@ app.post('/checkout', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
 
     console.log("checkout called");
-    let httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/"+logedInId, response => {
+    let httpreq = http.get("http://" + gatewayIp + ":8080/checkout/checkout/" + logedInId, response => {
         let items = "";
         response.on('data', function (chunk) { items += chunk });
         response.on('end', function () {
@@ -243,7 +266,7 @@ app.post('/checkout', function (req, res, next) {
 
 app.post('/deleteItem', function (req, res, next) {
     if (logedInId % 2 == 1) { res.redirect('/'); return; }
-console.log("item id "+req.body.itemId)
+    console.log("item id " + req.body.itemId)
     let httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         let items = "";
         response.on('data', function (chunk) { items += chunk });
@@ -277,7 +300,8 @@ app.post('/rateItem', function (req, res, next) {
 
 app.get('/Administrator', function (req, res, next) {
     if (logedInId != 0) { res.redirect('/'); return; }
-    res.render(__dirname + '/views/overviewAdmin.hbs', {loggedIn:logedInId, 
+    res.render(__dirname + '/views/overviewAdmin.hbs', {
+        loggedIn: logedInId,
         services: {
             ratingService: "up",
             inventoryService: "up",
@@ -296,17 +320,27 @@ app.post('/login', (req, res) => {
     console.log(req.body);
     logedInId = parseInt(req.body.IDname);
     email = req.body.Emailname;
-    if (logedInId % 2 == 1) { //customer
-        res.redirect('/customer');
-    }
-    else if (logedInId % 2 == 0) { //vendor
-        res.redirect('/vendor');
-    }
-    else if (logedInId == 0) {
-        res.redirect('/administrator');
-    }
-    else{
+    let httpreq = http.request(new HttpOption("/users/add"), function (response) {
+        let items = "";
+        response.on('data', function (chunk) { items += chunk });
+        response.on('end', function () {
+            if (logedInId % 2 == 1) { //customer
+                res.redirect('/customer');
+            }
+            else if (logedInId % 2 == 0) { //vendor
+                res.redirect('/vendor');
+            }
+            else if (logedInId == 0) {
+                res.redirect('/administrator');
+            }
+            else {
+                res.redirect('/');
+            }
+        })
+    }).on("error", (err) => {
         res.redirect('/');
-    }
+    });
+    httpreq.write(JSON.stringify({ userId: logedInId, email: email }));
+
 })
 
