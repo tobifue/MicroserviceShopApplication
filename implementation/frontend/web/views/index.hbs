@@ -7,35 +7,35 @@
 <!-- haml: http://haml.info/ -->
 <!-- hbs(handlebars): http://handlebarsjs.com/ -->
 
-  <body>
-    <header>
-      <h1>
-        MAIN PAGE
-      </h1>
-    </header>
+<body>
+  <header>
+    <h1>
+      MAIN PAGE
+    </h1>
+  </header>
 
-    <main>  
- 
-      
-     
-    </main>
+  <main>
 
-    <footer>     
-    </footer>
 
-    <!-- Your web-app is https, so your scripts need to be too -->
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
-            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
-            crossorigin="anonymous"></script>
-   <!--<script src="/client.js"></script> -->
- <form action="/login" method="post">
-      <label for="ID">ID (even for vendor, odd for costumer, and 0 for administrator)</label><br>
-      <input type="text" id="ID" name="ID" value=><br>
 
-      <label for="Email">Email</label><br>
-      <input type="text" id="Email" name="Email" value=><br>
+  </main>
 
-      <input type="submit" value="Submit">
-    </form>
-  </body>
+  <footer>
+  </footer>
+
+  <!-- Your web-app is https, so your scripts need to be too -->
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+    integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+  <!--<script src="/client.js"></script> -->
+  <form action="/login" method="post">
+    <label for="ID">ID (even for vendor, odd for costumer, and 0 for administrator)</label><br>
+    <input type="number" id="ID" name="IDname" ><br>
+
+    <label for="Email">Email</label><br>
+    <input type="text" id="Email" name="Emailname" ><br>
+
+    <input type="submit" value="Submit">
+  </form>
+</body>
+
 </html>

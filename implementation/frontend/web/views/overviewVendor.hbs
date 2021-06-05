@@ -21,8 +21,6 @@
       Sell item ( inventory Service )
     </h1>
     <form action="/addItem" method="post">
-      <label for="vendor">Vendor:</label><br>
-      <input type="text" id="vendor" name="vendorId" value={{ this.vendorId}}><br>
 
       <label for="name">Item name:</label><br>
       <input type="text" id="name" name="itemName" value={{ this.itemName }}><br>
@@ -71,14 +69,17 @@
               <input type="hidden" id="priceRecommendationId" name="priceRecommendation" value={{
                 this.priceRecommendation }}>
               <input type="submit" value="Submit">
-              <form action="/deleteItem" method="post">
-            <td>
-              <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
-              <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
-              <input type="submit" value="delete">
-            </td>
-            </td>
+
           </form>
+          </td>
+          <td>
+            <form action="/deleteItem" method="post">
+            <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
+            <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
+            <input type="submit" value="delete">
+
+            </form>
+          </td>
         </tr>
         {{/each}}
       </tbody>
