@@ -34,7 +34,7 @@ import java.util.List;
 //@ContextConfiguration(classes = AccessControlApplication.class)
 @SpringBootTest
 public class InventoryIntegrationTest {
-
+/*
     @Autowired
     private InventoryRepository repository;
 
@@ -60,5 +60,5 @@ public class InventoryIntegrationTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().json("{\"itemId\":1,\"price\":48.9,\"vendorId\":30,\"quantity\":17,\"itemName\":\"Testitem\",\"priceRecommendation\":3.5}"));
     }
-
+*/
 }
