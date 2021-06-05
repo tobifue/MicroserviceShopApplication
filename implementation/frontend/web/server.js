@@ -129,6 +129,7 @@ app.post('/changeItem', function (req, res, next) {
 app.post('/recom', function (req, res, next) {
     console.log("body" + req.body);
     var httpo = new HttpOption("/pricecrawler/recommend");
+    httpo.port = 8091;
     httpo.headers = { "Content-Type": 'text/plain' };
     var httpreq = http.request(httpo, function (response) {
         var newPrice = "";
@@ -141,7 +142,6 @@ app.post('/recom', function (req, res, next) {
         console.log(err);
         res.redirect('/vendor');
     });
-    console;
     httpreq.write(req.body.id);
     httpreq.end();
 });

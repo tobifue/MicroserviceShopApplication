@@ -168,6 +168,7 @@ app.post('/changeItem', function (req, res, next) {
 app.post('/recom', function (req, res, next) {
     console.log("body"+ req.body);
     let httpo = new HttpOption("/pricecrawler/recommend");
+    httpo.port = 8091;
     httpo.headers = { "Content-Type": 'text/plain' };
             let httpreq = http.request(httpo, function (response) {
                 let newPrice: string = "";
