@@ -22,10 +22,10 @@ public class PriceadjustmentController {
 	 * @return
 	 */
 	@PostMapping(path = "/recommend", consumes = "text/plain", produces = "text/plain")
-	public String getPriceRecommendation(@RequestBody Map<String, Object> markedProduct) {
+	public String getPriceRecommendation(@RequestBody String itemName) {
 		try {
 			return TrafficController
-					.sendMessageToSingleRecipient(Message.createInstance(null, "pricecrawler", "/recommend", "POST"));
+					.sendMessageToSingleRecipient(Message.createInstance(itemName, "pricecrawler", "/recommend", "POST"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
