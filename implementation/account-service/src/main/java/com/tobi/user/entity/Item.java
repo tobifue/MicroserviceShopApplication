@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * Item class to manage retrieved list of items
+ * Item class with all constructors to manage retrieved list of items
  * when calling txhistory endpoint in AccountService.
  */
 @Data

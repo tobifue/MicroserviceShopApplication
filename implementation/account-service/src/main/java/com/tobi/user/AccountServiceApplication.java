@@ -40,6 +40,8 @@ public class AccountServiceApplication {
 	/**
 	 * GET method endpoint to get profit by vendorID. Returns
 	 * json with plain double value.
+	 * @param vendorId id of the vendor in Long format
+	 * @return String json with list of items
 	 */
 	@SneakyThrows
 	@GetMapping(path = "/vendor/{id}", produces="application/json")
@@ -87,8 +89,9 @@ public class AccountServiceApplication {
 	}
 
 	/**
-	 * Endpoint to register service with gateway service.
-	 * Registration details (port, category) are set.
+	 * Endpoint to call for gateway to check
+	 * if service is alive.
+	 * @return String "OK"
 	 */
 	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
 	@ResponseBody
@@ -96,6 +99,9 @@ public class AccountServiceApplication {
 		return "OK";
 	}
 
+	/**
+	 * Try to register with gateway.
+	 */
 	@Bean
 	public CommandLineRunner registerWithGateWay() {
 		return (args) -> {
@@ -104,6 +110,10 @@ public class AccountServiceApplication {
 		};
 	}
 
+	/**
+	 * If registerWithGateway was not successful,
+	 * continuously try again.
+	 */
 	@Bean
 	public CommandLineRunner registerAgainWithGateway( ) {
 		return (args) -> {

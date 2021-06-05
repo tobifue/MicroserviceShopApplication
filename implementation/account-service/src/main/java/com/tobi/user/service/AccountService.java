@@ -25,7 +25,9 @@ public class AccountService {
     /**
      * Calls txhistory endpoint by vendorId, retrieves
      * the respective list of Items and calculates
-     * the profit. Returns profit as Double.
+     * the profit.
+     * @param id id of the vendor in Long format
+     * @return the profit as Double
      */
     public Double getItemsByVendorId(Long id) {
         log.info("Inside getUserWithDepartment of UserService");
@@ -45,6 +47,8 @@ public class AccountService {
 
     /**
      * Calculates the profit by a list of items.
+     * @param transactionList List of Items
+     * @return the profit as Double
      */
     public Double calculateProfit(List<Item> transactionList){
         Double profit = 0.0;
