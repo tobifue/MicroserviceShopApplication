@@ -46,22 +46,18 @@ public class CheckoutController {
             for (int i = 0; i < jsonArray.length(); i++) {
                 Map<String, Object> item = new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), HashMap.class);
 
-                System.out.println("is here"); // display usernames
-
                 item.put("customerId", costumerId.toString());
                 //item.put("vendorId", "2");
-                int bought_volume = (Integer) item.get("quantity");
+                int bought_quantity = (Integer) item.get("quantity");
                 String prev_quantity = NetworkUtil.httpGet(gatewayIp, String.format("/inventory/%s", item.get("itemId")));
-                System.out.println("now here"); // display usernames
-
                 JSONObject jsonItemsObject = new JSONObject(prev_quantity);
+                int remain_quantity = Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_quantity;
 
                 //substract bought volume from quantity
-                item.put("quantity", Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_volume);
+                item.put("quantity", remain_quantity);
 
-                if(Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_volume < 1){
-                    System.out.println("here"); // display usernames
-
+                //update item, if quantity is empty delete
+                if(remain_quantity < 1){
                     NetworkUtil.httpPost(gatewayIp, String.format("inventory/delete/%s", item.get("itemId")), item);
                 }
                 else{
