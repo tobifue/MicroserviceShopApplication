@@ -18,7 +18,7 @@ public class PriceadjustmentController {
 
 	/**
 	 * 
-	 * @param requires { "item" : [insert item title] }
+	 * @param requires { "itemName" : [insert item title] }
 	 * @return
 	 */
 
