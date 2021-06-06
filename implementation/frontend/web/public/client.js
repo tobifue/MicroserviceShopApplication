@@ -13,11 +13,12 @@ $("button").click(function (e) {
             access_token: $("#access_token").val()
         },
         success: function (result) {
-            //console.log(lastId)
+            console.log(lastId)
+            var paragraph = document.getElementById(lastId);
             if (result.length > 20)
-                $('#' + lastId).text('-1');
+                paragraph.textContent = 'not found';
             else
-                $('#' + lastId).text(result);
+                paragraph.textContent = result;
         },
         error: function (result) {
             alert('error');

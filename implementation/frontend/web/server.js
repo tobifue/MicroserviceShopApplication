@@ -37,9 +37,8 @@ var Item = /** @class */ (function () {
     return Item;
 }());
 var rating = /** @class */ (function () {
-    function rating(customerId, itemId, itemName, rating) {
+    function rating(customerId, itemName, rating) {
         this.customerId = customerId;
-        this.itemId = itemId;
         this.itemName = itemName;
         this.rating = rating;
     }
@@ -129,11 +128,11 @@ app.post('/changeItem', function (req, res, next) {
     httpreq.end();
 });
 app.post('/recom', function (req, res, next) {
-    console.log("body" + req.body);
-    //let httpo = new HttpOption("/pricecrawler/recommend");
-    var httpo = new HttpOption("/recommend");
-    httpo.port = 8091;
-    httpo.headers = { "Content-Type": 'text/plain' };
+    console.log("body" + JSON.stringify(req.body));
+    var httpo = new HttpOption("/pricecrawler/recommend");
+    //let httpo = new HttpOption("/recommend");
+    //httpo.port = 8091;
+    //httpo.headers = { "Content-Type": 'text/plain' };
     var httpreq = http.request(httpo, function (response) {
         var newPrice = "";
         response.on('data', function (chunk) { newPrice += chunk; });
@@ -146,7 +145,7 @@ app.post('/recom', function (req, res, next) {
         console.log(err);
         res.redirect('/vendor');
     });
-    httpreq.write(req.body.id);
+    httpreq.write(JSON.stringify({ itemName: req.body.id }));
     httpreq.end();
 });
 app.get('/customer', function (req, res, next) {
@@ -231,7 +230,7 @@ app.post('/deleteItem', function (req, res, next) {
         res.redirect('/');
         return;
     }
-    console.log("item id " + req.body.itemId);
+    console.log("delete item " + req.body.itemId);
     var httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         var items = "";
         response.on('data', function (chunk) { items += chunk; });
@@ -259,8 +258,8 @@ app.post('/rateItem', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    console.log("rating item" + JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)));
-    httpreq.write(JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)));
+    console.log("rating item" + JSON.stringify(new rating(logedInId, req.body.itemName, req.body.rate)));
+    httpreq.write(JSON.stringify(new rating(logedInId, req.body.itemName, req.body.rate)));
     httpreq.end();
 });
 app.get('/Administrator', function (req, res, next) {
