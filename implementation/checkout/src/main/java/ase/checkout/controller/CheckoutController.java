@@ -46,13 +46,13 @@ public class CheckoutController {
                 Map<String, Object> item = new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), HashMap.class);
 
                 item.put("customerId", costumerId.toString());
-                item.put("vendorId", "2");
+                //item.put("vendorId", "2");
 
                 //get User mail
                 System.out.println(user); // display usernames
                 System.out.println(item.get("itemId"));
-                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update", item.get("itemId")), item);
-                NetworkUtil.httpPost(gatewayIp, String.format("history/add", costumerId), item);
+                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/", item.get("itemId")), item);
+                NetworkUtil.httpPost(gatewayIp, "history/add", item);
                 item.put("email", jsonUserObject.getString("email"));
                 System.out.println(item); // display usernames
                 NetworkUtil.httpPost(gatewayIp, String.format("shipment/add", costumerId), item);
