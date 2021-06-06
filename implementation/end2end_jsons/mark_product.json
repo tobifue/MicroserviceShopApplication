@@ -26,6 +26,7 @@
 							"    pm.expect(responseJson.vendorId).to.be.a('number');",
 							"    pm.expect(responseJson.quantity).to.be.a('number');",
 							"    pm.expect(responseJson.itemName).to.be.a('string');",
+							"    console.log(responseJson);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -255,22 +256,22 @@
 	],
 	"variable": [
 		{
-			"id": "a2086620-9ee7-47ab-bce0-2fc210dc187b",
+			"id": "7d500cc1-110a-441c-9885-8d46b3231cb8",
 			"key": "itemId",
 			"value": ""
 		},
 		{
-			"id": "97adfb65-58bf-4e1c-beeb-d9529c2d7f42",
+			"id": "305f80bb-7e60-4c1c-b891-fa54f6ab8236",
 			"key": "itemName",
 			"value": ""
 		},
 		{
-			"id": "f66e9e4e-a368-4bee-895f-31b93a235b5c",
+			"id": "b18ebf0c-3030-4808-a83e-d7ead415ed4a",
 			"key": "prev_mails",
 			"value": ""
 		},
 		{
-			"id": "f2aef158-231b-49fd-be50-ba22b440ce1b",
+			"id": "c76aa62a-af93-4fd9-82df-68a9f6480c17",
 			"key": "itemPrice",
 			"value": ""
 		}
