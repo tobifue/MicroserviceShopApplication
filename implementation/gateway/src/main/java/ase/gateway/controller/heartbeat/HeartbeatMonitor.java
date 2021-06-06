@@ -12,8 +12,8 @@ import ase.gateway.traffic.ServiceConnection;
 public final class HeartbeatMonitor {
 
 	private final Thread monitorThread;
-	private List<ServiceConnection> activeConnections = new ArrayList<>();
-	private List<HeartbeatStatus> heartbeats = new ArrayList<>();
+	public List<ServiceConnection> activeConnections = new ArrayList<>();
+	public static List<HeartbeatStatus> heartbeats = new ArrayList<>();
 
 	public HeartbeatMonitor() {
 		monitorThread = new Thread(() -> {
@@ -65,11 +65,11 @@ public final class HeartbeatMonitor {
 		return activeConnections;
 	}
 
-	private synchronized List<HeartbeatStatus> getHeartbeats() {
+	public static synchronized List<HeartbeatStatus> getHeartbeats() {
 		return heartbeats;
 	}
 
-	class HeartbeatStatus {
+	public class HeartbeatStatus {
 		private final ServiceConnection connection;
 		private final String status;
 
