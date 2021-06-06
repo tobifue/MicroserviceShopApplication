@@ -29,8 +29,6 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private RestTemplate restTemplate;
     /**
      * GET method endpoint to get profit by vendorID. Returns
      * json with plain double value.

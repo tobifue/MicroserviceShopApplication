@@ -32,6 +32,7 @@ class AccountServiceApplicationTests
 	 * with a list of items. The calculateProfit function is applied
 	 * to ensure the profit is calculated by the right amount and format.
 	 */
+
 	@Test
 	public void calculateProfitTest() {
 

@@ -34,7 +34,7 @@ import java.util.List;
 //@ContextConfiguration(classes = AccessControlApplication.class)
 @SpringBootTest
 public class InventoryIntegrationTest {
-/*
+
     @Autowired
     private InventoryRepository repository;
 
@@ -48,9 +48,9 @@ public class InventoryIntegrationTest {
     void getItemsTest() throws Exception {
 
         //why can i not save a new Item?
-        Item test = new Item(104L, 48.9, 30, 17, "Testitem", 3.5);
+        Item test = ItemFactory.createInstance(104L, 48.9, 31, 17, "Testitem", 3.5);
         repository.save(test);
-        System.out.println(repository.findByItemId(1L));
+        System.out.println(repository.findByItemId(2L));
 
 
         List<Item> testList = new ArrayList<Item>();
@@ -58,7 +58,7 @@ public class InventoryIntegrationTest {
         //Mockito.when(inventoryService.findAllItems()).thenReturn(testList);
         mockMvc.perform(MockMvcRequestBuilders.get("/inventory/1"))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().json("{\"itemId\":1,\"price\":48.9,\"vendorId\":30,\"quantity\":17,\"itemName\":\"Testitem\",\"priceRecommendation\":3.5}"));
+        .andExpect(MockMvcResultMatchers.content().json("{\"itemId\":104,\"price\":48.9,\"vendorId\":31,\"quantity\":17,\"itemName\":\"Testitem\",\"priceRecommendation\":3.5}"));
     }
-*/
+
 }
