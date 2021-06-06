@@ -1,3 +1,6 @@
+"use strict";
+exports.__esModule = true;
+var express_1 = require("express");
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
@@ -266,19 +269,16 @@ app.get('/Administrator', function (req, res, next) {
         res.redirect('/');
         return;
     }
-    res.render(__dirname + '/views/overviewAdmin.hbs', {
-        loggedIn: logedInId,
-        services: {
-            ratingService: "up",
-            inventoryService: "up",
-            cartService: "up",
-            priceadjustmentService: "down",
-            notificationService: "up",
-            markedProductService: "up",
-            checkoutService: "up",
-            historyService: "up",
-            shipmentService: "up"
-        }
+    var generateServiceStatus = http.get("http://" + gatewayIp + ":8080/heartbeat/get", function (response) {
+        var heartbeat = "";
+        response.on('data', function (chunk) { heartbeat += chunk; });
+        response.on('end', function () {
+            var heartInfo = express_1.json.parse(heartbeat);
+            res.render(__dirname + '/views/overviewAdmin.hbs', {
+                loggedIn: logedInId,
+                services: heartInfo
+            });
+        });
     });
 });
 app.post('/login', function (req, res) {
