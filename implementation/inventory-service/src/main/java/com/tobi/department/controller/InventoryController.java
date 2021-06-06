@@ -158,8 +158,9 @@ public class InventoryController {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
         String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
+        System.out.print(entity);
         ResponseEntity<String> response = restTemplate.postForEntity(gatewayIp + "/markedproduct/update", entity, String.class);
-
+        System.out.print(response);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
 
