@@ -51,11 +51,11 @@ public class CheckoutController {
                 //get User mail
                 System.out.println(user); // display usernames
                 System.out.println(item.get("itemId"));
-                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/", item.get("itemId")), item);
+                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/%s", item.get("itemId")), item);
                 NetworkUtil.httpPost(gatewayIp, "history/add", item);
                 item.put("email", jsonUserObject.getString("email"));
                 System.out.println(item); // display usernames
-                NetworkUtil.httpPost(gatewayIp, String.format("shipment/add", costumerId), item);
+                NetworkUtil.httpPost(gatewayIp,"shipment/add", item);
             }
             System.out.println("cart: " + cart);
         } catch (RestClientException e) {

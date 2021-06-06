@@ -310,7 +310,7 @@ app.get('/Administrator', function (req, res, next) {
         let heartbeat: string = "";
         response.on('data', function (chunk) { heartbeat += chunk });
         response.on('end', function () {
-            let heartInfo = json.parse(heartbeat);
+            let heartInfo = JSON.parse(heartbeat);
             res.render(__dirname + '/views/overviewAdmin.hbs', {
                 loggedIn: logedInId,
                 services: heartInfo

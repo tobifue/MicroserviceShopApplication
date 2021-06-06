@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-var express_1 = require("express");
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
@@ -273,7 +272,7 @@ app.get('/Administrator', function (req, res, next) {
         var heartbeat = "";
         response.on('data', function (chunk) { heartbeat += chunk; });
         response.on('end', function () {
-            var heartInfo = express_1.json.parse(heartbeat);
+            var heartInfo = JSON.parse(heartbeat);
             res.render(__dirname + '/views/overviewAdmin.hbs', {
                 loggedIn: logedInId,
                 services: heartInfo
