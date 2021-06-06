@@ -1,5 +1,7 @@
 package ase.priceadjustment;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import ase.priceadjustment.scraper.PriceScraper;
 
 @RestController
@@ -35,9 +35,10 @@ public class PriceadjustmentApplication {
 	@Value("${server.port}")
 	private String port;
 
-	@PostMapping(path = "/recommend", consumes = "text/plain", produces = "text/plain")
-	public String addTransaction(@RequestBody String item) {
-		return scraper.scrape(item);
+	@PostMapping(path = "/recommend", consumes = "application/json", produces = "application/json")
+	@ResponseBody
+	public String addTransaction(@RequestBody Map<String, Object> recommend) {
+		return scraper.scrape(recommend);
 	}
 
 	@RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -47,7 +48,7 @@ public class PriceadjustmentApplication {
 	}
 
 	@RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
-	private void registerWithGateway() {
+	private boolean registerWithGateway() {
 		try {
 			Map<String, Object> registrationDetails = new HashMap<>();
 			registrationDetails.put("endpoints", new ArrayList<String>() {
@@ -58,24 +59,34 @@ public class PriceadjustmentApplication {
 
 				}
 			});
-			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress()+":" + port;
-			String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
-
+			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
 			registrationDetails.put("category", "pricecrawler");
 			registrationDetails.put("ip", thisAdr);
-			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
-					registrationDetails, String.class);
-			System.out.println("Successfully registered with gateway!");
+			String gatewayIp = "http://"
+					+ (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"), registrationDetails,
+					String.class);
+			return true;
 		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
+			return false;
 		}
 	}
 
 	@Bean
-	public CommandLineRunner initialize() {
+	public CommandLineRunner loadRepository() {
 		return (args) -> {
 			this.scraper = new PriceScraper();
-			registerWithGateway();
+			new Thread(() -> {
+				while (!registerWithGateway()) {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		};
 	}
 

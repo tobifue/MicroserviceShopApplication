@@ -9,13 +9,13 @@ import net.minidev.json.JSONArray;
 public class TransactionHistory {
 
 	public enum IdType {
-		BUYER, SELLER;
+		VENDOR, CUSTOMER;
 
 		public static IdType parse(String input) throws InvalidParameterException {
-			if (input.equals("buyer"))
-				return BUYER;
-			else if (input.equals("seller"))
-				return SELLER;
+			if (input.equals("vendor"))
+				return VENDOR;
+			else if (input.equals("customer"))
+				return CUSTOMER;
 			else
 				throw new InvalidParameterException("Input: " + input + "is not a valid IdType!");
 		}
@@ -50,9 +50,9 @@ public class TransactionHistory {
 				}
 			} else {
 				// specific type
-				if (type == IdType.BUYER && customerId != null && customerId.equals(userId)) {
+				if (type == IdType.CUSTOMER && customerId != null && customerId.equals(userId)) {
 					result.add(tx);
-				} else if (type == IdType.SELLER && vendorId != null && vendorId.equals(userId)) {
+				} else if (type == IdType.VENDOR && vendorId != null && vendorId.equals(userId)) {
 					result.add(tx);
 				}
 			}
