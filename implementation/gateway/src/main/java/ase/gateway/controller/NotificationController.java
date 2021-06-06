@@ -67,6 +67,18 @@ public class NotificationController {
 		}
 	}
 
+	@RequestMapping(value = "/sentMails", method = RequestMethod.GET)
+	@ResponseBody
+	public String getMailsSent() {
+		try {
+			return TrafficController
+					.sendMessageToSingleRecipient(Message.createInstance(null, "notification", "/sentMails", "GET"));
+		} catch (RestClientException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
 	/**
 	 * @param transaction in format { "buyerId" : "1", "itemId": "2", "price": "10",
 	 *                    "itemTitle": "item1" }
