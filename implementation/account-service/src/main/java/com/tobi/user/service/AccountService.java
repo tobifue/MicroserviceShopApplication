@@ -35,7 +35,7 @@ public class AccountService {
         String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
         ResponseEntity<List<Item>> responseEntity =
-                restTemplate.exchange(gatewayIp+"/history/generate/seller/" +id,
+                restTemplate.exchange(gatewayIp+"/history/generate/vendor/" +id,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Item>>() {
                         });
         List<Item> listOfItems = responseEntity.getBody();
