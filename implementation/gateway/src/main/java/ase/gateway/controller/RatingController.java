@@ -19,20 +19,20 @@ public class RatingController {
 
 	// private static final String serviceName = "rating";
 
-	@RequestMapping(value = "/getRating/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRating/{itemName}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getRating(@PathVariable Long itemId) {
+	public String getRating(@PathVariable String itemName) {
 		try {
 			return TrafficController.sendMessageToSingleRecipient(
-					Message.createInstance(null, "rating", String.format("/getRating/%s", itemId), "GET"));
+					Message.createInstance(null, "rating", String.format("/getRating/%s", itemName), "GET"));
 		} catch (RestClientException e) {
 			return e.getMessage();
 		}
 	}
 
 	/**
-	 * @param rating in format { "buyerId": 3, "itemId" : "1", "itemTitle": "Item2",
-	 *               "rating": "2"}
+	 * @param rating in format { "customerId": 3, "itemTitle": "Item2", "rating":
+	 *               "2"}
 	 * @return the transaction
 	 */
 

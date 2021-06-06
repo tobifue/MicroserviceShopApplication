@@ -13,25 +13,22 @@ public class Rating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rtnId;
-	private Long customerid;
-	private Long itemId;
+	private Long customerId;
 	private String itemName;
 	private double rating;
 
 	public Rating() {
 	}
 
-	public Rating(Long customerid, Long itemId, String itemName, double rating) {
-		this.customerid = customerid;
-		this.itemId = itemId;
+	public Rating(Long customerId, Long itemId, String itemName, double rating) {
+		this.customerId = customerId;
 		this.itemName = itemName;
 		this.rating = rating;
 	};
 
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
-		j.put("customerid", customerid);
-		j.put("itemId", itemId);
+		j.put("customerId", customerId);
 		j.put("itemName", itemName);
 		j.put("rating", rating);
 		return j;
@@ -40,11 +37,9 @@ public class Rating {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[itemId: " + itemId);
-		sb.append("; itemName: " + itemName);
 		sb.append("[rtnID: " + rtnId);
-		sb.append("; ItemName: " + itemName);
-		sb.append("; itemId: " + itemId);
+		sb.append("; customerId: " + customerId);
+		sb.append("; itemName: " + itemName);
 		sb.append("; Rating: " + rating);
 		sb.append("]");
 		return sb.toString();
@@ -54,12 +49,8 @@ public class Rating {
 		return rtnId;
 	}
 
-	public Long getItemId() {
-		return itemId;
-	}
-
-	public Long getcustomerid() {
-		return customerid;
+	public Long getcustomerId() {
+		return customerId;
 	}
 
 	public double getRating() {

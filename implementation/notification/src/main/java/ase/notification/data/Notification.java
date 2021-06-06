@@ -14,7 +14,6 @@ public class Notification {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long nid;
 	private Long customerid;
-	private Long itemId;
 	private String itemName;
 	private double price;
 	private double newPrice;
@@ -26,9 +25,8 @@ public class Notification {
 	public Notification() {
 	}
 
-	public Notification(Long customerid, Long itemId, double price, String itemName, String email) {
+	public Notification(Long customerid, double price, String itemName, String email) {
 		this.customerid = customerid;
-		this.itemId = itemId;
 		this.itemName = itemName;
 		this.price = price;
 		this.email = email;
@@ -38,7 +36,6 @@ public class Notification {
 	public JSONObject toJsonObject() {
 		JSONObject j = new JSONObject();
 		j.put("customerid", customerid);
-		j.put("itemId", itemId);
 		j.put("price", price);
 		j.put("itemName", itemName);
 		j.put("email", email);
@@ -49,7 +46,6 @@ public class Notification {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("customer: " + customerid);
-		sb.append("; Item: " + itemId);
 		sb.append("; itemName: " + itemName);
 		sb.append("; price: " + price);
 		sb.append("; email " + email);
@@ -63,10 +59,6 @@ public class Notification {
 
 	public Long getCustomerId() {
 		return customerid;
-	}
-
-	public Long getItemId() {
-		return itemId;
 	}
 
 	public double getNewPrice() {

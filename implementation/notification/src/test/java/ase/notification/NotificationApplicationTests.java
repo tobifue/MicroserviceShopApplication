@@ -42,7 +42,7 @@ public class NotificationApplicationTests {
 	@BeforeEach
 	public void initialize() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(context).build();
-		notification = new Notification(1L, 1L, 4, "test", "a01528726@unet.univie.ac.at");
+		notification = new Notification(1L, 4, "test", "a01528726@unet.univie.ac.at");
 	}
 
 	@Test

@@ -45,10 +45,10 @@ public class RatingApplication {
 	@Value("${server.port}")
 	private String port;
 
-	@RequestMapping(value = "/getRating/{itemId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRating/{itemName}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getRating(@PathVariable Long itemId) {
-		return RatingService.getRating(repository, itemId);
+	public String getRating(@PathVariable String itemName) {
+		return RatingService.getRating(repository, itemName);
 	}
 
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
