@@ -11,7 +11,7 @@ const http = require('http');
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.engine('.hbs', expressHbs({ defaultLayout: 'layout',  extname: '.hbs' }));
+app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,11 +55,11 @@ class Item {
 }
 
 class rating {
-    customerId: string;
+    customerId: number;
     itemId: number;
     itemName: string;
     rating: number;
-    constructor(customerId: string, itemId: number, itemName: string, rating: number) {
+    constructor(customerId: number, itemId: number, itemName: string, rating: number) {
         this.customerId = customerId;
         this.itemId = itemId;
         this.itemName = itemName;
@@ -166,24 +166,26 @@ app.post('/changeItem', function (req, res, next) {
 
 
 app.post('/recom', function (req, res, next) {
-    console.log("body"+ req.body);
-    let httpo = new HttpOption("/pricecrawler/recommend");
+    console.log("body" + req.body);
+    //let httpo = new HttpOption("/pricecrawler/recommend");
+    let httpo = new HttpOption("/recommend");
     httpo.port = 8091;
     httpo.headers = { "Content-Type": 'text/plain' };
-            let httpreq = http.request(httpo, function (response) {
-                let newPrice: string = "";
-                response.on('data', function (chunk) { newPrice += chunk });
-                response.on('end', function () {
-                    console.log("newPrice: " + newPrice);
-                    res.redirect('/vendor');
-                })
-            }).on("error", (err) => {
-                console.log(err);
-                res.redirect('/vendor');
-            });
+    let httpreq = http.request(httpo, function (response) {
+        let newPrice: string = "";
+        response.on('data', function (chunk) { newPrice += chunk });
+        response.on('end', function () {
+            console.log("newPrice: " + newPrice);
+            res.setHeader('content-type', 'text/plain');
+            res.status(200).send(newPrice);
+        })
+    }).on("error", (err) => {
+        console.log(err);
+        res.redirect('/vendor');
+    });
 
-            httpreq.write(req.body.id);
-            httpreq.end();
+    httpreq.write(req.body.id);
+    httpreq.end();
 })
 
 
@@ -199,7 +201,8 @@ app.get('/customer', function (req, res, next) {
                 let history: string = "";
                 response.on('data', function (chunk) { history += chunk });
                 response.on('end', function () {
-                    res.render(__dirname + '/views/overviewCustomer.hbs', { loggedIn: logedInId, buyedItems: [new Item(99, "TestItem", 24, 70, 1, 65)], items: JSON.parse(items) });
+                    console.log(history)
+                    res.render(__dirname + '/views/overviewCustomer.hbs', { loggedIn: logedInId, buyedItems: JSON.parse(history), items: JSON.parse(items) });
                 })
             })
         })
@@ -242,7 +245,8 @@ app.post('/markProduct', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    httpreq.write(JSON.stringify({ vendorId: req.body.vendorId, costumerId: "1", price: req.body.price, email: email, itemName: req.body.itemName }));
+    console.log({ itemId: req.body.itemId, vendorId: req.body.vendorId, customerId: logedInId, price: req.body.price, email: email, itemName: req.body.itemName });
+    httpreq.write(JSON.stringify({ itemid: req.body.itemId, vendorId: req.body.vendorId, customerId: logedInId, price: req.body.price, email: email, itemName: req.body.itemName }));
     httpreq.end();
 });
 
@@ -284,7 +288,7 @@ app.post('/deleteItem', function (req, res, next) {
 
 app.post('/rateItem', function (req, res, next) {
     if (logedInId <= 0) { res.redirect('/'); return; }
-
+    console.log("rating body " + JSON.stringify(req.body))
     let httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
@@ -293,8 +297,8 @@ app.post('/rateItem', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    console.log("rating item" + JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)))
-    httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
+    console.log("rating item" + JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)))
+    httpreq.write(JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
 });
 

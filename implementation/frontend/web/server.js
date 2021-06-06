@@ -128,7 +128,8 @@ app.post('/changeItem', function (req, res, next) {
 });
 app.post('/recom', function (req, res, next) {
     console.log("body" + req.body);
-    var httpo = new HttpOption("/pricecrawler/recommend");
+    //let httpo = new HttpOption("/pricecrawler/recommend");
+    var httpo = new HttpOption("/recommend");
     httpo.port = 8091;
     httpo.headers = { "Content-Type": 'text/plain' };
     var httpreq = http.request(httpo, function (response) {
@@ -136,7 +137,8 @@ app.post('/recom', function (req, res, next) {
         response.on('data', function (chunk) { newPrice += chunk; });
         response.on('end', function () {
             console.log("newPrice: " + newPrice);
-            res.redirect('/vendor');
+            res.setHeader('content-type', 'text/plain');
+            res.status(200).send(newPrice);
         });
     }).on("error", function (err) {
         console.log(err);
@@ -158,7 +160,8 @@ app.get('/customer', function (req, res, next) {
                 var history = "";
                 response.on('data', function (chunk) { history += chunk; });
                 response.on('end', function () {
-                    res.render(__dirname + '/views/overviewCustomer.hbs', { loggedIn: logedInId, buyedItems: [new Item(99, "TestItem", 24, 70, 1, 65)], items: JSON.parse(items) });
+                    console.log(history);
+                    res.render(__dirname + '/views/overviewCustomer.hbs', { loggedIn: logedInId, buyedItems: JSON.parse(history), items: JSON.parse(items) });
                 });
             });
         });
@@ -200,7 +203,8 @@ app.post('/markProduct', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    httpreq.write(JSON.stringify({ vendorId: req.body.vendorId, costumerId: "1", price: req.body.price, email: email, itemName: req.body.itemName }));
+    console.log({ itemId: req.body.itemId, vendorId: req.body.vendorId, customerId: logedInId, price: req.body.price, email: email, itemName: req.body.itemName });
+    httpreq.write(JSON.stringify({ itemid: req.body.itemId, vendorId: req.body.vendorId, customerId: logedInId, price: req.body.price, email: email, itemName: req.body.itemName }));
     httpreq.end();
 });
 app.post('/checkout', function (req, res, next) {
@@ -244,6 +248,7 @@ app.post('/rateItem', function (req, res, next) {
         res.redirect('/');
         return;
     }
+    console.log("rating body " + JSON.stringify(req.body));
     var httpreq = http.request(new HttpOption("/rating/add"), function (response) {
         response.on('end', function () {
             res.redirect('/customer');
@@ -252,8 +257,8 @@ app.post('/rateItem', function (req, res, next) {
         console.log(err);
         res.redirect('/customer');
     });
-    console.log("rating item" + JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
-    httpreq.write(JSON.stringify(new rating("1", req.body.itemId, req.body.itemName, req.body.rate)));
+    console.log("rating item" + JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)));
+    httpreq.write(JSON.stringify(new rating(logedInId, req.body.itemId, req.body.itemName, req.body.rate)));
     httpreq.end();
 });
 app.get('/Administrator', function (req, res, next) {

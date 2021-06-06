@@ -68,12 +68,12 @@
               <input type="submit" value="Submit">
           </form>
           <td>
-            <button id="button_1" value={{ this.itemName }} name="but1">button 1</button>
+            <button id="button_1" value={{ this.itemName }} name="but1">search (5sec)</button>
             <a id={{ this.itemName }}></a>
           </td>
           <td>
+          <a id={{ this.itemName}}></a> 
             <form action="/deleteItem" method="post">
-              <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
               <input type="hidden" id="itemName" name="itemName" value={{ this.itemName}}>
               <input type="submit" value="delete">
             </form>
