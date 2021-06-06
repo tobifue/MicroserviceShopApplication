@@ -11,17 +11,14 @@ import org.jsoup.select.Elements;
 
 public class PriceScraper {
 
-//	public double scrape(String item) {
-//		// TODO actual implementation
-//		return new Random().nextDouble() * 100;
-//	}
-
 	public static final String WEBSITE = "https://www.shoepping.at";
 
 	public Map<String, String> items;
 
-	public String scrape(String item) {
+	public String scrape(Map<String, Object> recommend) {
 		items = new HashMap<>();
+
+		String item = (String) recommend.get("itemName");
 
 		scanItems();
 		return findPriceForName(item);
@@ -38,19 +35,13 @@ public class PriceScraper {
 		}
 
 		Elements elements = document.getElementsByClass("js-param-aware");
-		// Elements elements = document.getElementsByAttribute("href");
 
 		for (Element element : elements) {
 			String link = element.attributes().get("href");
 
-			// findName(link);
-
 			findPrice(link);
 
-			// printItems();
 		}
-
-		// findPriceForName("P40 lite");
 
 	}
 
@@ -72,58 +63,19 @@ public class PriceScraper {
 			for (Element element2 : elements2) {
 				items.put(element2.text(), element.text());
 			}
-			// System.out.println(element.text());
-		}
-
-	}
-
-	private void findName(String link) {
-
-		Document document;
-
-		try {
-			document = Jsoup.connect(WEBSITE + link).get();
-		} catch (IOException ignored) {
-			System.out.println("Cannot find name for " + link);
-			return;
-		}
-
-		Elements elements = document.getElementsByClass("text").eq(0);
-
-		for (Element element : elements) {
-			// items.put(link, element.text());
-			System.out.println(element.text());
 
 		}
+
 	}
 
 	private String findPriceForName(String item) {
 
 		for (String key : items.keySet()) {
 			if (key.contains(item)) {
-				return items.get(key).toString();
+				return String.format(items.get(key).toString());
 			}
 		}
-		return "Couldn't find price recommendation, try another name!";
-
-//		if (items.get(name) != null) {
-//			return items.get(name).toString();
-//		} else {
-//			return "Couldn't find price recommendation, try another name!";
-//		}
-
-	}
-
-	private void printItems() {
-		for (Map.Entry<String, String> entry : items.entrySet()) {
-			String link = entry.getKey();
-			String price = entry.getValue();
-
-			System.out.println("Name: " + link);
-			System.out.println("Price: " + price);
-
-		}
-
+		return String.format("Couldn't find price recommendation, try another name!");
 	}
 
 }
