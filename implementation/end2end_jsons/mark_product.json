@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "df62082f-077b-4d62-9a17-0bb047f926cc",
+		"name": "Mark product",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Set itemId, itemName and itemPrice\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.collectionVariables.set(\"itemId\",responseJson.itemId);",
+							"    pm.collectionVariables.set(\"itemName\",responseJson.itemName);",
+							"    pm.collectionVariables.set(\"itemPrice\",responseJson.price);",
+							"});",
+							"",
+							"pm.test(\"Format proves correct\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.itemId).to.be.a('number');",
+							"    pm.expect(responseJson.price).to.be.a('number');",
+							"    pm.expect(responseJson.vendorId).to.be.a('number');",
+							"    pm.expect(responseJson.quantity).to.be.a('number');",
+							"    pm.expect(responseJson.itemName).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Set itemId, itemName and itemPrice\", () => {",
+							"    pm.collectionVariables.set(\"itemName\",\"Smartphone Integration Test \" + Math.floor(Math.random() * 1000).toString());",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customerId\":2, \n    \"quantity\":10,\n    \"vendorId\":3, \n    \"price\":23.7, \n    \"email\": \"tobiasfuehles@aol.com\", \n    \"itemName\":\"{{itemName}}\",\n    \"priceRecommendation\":22\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/inventory/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mark product",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Check if itemName is set\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"itemName\")).not.to.be.null;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Product marked in correct format\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.be.a('number');",
+							"    pm.expect(responseJson.customerId).to.be.a('number');",
+							"    pm.expect(responseJson.vendorId).to.be.a('number');",
+							"    pm.expect(responseJson.price).to.be.a('number');",
+							"    pm.expect(responseJson.email).to.be.a('string');",
+							"    pm.expect(responseJson.itemName).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customerId\":2, \n    \"vendorId\":3, \n    \"price\":23.7, \n    \"email\": \"tobiasfuehles@aol.com\", \n    \"itemName\": \"{{itemName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/markedproduct/mark/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"markedproduct",
+						"mark",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check prev mails sent\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.collectionVariables.set(\"prev_mails\", responseJson);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notification/sentMails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notification",
+						"sentMails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Format proves correct\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.itemId).to.be.a('number');",
+							"    pm.expect(responseJson.price).to.be.a('number');",
+							"    pm.expect(responseJson.vendorId).to.be.a('number');",
+							"    pm.expect(responseJson.quantity).to.be.a('number');",
+							"    pm.expect(responseJson.itemName).to.be.a('string');",
+							"});",
+							"",
+							"pm.test(\"Check if price is updated\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.price).to.be.below(pm.collectionVariables.get(\"itemPrice\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\":9}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/inventory/update/{{itemId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory",
+						"update",
+						"{{itemId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check mail sent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check if mail is sent\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.equal((pm.collectionVariables.get(\"prev_mails\") +1));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notification/sentMails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notification",
+						"sentMails"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "a2086620-9ee7-47ab-bce0-2fc210dc187b",
+			"key": "itemId",
+			"value": ""
+		},
+		{
+			"id": "97adfb65-58bf-4e1c-beeb-d9529c2d7f42",
+			"key": "itemName",
+			"value": ""
+		},
+		{
+			"id": "f66e9e4e-a368-4bee-895f-31b93a235b5c",
+			"key": "prev_mails",
+			"value": ""
+		},
+		{
+			"id": "f2aef158-231b-49fd-be50-ba22b440ce1b",
+			"key": "itemPrice",
+			"value": ""
+		}
+	]
+}
