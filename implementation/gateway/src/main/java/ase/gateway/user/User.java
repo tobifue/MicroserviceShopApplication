@@ -12,12 +12,13 @@ import javax.persistence.Id;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long userId;
 	protected String email;
 
-	public User(String email){
+	public User(String email, Long userId){
 		this.email = email;
+		this.userId = userId;
 	}
 
 	protected User() {
