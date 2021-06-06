@@ -63,14 +63,13 @@ public class ShipmentController {
 	@ResponseBody
 	public String addTransaction(@RequestBody Map<String, Object> shipment) {
 		try {
-			return TrafficController
-					.sendMessageToSingleRecipient(Message.createInstance(shipment, "shipment", String.format("/add"), "POST"));
+			return TrafficController.sendMessageToSingleRecipient(
+					Message.createInstance(shipment, "shipment", String.format("/add"), "POST"));
 		} catch (RestClientException e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
-
 
 	@RequestMapping(value = "/start", method = RequestMethod.GET)
 	@ResponseBody

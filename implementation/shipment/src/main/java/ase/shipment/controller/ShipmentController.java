@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ase.shipment.data.Shipment;
+import ase.shipment.data.Shipment.ShippingStatus;
 import ase.shipment.data.ShipmentRepository;
 
 public class ShipmentController {
@@ -35,17 +36,28 @@ public class ShipmentController {
 
 	private void updateRandomShipment() {
 		List<Shipment> shipments = repository.findAll();
-		Shipment shipment = shipments.get(new Random().nextInt(shipments.size()));
-		System.out.println(shipment);
-		shipment.updateShippingStatus();
-		System.out.println("new status " + shipment.getShippingStatus());
-		// send notification
-		String gatewayIp = "http://localhost:8080";
-		String shippingStatus = shipment.getShippingStatus();
-		String itemName = shipment.getItemName();
-		String email = shipment.getEmail();
-		httpGet(gatewayIp, String.format("/notification/shipping/%s/%s/%s", itemName, shippingStatus, email));
-
+		if (shipments.size() > 0) {
+			Shipment shipment = shipments.get(new Random().nextInt(shipments.size()));
+			System.out.println(shipment);
+			shipment.updateShippingStatus();
+			repository.delete(shipment);
+			if (!shipment.getShippingStatus().equals(ShippingStatus.DELIVERED.getTitle())) {
+				repository.save(shipment);
+			}
+			System.out.println("new status " + shipment.getShippingStatus());
+			// send notification
+			try {
+				String gatewayIp = "http://localhost:8080";
+				String shippingStatus = shipment.getShippingStatus();
+				String itemName = shipment.getItemName();
+				String email = shipment.getEmail();
+				httpGet(gatewayIp, String.format("/notification/shipping/%s/%s/%s", itemName, shippingStatus, email));
+			} catch (Exception e) {
+				System.err.println("Could not reach notificationservice, shipment updated nevertheless");
+			}
+		} else {
+			System.out.println("No current shipments outstanding");
+		}
 	}
 
 	public void updateShipment(Shipment shipment) {

@@ -92,6 +92,8 @@ public class ShipmentApplication {
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Shipment addTransaction(@RequestBody Shipment shipment) {
+		// start dispatching the shipment
+		controller.start();
 		return repository.save(shipment);
 	}
 
@@ -131,13 +133,14 @@ public class ShipmentApplication {
 					add("/add");
 				}
 			});
-			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() + ":"+ port;
-			String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+			String thisAdr = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port;
+			String gatewayIp = "http://"
+					+ (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 
 			registrationDetails.put("category", "shipment");
 			registrationDetails.put("ip", thisAdr);
-			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"),
-					registrationDetails, String.class);
+			new RestTemplate().postForObject(String.format("%s/%s", gatewayIp, "/register/new"), registrationDetails,
+					String.class);
 			return true;
 		} catch (RestClientException | UnknownHostException e) {
 			System.err.println("Failed to connect to Gateway, please register manually or restart application");
