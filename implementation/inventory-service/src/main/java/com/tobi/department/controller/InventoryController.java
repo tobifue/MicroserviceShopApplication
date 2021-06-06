@@ -10,33 +10,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+/**
+ * Controller class for inventory service.
+ */
 @RestController
 public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
 
-    //create Item
+    /**
+     * Saves an Item sent in body via Repository to database.
+     * @param inventory of type Item
+     * @return jsonified created Item
+     */
     @SneakyThrows
     @PostMapping(path ="/", consumes = "application/json", produces = "application/json")
     public String saveItem(@RequestBody Item inventory){
 
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
+        if(inventory.getVendorId()==null || inventory.getItemName()==null || inventory.getQuantity()==null || inventory.getPrice()==null){
+            return "Not all input is set! Check for: vendorId, itemName, quantity and price!";
+        }
+        else {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
 
-        return json;
+            return json;
+        }
     }
 
     //get Item

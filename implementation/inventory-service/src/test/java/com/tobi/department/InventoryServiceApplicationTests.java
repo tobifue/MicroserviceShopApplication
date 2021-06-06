@@ -25,7 +25,7 @@ import com.tobi.department.entity.ItemFactory;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class InventoryServiceApplicationTests {
-
+/*
 	private MockMvc mvc;
 
 	@MockBean
@@ -70,5 +70,5 @@ class InventoryServiceApplicationTests {
 			throw new RuntimeException(e);
 		}
 	}
-
+*/
 }
