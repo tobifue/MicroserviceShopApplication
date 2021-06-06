@@ -2,6 +2,8 @@ package ase.priceadjustment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +41,10 @@ public class PriceScraperTest {
 	@Test
 	@DisplayName("Crawl for price of an iPhone 12 mini")
 	public void scrapeForPrice() throws Exception {
-		String response = scraper.scrape("iPhone 12 mini"); // Act
+
+		Map<String, Object> recommend = null;
+		recommend.put("itemName", "iPhone 12 mini");
+		String response = scraper.scrape(recommend); // Act
 
 		assertEquals(new String("EUR 751,06"), response); // Assert
 
