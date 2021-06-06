@@ -37,6 +37,7 @@ public class CheckoutController {
         try {
             JSONObject jsonObject = new JSONObject(cart);
             JSONObject jsonUserObject = new JSONObject(user);
+
             JSONArray jsonArray = jsonObject.getJSONArray("list");
             System.out.println(jsonArray); // display usernames
             System.out.println(jsonUserObject.getString("email")); // display usernames
@@ -45,13 +46,30 @@ public class CheckoutController {
             for (int i = 0; i < jsonArray.length(); i++) {
                 Map<String, Object> item = new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), HashMap.class);
 
+                System.out.println("is here"); // display usernames
+
                 item.put("customerId", costumerId.toString());
                 //item.put("vendorId", "2");
+                int bought_volume = (Integer) item.get("quantity");
+                String prev_quantity = NetworkUtil.httpGet(gatewayIp, String.format("/inventory/%s", item.get("itemId")));
+                System.out.println("now here"); // display usernames
 
+                JSONObject jsonItemsObject = new JSONObject(prev_quantity);
+
+                //substract bought volume from quantity
+                item.put("quantity", Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_volume);
+
+                if(Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_volume < 1){
+                    System.out.println("here"); // display usernames
+
+                    NetworkUtil.httpPost(gatewayIp, String.format("inventory/delete/%s", item.get("itemId")), item);
+                }
+                else{
+                    NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/%s", item.get("itemId")), item);
+                }
                 //get User mail
-                System.out.println(user); // display usernames
-                System.out.println(item.get("itemId"));
-                NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/%s", item.get("itemId")), item);
+                System.out.println("usernames" + user); // display usernames
+                System.out.println("itemId" + item.get("itemId"));
                 NetworkUtil.httpPost(gatewayIp, "history/add", item);
                 item.put("email", jsonUserObject.getString("email"));
                 System.out.println(item); // display usernames
