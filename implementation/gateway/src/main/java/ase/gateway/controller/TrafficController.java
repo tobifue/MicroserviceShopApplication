@@ -1,9 +1,12 @@
 package ase.gateway.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +21,9 @@ import ase.gateway.util.NetworkUtil;
 @RequestMapping("register")
 public class TrafficController {
 
-	private static List<ServiceConnection> activeConnections = new ArrayList<>();
-	private static HeartbeatMonitor heartbeatMonitor = null;
-	// TODO buffer messages if passthrough fails
+	private static List<ServiceConnection> activeConnections = Collections
+			.synchronizedList(new ArrayList<ServiceConnection>());
+	private static Thread monitorThread;
 
 	/**
 	 * @param registration details in format { "endpoints" : ["/test",
@@ -42,15 +45,13 @@ public class TrafficController {
 			System.out.println(conn.getSubscribedEndpoints());
 			System.out.println(conn.getCategory());
 			System.out.println(conn.getIp());
-			if (heartbeatMonitor == null) {
-				heartbeatMonitor = new HeartbeatMonitor();
-			}
-			heartbeatMonitor.updateConnections(activeConnections);
+		}
+		if (!monitorThread.isAlive()) {
+			monitorThread.start();
 		}
 	}
 
 	public static String sendMessageToSingleRecipient(Message message) {
-		// TODO check if successful, if not buffer message and try again
 		return dispatch(getSubscribedConnections(message.getCategory(), message.getEndpoint()).get(0), message);
 	}
 
@@ -62,6 +63,10 @@ public class TrafficController {
 		case "GET":
 			return NetworkUtil.httpGet(connection.getIp(), message.getEndpoint());
 		}
+	}
+
+	public static List<ServiceConnection> getAllActiveConnections() {
+		return activeConnections;
 	}
 
 	public static List<ServiceConnection> getSubscribedConnections(String category, String endpoint) {
@@ -76,6 +81,22 @@ public class TrafficController {
 			}
 		}
 		return result;
+	}
+
+	@Bean
+	public CommandLineRunner injectMonitorThread() {
+		return (args) -> {
+			monitorThread = new Thread(() -> {
+				while (true) {
+					System.out.println(HeartbeatMonitor.printCurrentHeartbeatStatus(activeConnections));
+					try {
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		};
 	}
 
 }
