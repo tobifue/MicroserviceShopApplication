@@ -49,7 +49,13 @@ public class TrafficController {
 	}
 
 	public static String sendMessageToSingleRecipient(Message message) {
-		return dispatch(getSubscribedConnections(message.getCategory(), message.getEndpoint()).get(0), message);
+		try {
+			return dispatch(getSubscribedConnections(message.getCategory(), message.getEndpoint()).get(0), message);
+		} catch (Exception e) {
+			System.err.println("no recipients for category: " + message.getCategory());
+			System.err.println(e.getMessage());
+			return e.getMessage();
+		}
 	}
 
 	public static String dispatch(ServiceConnection connection, Message message) {
@@ -68,16 +74,21 @@ public class TrafficController {
 
 	public static List<ServiceConnection> getSubscribedConnections(String category, String endpoint) {
 		List<ServiceConnection> result = new ArrayList<ServiceConnection>();
-		for (ServiceConnection s : activeConnections) {
-			if (s.getCategory().equals(category)) {
-				for (String ep : s.getSubscribedEndpoints()) {
-					// this way the service can subscribe to endpoints that contain pathvariables
-					if (endpoint.contains(ep))
-						result.add(s);
+		try {
+			for (ServiceConnection s : activeConnections) {
+				if (s.getCategory().equals(category)) {
+					for (String ep : s.getSubscribedEndpoints()) {
+						// this way the service can subscribe to endpoints that contain pathvariables
+						if (endpoint.contains(ep))
+							result.add(s);
+					}
 				}
 			}
+			return result;
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			throw e;
 		}
-		return result;
 	}
 
 	@Bean
