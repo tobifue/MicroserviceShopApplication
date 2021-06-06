@@ -46,9 +46,6 @@ public class TrafficController {
 			System.out.println(conn.getCategory());
 			System.out.println(conn.getIp());
 		}
-		if (!monitorThread.isAlive()) {
-			monitorThread.start();
-		}
 	}
 
 	public static String sendMessageToSingleRecipient(Message message) {
