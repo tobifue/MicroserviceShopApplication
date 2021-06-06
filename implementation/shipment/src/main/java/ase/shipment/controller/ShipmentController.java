@@ -47,7 +47,8 @@ public class ShipmentController {
 			System.out.println("new status " + shipment.getShippingStatus());
 			// send notification
 			try {
-				String gatewayIp = "http://localhost:8080";
+				String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
+
 				String shippingStatus = shipment.getShippingStatus();
 				String itemName = shipment.getItemName();
 				String email = shipment.getEmail();
