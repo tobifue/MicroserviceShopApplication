@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -37,46 +36,65 @@ public class InventoryController {
     @SneakyThrows
     @PostMapping(path ="/", consumes = "application/json", produces = "application/json")
     public String saveItem(@RequestBody Item inventory){
-
-        if(inventory.getVendorId()==null || inventory.getItemName()==null || inventory.getQuantity()==null || inventory.getPrice()==null){
+    try {
+        if (inventory.getVendorId() == null || inventory.getItemName() == null || inventory.getQuantity() == null || inventory.getPrice() == null) {
             return "Not all input is set! Check for: vendorId, itemName, quantity and price!";
-        }
-        else {
+        } else {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(inventoryService.saveItem(inventory));
 
             return json;
         }
     }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
+    }
 
-    //get Item
+    /**
+     * Get Item by itemId.
+     * @param itemId of Item in Long format
+     * @return jsonified Item
+     */
     @SneakyThrows
     @GetMapping(path = "/{id}", produces = "application/json")
     public String findByItemId(@PathVariable("id")Long itemId){
-
+    try {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(inventoryService.findByItemId(itemId));
 
+        if (inventoryService.findByItemId(itemId) == null) throw new ItemNotFoundException("item with this id not found");
+
         return json;
     }
+    catch(ItemNotFoundException e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
+    }
 
-    //get List of all Items from Vendor
+    /**
+     * Get all items by vendorId.
+     * @param id of vendor in Long format
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/vendor/{id}")
     @GetMapping(produces = "application/json")
     public @ResponseBody String findAllObjects(@PathVariable("id")Integer id) {
 
+    try {
         List<Item> inventories = new ArrayList<Item>();
         List<Item> v_inventories = new ArrayList<Item>();
 
         inventories = inventoryService.findAllItems();
 
 
-        for(Item dep : inventories) {
-            if(dep.getVendorId()==id){
+        for (Item dep : inventories) {
+            if (dep.getVendorId() == id) {
                 v_inventories.add(dep);
-            }
-            else{
+            } else {
                 //nothing to do here
             }
         }
@@ -86,12 +104,21 @@ public class InventoryController {
 
         return json;
     }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
+    }
 
+    /**
+     * Get all stored Items
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/items/")
     @GetMapping(produces = "application/json")
     public @ResponseBody String findAllItems() throws JsonProcessingException {
-
+    try {
         List<Item> itemss = new ArrayList<Item>();
 
         itemss = inventoryService.findAllItems();
@@ -100,12 +127,21 @@ public class InventoryController {
 
         return json;
     }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
+    }
 
+    /**
+     * Get all stored Items
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/vendor")
     @GetMapping(consumes="application/json", produces ="application/json")
     public @ResponseBody String findAllObjects() {
-
+    try {
         List<Item> inventories = new ArrayList<Item>();
 
         inventories = inventoryService.findAllItems();
@@ -114,6 +150,11 @@ public class InventoryController {
         String json = ow.writeValueAsString(inventories);
 
         return json;
+    }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
     }
 
     @Bean
@@ -124,30 +165,35 @@ public class InventoryController {
     @Autowired
     private RestTemplate restTemplate;
 
-    //update Item
+    /**
+     * Update an item. Item is found by itemId
+     * and variables missing in the body are not changed.
+     * @param itemId of updated Item in Long format
+     * @param update_item body with to be updated Item variables
+     * @return jsonified updated Item
+     */
     @SneakyThrows
     @RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
     @PostMapping
-    public String update(@PathVariable("id") Long departmentId, @RequestBody Item update_item) throws JsonProcessingException {
-        Item inventory = inventoryService.findByItemId(departmentId);
+    public String update(@PathVariable("id") Long itemId, @RequestBody Item update_item) throws JsonProcessingException {
+    try {
+        Item inventory = inventoryService.findByItemId(itemId);
 
-        if(update_item.getVendorId()!=null) {
+        if (update_item.getVendorId() != null) {
             inventory.setVendorId(update_item.getVendorId());
         }
-        if(update_item.getQuantity()!=null) {
+        if (update_item.getQuantity() != null) {
             inventory.setQuantity(update_item.getQuantity());
         }
-        if(update_item.getItemName()!=null) {
+        if (update_item.getItemName() != null) {
             inventory.setItemName(update_item.getItemName());
         }
-        if(update_item.getPrice()!=null) {
+        if (update_item.getPrice() != null) {
             inventory.setPrice(update_item.getPrice());
         }
         //code
         HttpHeaders headers = new HttpHeaders();
-// set `content-type` header
         headers.setContentType(MediaType.APPLICATION_JSON);
-// set `accept` header
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         Map<String, Object> map = new HashMap<>();
@@ -166,19 +212,36 @@ public class InventoryController {
 
         return json;
     }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
+    }
 
-    //delete Item
+    /**
+     * Deletes an Item by id.
+     * @return success string message
+     */
     @RequestMapping(value = "/delete/{id}")
     @PostMapping
-    public String delete(@PathVariable("id") Long departmentId) {
-
-        inventoryService.deleteByItemId(departmentId);
+    public String delete(@PathVariable("id") Long itemId) {
+    try {
+        inventoryService.deleteByItemId(itemId);
         return "Delete successfull";
+    }
+    catch(Exception e){
+        e.printStackTrace();
+        return e.getMessage();
+    }
     }
 
     @Value("${server.port}")
     private String port;
 
+    /**
+     * Endpoint to register service with gateway service.
+     * Registration details (port, category) are set.
+     */
     @RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
     private boolean registerWithGateway() {
         try {
@@ -223,6 +286,9 @@ public class InventoryController {
         };
     }
 
+    /**
+     * Heartbeat endpoint to check service status.
+     */
     @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
     @ResponseBody
     public String heartbeat() {

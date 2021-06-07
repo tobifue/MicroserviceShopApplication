@@ -3,7 +3,7 @@
 
 stages:
   - cartTest
-  - dockerBuild
+  - dockerBuildAndTest
   - release
 
 
@@ -24,7 +24,7 @@ docker:
   image: docker:latest
   tags:
     - swa
-  stage: dockerBuild
+  stage: dockerBuildAndTest
   needs:
     - job: cart_testing
   services:

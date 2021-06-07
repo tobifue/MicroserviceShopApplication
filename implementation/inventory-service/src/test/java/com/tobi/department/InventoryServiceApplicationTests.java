@@ -2,13 +2,15 @@ package com.tobi.department;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tobi.department.entity.Item;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -17,15 +19,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.tobi.department.repository.InventoryRepository;
 import com.tobi.department.entity.ItemFactory;
 
+import javax.transaction.Transactional;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class InventoryServiceApplicationTests {
-/*
+
 	private MockMvc mvc;
 
 	@MockBean
@@ -36,10 +39,12 @@ class InventoryServiceApplicationTests {
 
 	private Item item;
 
-	@BeforeAll
-	public static void setup() {
-
-	}
+	@Transactional
+    @Test
+    public void testFactory() {
+        Item testItem = ItemFactory.createInstance(1L, 20.3, 13, 34, "test", 24.0);
+		Assert.assertNotNull(testItem);
+    }
 
 	@BeforeEach
 	public void initialize() {
@@ -70,5 +75,5 @@ class InventoryServiceApplicationTests {
 			throw new RuntimeException(e);
 		}
 	}
-*/
+
 }

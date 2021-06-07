@@ -1,17 +1,11 @@
 package com.tobi.department.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Entity
 @Data
@@ -90,31 +84,5 @@ public class Item{
         this.priceRecommendation = priceRecommendation;
     }
 
-/*
-    public Long get_departmentId() {
-        return departmentId;
-    }
-
-    public void set_departmentId(Long departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public Integer get_price() {
-        return price;
-    }
-
-    public void set_price(Integer price) {
-        this.price = price;
-    }
-
-    public Integer get_vendorId(){
-        return vendorId;
-    }
-
-    public void set_vendorId(Integer vendorId){
-        this.vendorId=vendorId;
-    }
-
- */
 }
 

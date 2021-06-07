@@ -58,6 +58,15 @@ public class NotificationApplication {
 			System.out.println(t);
 	}
 
+	@RequestMapping(value = "/sentMails", method = RequestMethod.GET)
+	public int numberSentMails() {
+
+		List<Notification> txs = repository.findAll();
+		System.out.println("Number of Mails sent: " +
+				txs.size());
+		return txs.size();
+	}
+
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public Notification addTransaction(@RequestBody Notification notification) {
@@ -81,6 +90,7 @@ public class NotificationApplication {
 	public void callPrice(@PathVariable String itemName, @PathVariable double price, @PathVariable double newPrice,
 			@PathVariable String email) {
 		Notification nt = NotificationService.checkPrice(itemName, repository, price, newPrice, email);
+		repository.save(nt);
 		try {
 			notificationService.sendEmail(nt);
 			System.out.println("Email sent successfully");
@@ -115,6 +125,7 @@ public class NotificationApplication {
 					add("/shipping");
 					add("/price");
 					add("/clearAll");
+					add("/sentMails");
 
 				}
 			});
