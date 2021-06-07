@@ -72,12 +72,7 @@ app.get('/vendor', function (req, res, next) {
                 var profit = "";
                 response.on('data', function (chunk) { profit += chunk; });
                 response.on("end", function () {
-                    if (items == null) {
-                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn: logedInId, items: [new Item(1, "Itemname: ToDO", 24, 70, 0, 65)], profit: "134,32" });
-                    }
-                    else {
-                        res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn: logedInId, items: JSON.parse(items), profit: profit || "134,32" });
-                    }
+                    res.render(__dirname + '/views/overviewVendor.hbs', { loggedIn: logedInId, items: JSON.parse(items), profit: profit });
                 });
             });
         });
