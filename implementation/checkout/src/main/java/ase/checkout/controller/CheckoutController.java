@@ -48,19 +48,18 @@ public class CheckoutController {
 
                 item.put("customerId", costumerId.toString());
                 //item.put("vendorId", "2");
-                int bought_quantity = (Integer) item.get("quantity");
+                int bought_quantity = Integer.parseInt(item.get("quantity").toString());
                 String prev_quantity = NetworkUtil.httpGet(gatewayIp, String.format("/inventory/%s", item.get("itemId")));
                 JSONObject jsonItemsObject = new JSONObject(prev_quantity);
-                int remain_quantity = Integer.parseInt(jsonItemsObject.getString("quantity"))-bought_quantity;
+                int remain_quantity = Integer.parseInt(jsonItemsObject.getString("quantity")) - bought_quantity;
 
                 //substract bought volume from quantity
                 item.put("quantity", remain_quantity);
 
                 //update item, if quantity is empty delete
-                if(remain_quantity < 1){
+                if (remain_quantity < 1) {
                     NetworkUtil.httpPost(gatewayIp, String.format("inventory/delete/%s", item.get("itemId")), item);
-                }
-                else{
+                } else {
                     NetworkUtil.httpPost(gatewayIp, String.format("inventory/update/%s", item.get("itemId")), item);
                 }
                 //get User mail
@@ -69,7 +68,7 @@ public class CheckoutController {
                 NetworkUtil.httpPost(gatewayIp, "history/add", item);
                 item.put("email", jsonUserObject.getString("email"));
                 System.out.println(item); // display usernames
-                NetworkUtil.httpPost(gatewayIp,"shipment/add", item);
+                NetworkUtil.httpPost(gatewayIp, "shipment/add", item);
             }
             System.out.println("cart: " + cart);
         } catch (RestClientException e) {
