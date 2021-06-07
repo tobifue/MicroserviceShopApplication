@@ -30,7 +30,7 @@ public class UpdateController {
 					System.out.println("old price: " + m.getPrice() + "; new price: " + updateMessage.get("price"));
 					result = String.format("price changed from %s to %s", m.getPrice(), updateMessage.get("price"));
 					// send notification
-					String gatewayIp = "http://localhost:8080";
+					String gatewayIp = "http://" + (System.getenv("GATEWAYIP") == null ? "localhost" : System.getenv("GATEWAYIP")) + ":8080";
 					String itemName = m.getItemName();
 					double oldPrice = m.getPrice();
 					double newPrice = Double.parseDouble((String) updateMessage.get("price"));
