@@ -18,8 +18,8 @@ import java.util.Date;
 public class Item {
 
     private Long txid;
-    private Long buyerId;
-    private Long sellerId;
+    private Long customerId;
+    private Long vendorId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;

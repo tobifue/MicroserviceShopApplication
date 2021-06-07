@@ -3,8 +3,12 @@ package com.tobi.department.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Custom ItemNotFoundException
+ */
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "item not found")
 public class ItemNotFoundException extends RuntimeException {
+
     private int errorCode;
     private String errorMessage;
 
@@ -43,8 +47,4 @@ public class ItemNotFoundException extends RuntimeException {
         return errorMessage;
     }
 
-    @Override
-    public String toString() {
-        return this.errorCode + " : " + this.getErrorMessage();
-    }
 }

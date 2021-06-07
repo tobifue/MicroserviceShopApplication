@@ -9,9 +9,16 @@ import com.tobi.department.repository.InventoryRepository;
 import net.minidev.json.JSONArray;
 import org.json.JSONException;
 
+/**
+ * Factory pattern for items.
+ */
 public class ItemFactory {
 
-    //ToDo should people be able to define itemId as they wish?
+    /**
+     * Creates Item.
+     * @param itemId,price,vendorId,quantity,itemName,priceRecommendation
+     * @return created Item
+     */
     public static Item createInstance(Long itemId, Double price, Integer vendorId, Integer quantity, String itemName, Double priceRecommendation) {
         if (itemId != 0) {
             return new Item(itemId, price, vendorId, quantity, itemName, priceRecommendation);

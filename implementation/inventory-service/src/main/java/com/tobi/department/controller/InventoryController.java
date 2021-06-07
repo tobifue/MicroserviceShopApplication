@@ -64,7 +64,7 @@ public class InventoryController {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(inventoryService.findByItemId(itemId));
 
-        if (inventoryService.findByItemId(itemId) == null) throw new ItemNotFoundException("item with this id not found");
+        if (inventoryService.findByItemId(itemId) == null) throw new ItemNotFoundException("item with id " + itemId + " not found");
 
         return json;
     }
