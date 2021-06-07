@@ -34,7 +34,7 @@
           <td>
             <form action="/markProduct" method="post">
               <input type="hidden" id="itemId" name="itemId" value={{ this.itemId }}>
-              <input type="hidden" id="itemName" name="itemName" value={{ this.itemName }}>
+              <input type="hidden" id="itemName" name="itemName" value="{{ this.itemName }}">
               <input type="hidden" id="vendorId" name="vendorId" value={{ this.vendorId }}>
               <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity }}>
               <input type="hidden" id="priceId" name="price" value={{ this.price }}>
@@ -48,7 +48,7 @@
             <td>
               <input style="width: 5em" type="number" id="newPiece" name="newPiece" max={{ this.quantity}} value=>
               <input type="hidden" id="itemId" name="itemId" value={{ this.itemId }}>
-              <input type="hidden" id="nameId" name="itemName" value={{ this.itemName}}>
+              <input type="hidden" id="nameId" name="itemName" value="{{ this.itemName}}">
               <input type="hidden" id="vendorId" name="vendorId" value={{ this.vendorId}}>
               <input type="hidden" id="quantityId" name="quantity" value={{ this.quantity}}>
               <input type="hidden" id="priceId" name="price" value={{ this.price }}>
@@ -84,7 +84,7 @@
             <td>
               <input style="width: 5em" type="number" id="rate" name="rate" max=5 value=>
               <input type="hidden" id="itemId" name="itemId" value={{ this.itemId}}>
-              <input type="hidden" id="itemName" name="itemName" value={{ this.itemname}}>
+              <input type="hidden" id="itemName" name="itemName" value="{{ this.itemname}}">
               <input type="submit" value="OK">
             </td>
           </form>

@@ -96,7 +96,7 @@ class HttpOption {
 
 
 app.get('/vendor', function (req, res, next) {
-    if (logedInId % 2 == 1) { res.redirect('/'); return; }
+    if (logedInId % 2 != 0) { res.redirect('/'); return; }
     const httpreqGetItems = http.get("http://" + gatewayIp + ":8080/inventory/vendor/" + logedInId, response => {
         let items: string = "";
         response.on('data', function (chunk) { items += chunk });
@@ -269,7 +269,6 @@ app.post('/checkout', function (req, res, next) {
 
 
 app.post('/deleteItem', function (req, res, next) {
-    if (logedInId % 2 == 1) { res.redirect('/'); return; }
     console.log("delete item " + req.body.itemId)
     let httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         let items = "";

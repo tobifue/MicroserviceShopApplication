@@ -59,7 +59,7 @@ var HttpOption = /** @class */ (function () {
     return HttpOption;
 }());
 app.get('/vendor', function (req, res, next) {
-    if (logedInId % 2 == 1) {
+    if (logedInId % 2 != 0) {
         res.redirect('/');
         return;
     }
@@ -226,10 +226,6 @@ app.post('/checkout', function (req, res, next) {
     });
 });
 app.post('/deleteItem', function (req, res, next) {
-    if (logedInId % 2 == 1) {
-        res.redirect('/');
-        return;
-    }
     console.log("delete item " + req.body.itemId);
     var httpreq = http.request(new HttpOption("/inventory/delete/" + req.body.itemId), function (response) {
         var items = "";
