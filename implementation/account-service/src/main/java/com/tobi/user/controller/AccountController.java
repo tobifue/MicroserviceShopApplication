@@ -54,7 +54,6 @@ public class AccountController {
     /**
      * Endpoint to register service with gateway service.
      * Registration details (port, category) are set.
-     * Here i am.
      */
     @RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
     private boolean registerWithGateway() {

@@ -14,9 +14,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.mvc.AbstractController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -54,10 +52,11 @@ public class InventoryController {
     }
     }
 
-    @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="No such Order")  // 404
-    public class OrderNotFoundException extends RuntimeException {
-    }
-    //get Item
+    /**
+     * Get Item by itemId.
+     * @param itemId of Item in Long format
+     * @return jsonified Item
+     */
     @SneakyThrows
     @GetMapping(path = "/{id}", produces = "application/json")
     public String findByItemId(@PathVariable("id")Long itemId){
@@ -75,7 +74,11 @@ public class InventoryController {
     }
     }
 
-    //get List of all Items from Vendor
+    /**
+     * Get all items by vendorId.
+     * @param id of vendor in Long format
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/vendor/{id}")
     @GetMapping(produces = "application/json")
@@ -107,6 +110,10 @@ public class InventoryController {
     }
     }
 
+    /**
+     * Get all stored Items
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/items/")
     @GetMapping(produces = "application/json")
@@ -126,6 +133,10 @@ public class InventoryController {
     }
     }
 
+    /**
+     * Get all stored Items
+     * @return jsonified List of Items
+     */
     @SneakyThrows
     @RequestMapping(value="/vendor")
     @GetMapping(consumes="application/json", produces ="application/json")
@@ -154,13 +165,19 @@ public class InventoryController {
     @Autowired
     private RestTemplate restTemplate;
 
-    //update Item
+    /**
+     * Update an item. Item is found by itemId
+     * and variables missing in the body are not changed.
+     * @param itemId of updated Item in Long format
+     * @param update_item body with to be updated Item variables
+     * @return jsonified updated Item
+     */
     @SneakyThrows
     @RequestMapping(value = "/update/{id}", consumes = "application/json", produces="application/json")
     @PostMapping
-    public String update(@PathVariable("id") Long departmentId, @RequestBody Item update_item) throws JsonProcessingException {
+    public String update(@PathVariable("id") Long itemId, @RequestBody Item update_item) throws JsonProcessingException {
     try {
-        Item inventory = inventoryService.findByItemId(departmentId);
+        Item inventory = inventoryService.findByItemId(itemId);
 
         if (update_item.getVendorId() != null) {
             inventory.setVendorId(update_item.getVendorId());
@@ -201,12 +218,15 @@ public class InventoryController {
     }
     }
 
-    //delete Item
+    /**
+     * Deletes an Item by id.
+     * @return success string message
+     */
     @RequestMapping(value = "/delete/{id}")
     @PostMapping
-    public String delete(@PathVariable("id") Long departmentId) {
+    public String delete(@PathVariable("id") Long itemId) {
     try {
-        inventoryService.deleteByItemId(departmentId);
+        inventoryService.deleteByItemId(itemId);
         return "Delete successfull";
     }
     catch(Exception e){
@@ -218,6 +238,10 @@ public class InventoryController {
     @Value("${server.port}")
     private String port;
 
+    /**
+     * Endpoint to register service with gateway service.
+     * Registration details (port, category) are set.
+     */
     @RequestMapping(value = "/registerWithGateway", method = RequestMethod.GET)
     private boolean registerWithGateway() {
         try {
@@ -262,6 +286,9 @@ public class InventoryController {
         };
     }
 
+    /**
+     * Heartbeat endpoint to check service status.
+     */
     @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
     @ResponseBody
     public String heartbeat() {
