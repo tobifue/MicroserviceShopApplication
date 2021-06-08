@@ -52,9 +52,13 @@ public class AccountService {
      */
     public Double calculateProfit(List<Item> transactionList){
         Double profit = 0.0;
+        Double price = 0.0;
+        Integer quantity = 0;
 
         for (Item it : transactionList){
-            profit += it.getPrice();
+            quantity = it.getQuantity();
+            price = it.getPrice();
+            profit += price*quantity;
         }
 
         return profit;

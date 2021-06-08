@@ -25,7 +25,7 @@ public class Item {
     private Date date;
     private double price;
     private String itemTitle;
-    private int count;
+    private int quantity;
 }
 
 
