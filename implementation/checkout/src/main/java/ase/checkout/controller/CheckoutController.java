@@ -53,6 +53,10 @@ public class CheckoutController {
                 JSONObject jsonItemsObject = new JSONObject(prev_quantity);
                 int remain_quantity = Integer.parseInt(jsonItemsObject.getString("quantity")) - bought_quantity;
 
+                NetworkUtil.httpPost(gatewayIp, "history/add", item);
+                item.put("email", jsonUserObject.getString("email"));
+                System.out.println(item); // display usernames
+                NetworkUtil.httpPost(gatewayIp, "shipment/add", item);
                 //substract bought volume from quantity
                 item.put("quantity", remain_quantity);
 
@@ -65,10 +69,6 @@ public class CheckoutController {
                 //get User mail
                 System.out.println("usernames" + user); // display usernames
                 System.out.println("itemId" + item.get("itemId"));
-                NetworkUtil.httpPost(gatewayIp, "history/add", item);
-                item.put("email", jsonUserObject.getString("email"));
-                System.out.println(item); // display usernames
-                NetworkUtil.httpPost(gatewayIp, "shipment/add", item);
             }
             System.out.println("cart: " + cart);
         } catch (RestClientException e) {
