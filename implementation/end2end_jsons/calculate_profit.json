@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "91d0f943-92bc-4a25-a7d7-aba9b949da15",
-		"name": "Calculate profit",
+		"_postman_id": "4542c938-56a3-4d85-aaf7-5b30400ecdc4",
+		"name": "Calculate profit Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -31,8 +31,9 @@
 							"    console.log(pm.variables.get(\"prev_profit\"));",
 							"});",
 							"",
-							"pm.test(\"price is set\", () => {",
+							"pm.test(\"price and quantity is set\", () => {",
 							"    pm.collectionVariables.set((\"price\"),12);",
+							"    pm.collectionVariables.set((\"quantity\"),5);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -101,7 +102,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"price\": {{price}},\n    \"vendorId\":{{vendorId}},\n    \"quantity\": \"5\",\n    \"itemName\" : \"Emporia Smart 4\",\n    \"priceRecommendation\" : \"1\",\n    \"customerId\":\"2\"\n}",
+					"raw": "{\n    \"price\": {{price}},\n    \"vendorId\":{{vendorId}},\n    \"quantity\": {{quantity}},\n    \"itemName\" : \"Emporia Smart 4\",\n    \"priceRecommendation\" : \"1\",\n    \"customerId\":\"2\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -132,7 +133,9 @@
 						"exec": [
 							"pm.test(\"Correct profit calculated\", () => {",
 							"  const responseJson = pm.response.json();",
-							"  pm.expect(responseJson).to.eql(pm.collectionVariables.get(\"price\")+pm.collectionVariables.get(\"prev_profit\"));",
+							"  pm.expect(responseJson).to.eql((pm.collectionVariables.get(\"price\")*",
+							"  pm.collectionVariables.get(\"quantity\"))+pm.collectionVariables.get(\"prev_profit\"));",
+							"  console.log()",
 							"});"
 						],
 						"type": "text/javascript"
@@ -189,23 +192,28 @@
 	],
 	"variable": [
 		{
-			"id": "da32be78-e6aa-43d1-942b-f2ee34b2a674",
+			"id": "7a1ea342-4f49-4acf-9adc-4c48e72f6c85",
 			"key": "vendorId",
 			"value": "0"
 		},
 		{
-			"id": "79af18af-fe88-46e5-9c36-90996734dd67",
+			"id": "bb5e42ad-95c7-42df-8723-a7ce8835324a",
 			"key": "id",
 			"value": ""
 		},
 		{
-			"id": "92b00334-8da6-4a65-8653-139f0846d7f5",
+			"id": "dceeac12-0195-4370-ae4f-eabfeb092e45",
 			"key": "prev_profit",
 			"value": ""
 		},
 		{
-			"id": "636ab03c-ea29-48d2-89d5-0ec134ecd05d",
+			"id": "790eb412-3d6a-468c-a070-349f6eb152f1",
 			"key": "price",
+			"value": ""
+		},
+		{
+			"id": "56c05a09-93c1-42fd-bef5-3863a1795b06",
+			"key": "quantity",
 			"value": ""
 		}
 	]
