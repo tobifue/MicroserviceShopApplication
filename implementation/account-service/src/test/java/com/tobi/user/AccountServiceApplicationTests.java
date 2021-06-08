@@ -48,7 +48,7 @@ class AccountServiceApplicationTests
 		transList.add(employee1);
 		transList.add(employee2);
 		Double testProfit = accService.calculateProfit(transList);
-		Double profit = 6.8;
+		Double profit = 6.8*34;
 
 		assertThat(testProfit, comparesEqualTo(profit));
 	}
