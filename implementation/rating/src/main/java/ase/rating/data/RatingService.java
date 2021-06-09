@@ -19,7 +19,7 @@ public class RatingService {
 		System.out.println(finalrating);
 
 		JSONObject j = new JSONObject();
-		j.put("rating: ", finalrating);
+		j.put("rating", finalrating);
 		return j.toJSONString();
 	}
 
