@@ -1,0 +1,646 @@
+{
+	"info": {
+		"_postman_id": "14a281a0-9ac1-4d4c-b6bf-5b332767b298",
+		"name": "Rate an item",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"ase.notification@gmail.com\", \"userId\":{{$randomInt}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item for selling",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"itemName is set\", () => {\r",
+							"    pm.collectionVariables.set(\"usedName\", \"2720 Flip DS\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"vendorId is set\", () => {\r",
+							"    pm.collectionVariables.set(\"vendorId\", \"901\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"usedId is set\", () => {",
+							"    pm.collectionVariables.set(\"usedId\", \"3\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"vendorId\":\"{{usedId}}\", \"itemName\": \"{{usedName}}\", \"quantity\":\"10\", \"price\":\"50\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/inventory/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item to cart",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId is set\", () => {",
+							"    pm.expect(\"customerId\").to.not.be.null;",
+							"    pm.collectionVariables.set(\"customerId\", 701);",
+							"});",
+							"",
+							"pm.test(\"itemName is set\", () => {",
+							"    pm.collectionVariables.set(\"usedName\", \"2720 Flip DS\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Used customerId is stored\", () => {",
+							"    pm.collectionVariables.set(\"customerId\", pm.collectionVariables.get(\"customerId\"));",
+							"});",
+							"",
+							"pm.test(\"Used usedName is stored\", () => {",
+							"    pm.collectionVariables.set(\"usedName\", pm.collectionVariables.get(\"usedName\"));",
+							"});",
+							"",
+							"pm.test(\"Used vendorId is stored\", () => {",
+							"    pm.collectionVariables.set(\"vendorId\", pm.collectionVariables.get(\"vendorId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"itemId\":{{$randomInt}},\"price\":{{$randomInt}},\"vendorId\":{{usedId}},\"quantity\":{{$randomInt}}, \"itemName\":\"{{usedName}}\",\"priceRecommendation\":{{$randomInt}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cart/addItemToCart/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cart",
+						"addItemToCart",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Do checkout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"customerId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/checkout/checkout/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout",
+						"checkout",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item to cart customer2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId2 is set\", () => {",
+							"    pm.expect(\"customerId2\").to.not.be.null;",
+							"    pm.collectionVariables.set(\"customerId2\", 702);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Used customerId2 is stored\", () => {",
+							"    pm.collectionVariables.set(\"customerId2\", \"702\");",
+							"});",
+							"",
+							"pm.test(\"Used usedName is stored\", () => {",
+							"    pm.collectionVariables.set(\"usedName\", pm.collectionVariables.get(\"usedName\"));",
+							"});",
+							"",
+							"pm.test(\"Used vendorId is stored\", () => {",
+							"    pm.collectionVariables.set(\"vendorId\", pm.collectionVariables.get(\"vendorId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"itemId\":{{$randomInt}},\"price\":{{$randomInt}},\"vendorId\":{{vendorId}},\"quantity\":{{$randomInt}}, \"itemName\":\"{{usedName}}\",\"priceRecommendation\":{{$randomInt}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cart/addItemToCart/{{customerId2}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cart",
+						"addItemToCart",
+						"{{customerId2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Do checkout customer2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId2\")).to.equal(pm.collectionVariables.get(\"customerId2\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/checkout/checkout/{{customerId2}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout",
+						"checkout",
+						"{{customerId2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add rating of 5",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"customerId\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"itemName equals previous request\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"usedName\")).to.equal(pm.collectionVariables.get(\"usedName\"));\r",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Format proves correct\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.customerId).to.be.a('number');\r",
+							"    pm.expect(responseJson.rtnId).to.be.a('number');\r",
+							"    pm.expect(responseJson.itemName).to.be.a('string');\r",
+							"    pm.expect(responseJson.rating).to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Rating is set\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.variables.set((\"rating\"),responseJson.Rating);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Used usedName is stored\", () => {\r",
+							"    pm.collectionVariables.set(\"usedName\", pm.collectionVariables.get(\"usedName\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"customerId\": {{customerId}}, \"itemName\": \"{{usedName}}\", \"rating\": 5.0}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/rating/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rating",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add rating of 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"customerId2\")).to.equal(pm.collectionVariables.get(\"customerId2\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"itemName equals previous request\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"usedName\")).to.equal(pm.collectionVariables.get(\"usedName\"));\r",
+							"}); "
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Format proves correct\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.customerId).to.be.a('number');\r",
+							"    pm.expect(responseJson.rtnId).to.be.a('number');\r",
+							"    pm.expect(responseJson.itemName).to.be.a('string');\r",
+							"    pm.expect(responseJson.rating).to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Rating is set\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.variables.set((\"rating\"),responseJson.Rating);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Used usedName is stored\", () => {\r",
+							"    pm.collectionVariables.set(\"usedName\", pm.collectionVariables.get(\"usedName\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"customerId\": {{customerId2}}, \"itemName\": \"{{usedName}}\", \"rating\": 1.0}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/rating/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rating",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check rating",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"itemName equals previous request\", () => {\r",
+							"    pm.expect(pm.collectionVariables.get(\"usedName\")).to.equal(pm.collectionVariables.get(\"usedName\"));\r",
+							"}); \r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Format proves correct\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.rating).to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Value proves correct\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.rating).to.eql(3);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/rating/getRating/{{usedName}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rating",
+						"getRating",
+						"{{usedName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "d1ab4c06-5aa1-4778-bd1a-e841da588482",
+			"key": "vendorId",
+			"value": "0"
+		},
+		{
+			"id": "ef6178b1-191e-4507-a005-6edca1d7be9f",
+			"key": "id",
+			"value": ""
+		},
+		{
+			"id": "270d64a4-ab73-4d8f-9171-c3474e2ce515",
+			"key": "customerId",
+			"value": ""
+		},
+		{
+			"id": "f6cb2dee-579f-4105-95f4-2c184457fdc8",
+			"key": "used_id",
+			"value": ""
+		},
+		{
+			"id": "fd441188-f121-40a3-b173-61e81d6b44be",
+			"key": "itemId",
+			"value": ""
+		},
+		{
+			"id": "62598611-dcb7-4cf9-bac3-de5ee720aaf8",
+			"key": "used_Item",
+			"value": ""
+		},
+		{
+			"id": "bb5bc0af-eb9a-4408-a37c-1ea9910e8d94",
+			"key": "itemName",
+			"value": ""
+		},
+		{
+			"id": "b9b6bd27-b3fd-40ca-9cb6-7267386e1218",
+			"key": "usedName",
+			"value": ""
+		},
+		{
+			"id": "7fe9a400-8c62-4d8d-9fd3-cb8d654b09f1",
+			"key": "customerId2",
+			"value": ""
+		},
+		{
+			"id": "e35989f3-db41-49e9-a91c-120a2a653a91",
+			"key": "usedId",
+			"value": ""
+		}
+	]
+}

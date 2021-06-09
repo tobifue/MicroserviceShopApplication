@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "d2c8e4d8-159a-4428-a110-aa4da6834892",
+		"name": "Shipment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"ase.notification@gmail.com\", \"userId\":{{$randomInt}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item for selling",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"itemName is set\", () => {\r",
+							"    pm.collectionVariables.set(\"usedName\", \"Samsung Galaxy S20\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"usedId is set\", () => {\r",
+							"    pm.collectionVariables.set(\"usedId\", \"900\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"vendorId\":\"{{usedId}}\", \"itemName\": \"{{usedName}}\", \"quantity\":\"20\", \"price\":\"4\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/inventory/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item to cart",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId is set\", () => {",
+							"    pm.expect(\"customerId\").to.not.be.null;",
+							"    pm.collectionVariables.set(\"customerId\", 700);",
+							"});",
+							"",
+							"pm.test(\"itemName is set\", () => {",
+							"    pm.collectionVariables.set(\"usedName\", \"Samsung Galaxy S20\");",
+							"});",
+							"",
+							"pm.test(\"usedId is set\", () => {",
+							"    pm.collectionVariables.set(\"usedId\", \"900\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Used customerId is stored\", () => {",
+							"    pm.collectionVariables.set(\"customerId\", pm.collectionVariables.get(\"customerId\"));",
+							"});",
+							"",
+							"pm.test(\"Used usedName is stored\", () => {",
+							"    pm.collectionVariables.set(\"usedName\", pm.collectionVariables.get(\"usedName\"));",
+							"});",
+							"",
+							"pm.test(\"Used vendorId is stored\", () => {",
+							"    pm.collectionVariables.set(\"usedId\", pm.collectionVariables.get(\"usedId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"itemId\":{{$randomInt}},\"price\":4.0,\"vendorId\":{{usedId}},\"quantity\":{{$randomInt}}, \"itemName\":\"{{usedName}}\",\"priceRecommendation\":{{$randomInt}}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cart/addItemToCart/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cart",
+						"addItemToCart",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Do checkout",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"customerId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/checkout/checkout/{{customerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout",
+						"checkout",
+						"{{customerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add shipment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"customerId\": \"{{customerId}}\", \"vendorId\":\"900\", \"itemId\":\"539\", \"email\": \"ase.notification@gmail.com\", \"itemName\": \"{{usedName}}\", \"price\": \"4\", \"quantity\": \"1\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/shipment/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shipment",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activate shipment and send email",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"customerId equals previous request\", () => {",
+							"    pm.expect(pm.collectionVariables.get(\"customerId\")).to.equal(pm.collectionVariables.get(\"customerId\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/shipment/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shipment",
+						"start"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "f2108ff4-8589-4200-8783-91295d2a4a8b",
+			"key": "customerId",
+			"value": ""
+		},
+		{
+			"id": "563a52d2-5203-492c-8b91-cdbcd5336975",
+			"key": "usedName",
+			"value": ""
+		},
+		{
+			"id": "fc07197f-fca6-4a12-8764-fa1178e72714",
+			"key": "used_id",
+			"value": ""
+		},
+		{
+			"id": "90424cd0-058f-464a-830a-de2b8cbf93d7",
+			"key": "usedId",
+			"value": ""
+		}
+	]
+}

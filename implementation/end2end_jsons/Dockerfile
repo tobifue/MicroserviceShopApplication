@@ -5,4 +5,4 @@ WORKDIR /usr/src/app
 COPY ./ ./
 RUN npm install newman -g
 RUN npm install -g wait-on
-CMD (wait-on http://localhost:8080 || wait-on http://gateway:8080) && sleep 30s  && newman run buy_from_shop.json && newman run calculate_profit.json && newman run mark_product.json
+CMD (wait-on http://localhost:8080 || wait-on http://gateway:8080) && sleep 30s  && newman run buy_from_shop.json && newman run calculate_profit.json && newman run mark_product.json && newman run rate_item.json && newman run shipment_notification.json
